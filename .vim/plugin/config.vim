@@ -61,9 +61,4 @@ endif
 " Show invisible characters
 set list
 " set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-let &listchars = 'tab:' . nr2char(0x25B8) . ' '
-  \ . ',trail:' . nr2char(0x00B7)
-  \ . ',extends:' . nr2char(0x276F)
-  \ . ',precedes:' . nr2char(0x276E)
-  \ . ',nbsp:' . nr2char(0x005F)
-  \ . ',eol:' . nr2char(0x00AC)
+let &listchars = 'tab:' . nr2char(0x25B8) . ' ' . ',trail:' . nr2char(0x00B7) . ',extends:' . nr2char(0x276F) . ',precedes:' . nr2char(0x276E) . ',nbsp:' . nr2char(0x005F) . ',eol:' . nr2char(0x00AC)
