@@ -1,7 +1,10 @@
 {
     "dir": ".vim",
     "link": ".vim/*",
-    "lines": {
-        ".vim/vimrc": "source ~/.vim/init.vim"
-    }
+    "lines": [
+        {
+            "file": ".vim/vimrc",
+            "line": "source ~/.vim/init.vim"
+        }
+    ]
 }
