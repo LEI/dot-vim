@@ -1,4 +1,4 @@
-" Plugins
+" Load plugin settings
 
 " https://github.com/skwp/dotfiles/blob/master/vim/settings.vim
 

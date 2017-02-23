@@ -15,34 +15,14 @@ if !Exists(g:vim_plug_path)
   execute 'silent !curl -sfLo ' . g:vim_plug_path . '  --create-dirs ' . g:vim_plug_url
 endif
 
-let g:vim_plugins = expand('~/.vim/plugged')
-call plug#begin(g:vim_plugins)
-
-Plug 'altercation/vim-colors-solarized'
-Plug 'kien/ctrlp.vim'
-Plug 'tpope/vim-commentary'
-" Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
-
-" Add plugins to &runtimepath
-call plug#end()
+if Exists('~/.vim/plug.vim')
+  source ~/.vim/plug.vim
+endif
 
 " Install plugins
 if !isdirectory(g:vim_plugins)
   PlugInstall
 endif
-
-try
-  set background=dark
-  colorscheme solarized
-  call togglebg#map('<F5>')
-catch /E185:/
-  colorscheme default
-endtry
 
 if Exists('~/.vimrc.local')
   source ~/.vimrc.local

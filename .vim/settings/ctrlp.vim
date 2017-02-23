@@ -1,5 +1,12 @@
 " CtrlP
 " https://github.com/skwp/dotfiles/blob/master/vim/settings/ctrlp.vim
+" https://github.com/thoughtbot/dotfiles/blob/master/vimrc
+" https://github.com/ggreer/the_silver_searcher
+
+"let g:ctrlp_map = '<leader>f'
+"let g:ctrlp_max_height = 30
+"let g:ctrlp_working_path_mode = 0
+"let g:ctrlp_match_window_reversed = 0
 
 if executable('ag')
   " Use The Silver Searcher in CtrlP for listing files
