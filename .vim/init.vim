@@ -8,6 +8,10 @@ if Exists('~/.vim/before.vim')
   source ~/.vim/before.vim
 endif
 
+if Exists('~/.vim/config.vim')
+  source ~/.vim/config.vim
+endif
+
 " Auto download Vim Plug
 let g:vim_plug_path = '~/.vim/autoload/plug.vim'
 let g:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
