@@ -39,8 +39,9 @@ Upgrade vim-plug itself
 
 #### Fix `Ctrl-h` in Terminal.app
 
-Default `key_backspace` (kbs) entry on OS X is `^H` (ASCII DELETE),
-set it to `\177` (ASCII BACKSPACE) with these commands:
+Default `key_backspace` (kbs) entry on OS X is `^H` (ASCII DELETE).
+
+Set it to `\177` (ASCII BACKSPACE) with these commands:
 
     infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
     tic $TERM.ti

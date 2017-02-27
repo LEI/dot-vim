@@ -1,4 +1,4 @@
-" Grep
+" Grep options
 
 if executable('ag')
   " Use Ag over Grep

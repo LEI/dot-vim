@@ -1,4 +1,4 @@
-" Auto reload vimrc
+" Auto reload vimrc on save
 
 augroup VimReload
   autocmd!
