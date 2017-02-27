@@ -7,6 +7,7 @@ Plug 'altercation/vim-colors-solarized'
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder
 " Plug 'editorconfig/editorconfig-vim'
+Plug 'mbbill/undotree' " Undo history visualizer
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-commentary' " Comment stuff out
