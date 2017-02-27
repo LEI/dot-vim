@@ -6,7 +6,7 @@ function! Exists(path)
   return filereadable(expand(a:path))
 endfunction
 
-function! Sources(path)
+function! Source(path)
   if Exists(a:path)
     source a:path
   endif
