@@ -7,9 +7,9 @@ if get(g:, 'loaded_plugins', 0)
 endif
 let g:loaded_plugins = 1
 
-for s:path in split(globpath('~/.vim/settings', '*.vim'), '\n')
+for s:path in split(globpath('../settings', '*.vim'), '\n')
   let s:name = fnamemodify(s:path, ':t:r')
-  let s:check = !empty(glob('~/.vim/plugged/*' . s:name . '*'))
+  let s:check = !empty(glob('../plugged/*' . s:name . '*'))
   if s:check
     execute 'source ' . s:path
   endif

@@ -2,4 +2,4 @@ dir: ".vim"
 link: "*:.vim"
 line:
   path: ".vim/vimrc"
-  line: "source ~/.vim/init.vim"
+  line: "if filereadable(expand('init.vim')) | source init.vim | endif"
