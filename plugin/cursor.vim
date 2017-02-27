@@ -1,5 +1,4 @@
 " Restore cursor position
-
 function! RestoreCursor()
   if line("'\"") > 0 && line("'\"") <= line("$")
     normal! g`"
