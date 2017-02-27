@@ -21,15 +21,6 @@
 
 ## Usage
 
-### Fix `C-h` (Terminal.app)
-
-Default key_backspace (kbs) entry is ^H (ASCII DELETE): key_backspace=^H,
-
-Set key_backspace to \177 (ASCII BACKSPACE):
-
-    infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
-    tic $TERM.ti
-
 ### [Vim Plug](https://github.com/junegunn/vim-plug)
 
 Install plugins
@@ -43,3 +34,13 @@ Update plugins
 Upgrade vim-plug itself
 
     :PlugUpgrade
+
+### Mappings
+
+#### Fix `Ctrl-h` in Terminal.app
+
+Default `key_backspace` (kbs) entry on OS X is `^H` (ASCII DELETE),
+set it to `\177` (ASCII BACKSPACE) with these commands:
+
+    infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
+    tic $TERM.ti

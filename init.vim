@@ -6,9 +6,9 @@ endfunction
 
 runtime before.vim
 
-runtime plug.vim
-
 runtime config.vim
+
+runtime plug.vim
 
 if Exists('~/.vimrc.local')
   source ~/.vimrc.local
