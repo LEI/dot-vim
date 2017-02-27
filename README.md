@@ -17,6 +17,7 @@
 - [Vim sensible](https://github.com/tpope/vim-sensible)
 - [Vim Galore](https://github.com/mhinz/vim-galore)
 - [SpaceVim](https://github.com/SpaceVim/SpaceVim)
+- [spf13-vim](https://github.com/spf13/spf13-vim)
 
 ## Usage
 
