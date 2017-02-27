@@ -1,28 +1,28 @@
 " Vim
 "
-let $VIMHOME = expand("%:p:h")
+" let $VIMHOME = expand("%:p:h")
 " fnamemodify(expand("$MYVIMRC"), ":p:h")
 
 function! Exists(path)
   return filereadable(expand(a:path))
 endfunction
 
-if Exists('$VIMHOME/before.vim')
-  source $VIMHOME/before.vim
+if Exists('~/.vim/before.vim')
+  source ~/.vim/before.vim
 endif
 
-if Exists('$VIMHOME/config.vim')
-  source $VIMHOME/config.vim
+if Exists('~/.vim/config.vim')
+  source ~/.vim/config.vim
 endif
 
 " Auto download Vim Plug
-let g:vim_plug_path = '$VIMHOME/autoload/plug.vim'
+let g:vim_plug_path = '~/.vim/autoload/plug.vim'
 let g:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 if !Exists(g:vim_plug_path)
   execute 'silent !curl -sfLo ' . g:vim_plug_path . '  --create-dirs ' . g:vim_plug_url
 endif
 
-let g:vim_plugins = expand('$VIMHOME/plugged')
+let g:vim_plugins = expand('~/.vim/plugged')
 call plug#begin(g:vim_plugins)
 
 Plug 'altercation/vim-colors-solarized'
