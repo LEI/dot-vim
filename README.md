@@ -9,5 +9,5 @@
 ## Manual installation
 
     mkdir -p "$HOME/.vim"
-    ln -isv "$DOT/.vim/*" "$HOME/.vim"
+    ln -isv "$DOT/{*.vim,ftdetect,ftplugin,plugin,settings}" "$HOME/.vim"
     echo 'source ~/.vim/init.vim' >> "$HOME/.vim/vimrc"
