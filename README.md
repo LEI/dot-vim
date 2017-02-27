@@ -21,6 +21,15 @@
 
 ## Usage
 
+### Fix `C-h` (Terminal.app)
+
+Default key_backspace (kbs) entry is ^H (ASCII DELETE): key_backspace=^H,
+
+Set key_backspace to \177 (ASCII BACKSPACE):
+
+    infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
+    tic $TERM.ti
+
 ### [Vim Plug](https://github.com/junegunn/vim-plug)
 
 Install plugins

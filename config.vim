@@ -1,5 +1,13 @@
 " Main options
 
+try
+  set background=dark
+  colorscheme solarized
+  call togglebg#map('<F5>')
+catch /E185:/
+  colorscheme default
+endtry
+
 if &term =~# '256color'
   " Disable Background Color Erase (BCE) so that color schemes
   " work properly when Vim is used inside tmux and GNU screen.
