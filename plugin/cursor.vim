@@ -1,15 +1,15 @@
 " Cursor enhancements
 
-function! s:RestoreCursorPos()
+function! s:RestoreCursorPosition()
   if line("'\"") > 0 && line("'\"") <= line("$")
     normal! g`"
     return 1
   endif
 endfunction
 
-augroup RestoreCursorPos
+augroup RestoreCursorPosition
   autocmd!
-  autocmd BufReadPost * call s:RestoreCursor()
+  autocmd BufReadPost * call s:RestoreCursorPosition()
 augroup END
 
 " Show cursor line on active window only
