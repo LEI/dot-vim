@@ -1,6 +1,6 @@
 " Vim Plug
 
-Plug 'altercation/vim-colors-solarized' " romainl/flattened flattened_dark
+Plug 'romainl/flattened' " altercation/vim-colors-solarized
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder
 " Plug 'editorconfig/editorconfig-vim'
