@@ -1,4 +1,4 @@
-" Cursor enhancements
+" Restore cursor position and toggle cursor line
 
 function! s:RestoreCursorPosition()
   if line("'\"") > 0 && line("'\"") <= line("$")

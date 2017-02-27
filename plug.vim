@@ -1,5 +1,27 @@
 " Vim Plug
 
+Plug 'altercation/vim-colors-solarized' " romainl/flattened flattened_dark
+" Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
+Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder
+" Plug 'editorconfig/editorconfig-vim'
+Plug 'mbbill/undotree' " Undo history visualizer
+Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
+" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+Plug 'tpope/vim-commentary' " Comment stuff out
+" Plug 'tpope/vim-endwise' " Automatic end keywords
+" Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
+" Plug 'tpope/vim-fugitive' " Git wrapper
+" Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support
+" Plug 'tpope/vim-obsession' " Continuously updated session files
+Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
+Plug 'tpope/vim-sensible' " Sane defaults
+Plug 'tpope/vim-sleuth' " Automatic indentation detection
+Plug 'tpope/vim-surround' " Quoting/parenthesizing
+Plug 'tpope/vim-unimpaired' " Mappings
+Plug 'tpope/vim-vinegar' " Improved netrw directory browser
+
+" Text Objects: kana/vim-textobj-user
+
 function! YCMInstall(info)
   " The variable a:info is a dictionary with 3 fields:
   " - name: name of the plugin
@@ -12,74 +34,33 @@ function! YCMInstall(info)
     " - TypeScript support: install nodejs and npm then install the TypeScript SDK with npm install -g typescript.
     " - JavaScript support: install nodejs and npm and add --tern-completer when calling ./install.py
     " - Rust support: install rustc and cargo and add --racer-completer when calling ./install.py
-    YCM: !./install.py --tern-completer --gocode-completer
+    !./install.py --tern-completer --gocode-completer
   endif
 endfunction
-
-" Auto download vim-plug
-let g:vim_plug_path = '~/.vim/autoload/plug.vim'
-let g:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-if !Exists(g:vim_plug_path)
-  execute 'silent !curl -sfLo ' . g:vim_plug_path . '  --create-dirs ' . g:vim_plug_url
-endif
-
-let g:vim_plugins = expand('~/.vim/plugged')
-call plug#begin(g:vim_plugins)
-
-Plug 'altercation/vim-colors-solarized' " romainl/flattened flattened_dark
-" Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
-Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder
-" Plug 'editorconfig/editorconfig-vim'
-Plug 'mbbill/undotree' " Undo history visualizer
-Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
-" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
-Plug 'tpope/vim-commentary' " Comment stuff out
-" Plug 'tpope/vim-endwise' " Automatic end keywords
-" Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
-" Plug 'tpope/vim-fugitive' " Git wrapper
-" Plug 'shumphrey/fugitive-gitlab.vim'
-" Plug 'tpope/vim-obsession' " Continuously updated session files
-Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
-Plug 'tpope/vim-sensible' " Sane defaults
-Plug 'tpope/vim-sleuth' " Automatic indentation detection
-Plug 'tpope/vim-surround' " Quoting/parenthesizing
-Plug 'tpope/vim-unimpaired' " Mappings
-Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []} " Code completion
 " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' " Code snippets
+" " command! YCM call YCMEnable()
+" " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+" function! YCMEnable()
+"   if !exists('g:loaded_youcompleteme')
+"     call plug#load('YouCompleteMe')
+"   else
+"     echom "YCM is already loaded"
+"   endif
+"   if exists('g:loaded_youcompleteme')
+"     call youcompleteme#Enable()
+"   else
+"     echom "YCM was not loaded"
+"   endif
+" endfunction
+
 " Plug 'scrooloose/syntastic', {'on': []} " Syntax checker
-
-" Text Objects: kana/vim-textobj-user
-
-" Add plugins to &runtimepath
-call plug#end()
-
-" Install plugins
-if !isdirectory(g:vim_plugins)
-  PlugInstall
-endif
-
-" command! YCM call YCMEnable()
-" autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
-function! YCMEnable()
-  if !exists('g:loaded_youcompleteme')
-    call plug#load('YouCompleteMe')
-  else
-    echom "YCM is already loaded"
-  endif
-  if exists('g:loaded_youcompleteme')
-    call youcompleteme#Enable()
-  else
-    echom "YCM was not loaded"
-  endif
-endfunction
-
-function! SyntasticEnable()
-  if !exists('g:loaded_syntastic_plugin')
-    call plug#load('syntastic')
-  endif
-endfunction
+" function! SyntasticEnable()
+"   if !exists('g:loaded_syntastic_plugin')
+"     call plug#load('syntastic')
+"   endif
+" endfunction
 
 function! s:VimPlug()
   if &filetype == 'gitcommit'
