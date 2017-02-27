@@ -1,7 +1,4 @@
 " Vim
-"
-" let $VIMHOME = expand("%:p:h")
-" fnamemodify(expand("$MYVIMRC"), ":p:h")
 
 function! Exists(path)
   return filereadable(expand(a:path))

@@ -7,6 +7,7 @@ if get(g:, 'loaded_plugins', 0)
 endif
 let g:loaded_plugins = 1
 
+" Load settings for installed plugins only
 for s:path in split(globpath('../settings', '*.vim'), '\n')
   let s:name = fnamemodify(s:path, ':t:r')
   let s:check = !empty(glob('../plugged/*' . s:name . '*'))
