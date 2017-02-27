@@ -22,7 +22,7 @@ endif
 let g:vim_plugins = expand('~/.vim/plugged')
 call plug#begin(g:vim_plugins)
 
-Plug 'altercation/vim-colors-solarized'
+Plug 'romainl/flattened' " 'altercation/vim-colors-solarized'
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder
 " Plug 'editorconfig/editorconfig-vim'
@@ -56,8 +56,8 @@ endif
 
 try
   set background=dark
-  colorscheme solarized
-  call togglebg#map('<F5>')
+  colorscheme flattened_dark
+  " call togglebg#map('<F5>')
 catch /E185:/
   colorscheme default
 endtry
