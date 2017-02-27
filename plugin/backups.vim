@@ -1,4 +1,5 @@
 " Disable swapfiles and backups
+
 set noswapfile
 set nobackup
 set nowritebackup

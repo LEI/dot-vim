@@ -38,6 +38,12 @@ set nostartofline " Keep the cursor on the same column if possible
 
 " set title " Set the title of the window to 'titlestring'
 
+" set complete-=i " Do not scan included files (ctags?)
+
+" set complete+=kspell " Autocompete with dictionnary words when spell check is on
+
+" set nrformats-=octal " Disable octal format for number processing using CTRL-A
+
 if has('mouse')
   set mouse+=a
 endif
@@ -90,9 +96,23 @@ set shortmess=atI " Avoid hit-enter prompts caused by file messages
 set noerrorbells " Disable audible bell for error messages
 set visualbell " Use visual bell instead of beeping
 set t_vb= " Disable audible and visual bells
+"
+" set noshowmatch " Do not show matching brackets when text indicator is over them
+
+" set matchpairs+=<:> " HTML brackets
+
+" set mat=2 " How many tenths of a second to blink when matching brackets
+
+" Show line breaks (arrows: 0x21AA or 0x08627)
+let &showbreak = nr2char(0x2026) " Ellipsis
+
+" set fillchars+=stl:\ ,stlnc:\
+" let &fillchars='vert:|,fold:-,stl:x,stlnc:y'
 
 set list " Show invisible characters
 
+" Vim: eol:$
+" Nvim: tab:>\ ,trail:-,nbsp:+
 if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars = 'tab:' . nr2char(0x25B8) . ' '
   let &listchars.= ',trail:' . nr2char(0x00B7)

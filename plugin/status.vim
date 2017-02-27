@@ -9,3 +9,7 @@ set display+=lastline " Display as much as possible of the last line
 set showmode " Display current mode in status line
 
 set showcmd " Display incomplete commands
+
+set ruler " Always show current position
+
+" set rulerformat=%l,%c%V%=%P
