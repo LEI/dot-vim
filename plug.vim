@@ -25,6 +25,11 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 if has('lua')
   Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
   Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+
+  let g:neocomplete#enable_at_startup = 1
+  " let g:neocomplete#enable_auto_select = 1
+  " let g:neocomplete#enable_smart_case = 1
+  " let g:neocomplete#sources#syntax#min_keyword_length = 3
 endif
 
 function! YCMInstall(info)
