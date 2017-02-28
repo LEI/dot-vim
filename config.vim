@@ -25,8 +25,6 @@ set backspace=indent,eol,start " Normal backspace in insert mode
 
 set esckeys " Recognize escape immediately
 
-set lazyredraw " Only redraw when necessary
-
 set nostartofline " Keep the cursor on the same column if possible
 
 " Enable per-directory .vimrc files and disable unsafe commands in them
@@ -153,8 +151,7 @@ catch /E185:/
   " colorscheme default
 endtry
 
-" augroup VIMRC
-"   autocmd!
-"   " Fix: lazyredraw prevents the first draw
-"   autocmd VimEnter * redraw | autocmd! VIMRC
-" augroup END
+augroup VIMRC
+  autocmd!
+  autocmd VimEnter * set lazyredraw | autocmd! VIMRC
+augroup END
