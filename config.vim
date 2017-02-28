@@ -123,14 +123,12 @@ else
   " let &showbreak = '-> '
 endif
 
-" Indentation
-if !exists('g:loaded_sleuth')
-  set expandtab " Use spaces instead of tabs
-  set shiftwidth=4 " >> indents by 4 spaces
-  set shiftround " >> indents to net multiple of 'shiftwidth'
-  set softtabstop=4 " Tab key indents by 4 spaes
-  " set tabstop=4
-endif
+" if !exists('g:loaded_sleuth')
+set expandtab " Use spaces instead of tabs
+set shiftwidth=4 " >> indents by 4 spaces
+set shiftround " >> indents to net multiple of 'shiftwidth'
+set softtabstop=-1 " Use 'shiftwidth' value for editing operations
+set tabstop=4 " Number of spaces used to represent a tab (default: 8)
 
 " Folding
 " " set foldcolumn=1
