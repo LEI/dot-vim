@@ -103,9 +103,6 @@ set t_vb= " Disable audible and visual bells
 
 " set mat=2 " How many tenths of a second to blink when matching brackets
 
-" Show line breaks (arrows: 0x21AA or 0x08627)
-let &showbreak = nr2char(0x2026) " Ellipsis
-
 " set fillchars+=stl:\ ,stlnc:\
 " let &fillchars='vert:|,fold:-,stl:x,stlnc:y'
 
@@ -120,6 +117,8 @@ if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars.= ',precedes:' . nr2char(0x276E)
   let &listchars.= ',nbsp:' . nr2char(0x005F)
   let &listchars.= ',eol:' . nr2char(0x00AC)
+  " Show line breaks (arrows: 0x21AA or 0x08627)
+  let &showbreak = nr2char(0x2026) " Ellipsis
 else
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
   " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
