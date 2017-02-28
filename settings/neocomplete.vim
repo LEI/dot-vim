@@ -28,6 +28,7 @@ imap <expr><CR> pumvisible() ? (neosnippet#expandable_or_jumpable() ? "\<Plug>(n
 " Expand snippet or jump to next snippet placeholder with Tab
 imap <expr><Tab> pumvisible() ? "\<C-n>" : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<Tab>")
 smap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
+" xmap <C-k> <Plug>(neosnippet_expand_target)
 
 " Enable omni completion
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
