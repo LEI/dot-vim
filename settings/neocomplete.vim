@@ -14,19 +14,19 @@ let g:neocomplete#sources#syntax#min_keyword_length = 3
 " inoremap <expr><C-l> neocomplete#complete_common_string()
 
 " Close popup and delete backword char
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-h> neocomplete#smart_close_popup() . "\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup() . "\<C-h>"
 
-" Tab: next completion or jump to next placeholder
-inoremap <expr><Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : (pumvisible() ? "\<C-n>" : "\<Tab>")
-
-" Shift Tab: previous completion
+" Next and previous completion Tab and Shift-Tab
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 
-" Enter: close popup or expand if a snippet is selected
+" Close popup or expand if a snippet is selected with Enter
+" inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 imap <expr><CR> pumvisible() ? (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<C-y>") : "\<CR>"
 
-" Tab: Jumpt to next snippet placeholder while in select mode
+" Expand snippet or jump to next snippet placeholder with Tab
+imap <expr><Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : (pumvisible() ? "\<C-n>" : "\<Tab>")
 smap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
 
 " Enable omni completion
