@@ -23,7 +23,7 @@ inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 
 " Close popup or expand if a snippet is selected with Enter
-" inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 imap <expr><CR> pumvisible() ? (neosnippet#expandable_or_jumpable() ?
   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<C-y>") : "\<CR>"
 
