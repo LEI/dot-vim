@@ -21,7 +21,7 @@ snoremap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_e
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 
 " Enter: close popup and expand snippet if applicable
-inoremap <expr><CR> puvisible() ? (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<C-y>") : "\<CR>"
+inoremap <expr><CR> pumvisible() ? (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<C-y>") : "\<CR>"
 
 " Close popup and delete backword char
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
