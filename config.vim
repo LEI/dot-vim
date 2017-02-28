@@ -54,12 +54,12 @@ if exists('+colorcolumn')
   set colorcolumn=+1
 endif
 
-set number
+set number " Enable line number column
 if exists('&relativenumber')
-  set relativenumber
+  set relativenumber " Relative to the current line
 endif
 
-set synmaxcol=420 " Limit highlighted columns
+set synmaxcol=200 " Limit syntax highlighting for long lines
 
 " set report=0 " Always report changed lines
 
@@ -77,7 +77,7 @@ set smartcase " Do not ignore when the pattern containes upper case characters
 
 " set magic " Changes the special characters that can be used in search patterns
 
-" set gdefault
+" set gdefault " Reverse global flag (always apply to  all, except if /g)
 
 set splitbelow " Split windows below the current window
 
@@ -101,32 +101,31 @@ set t_vb= " Disable audible and visual bells
 
 " set mat=2 " How many tenths of a second to blink when matching brackets
 
+" Indentation
+set expandtab " Use spaces instead of tabs
+set shiftround " >> indents to net multiple of 'shiftwidth'
+set shiftwidth=4 " >> indents by 4 spaces
+set softtabstop=-1 " Use 'shiftwidth' value for editing operations
+set tabstop=4 " Number of spaces used to represent a tab (default: 8)
+
 set list " Show invisible characters
-" set fillchars+=stl:\ ,stlnc:\
-" let &fillchars='vert:|,fold:-,stl:x,stlnc:y'
 
 if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars = 'tab:' . nr2char(0x25B8) . ' '
-  let &listchars.= ',trail:' . nr2char(0x00B7)
-  let &listchars.= ',extends:' . nr2char(0x276F)
-  let &listchars.= ',precedes:' . nr2char(0x276E)
-  let &listchars.= ',nbsp:' . nr2char(0x005F)
-  let &listchars.= ',eol:' . nr2char(0x00AC)
+    \ . ',trail:' . nr2char(0x00B7)
+    \ . ',extends:' . nr2char(0x276F)
+    \ . ',precedes:' . nr2char(0x276E)
+    \ . ',nbsp:' . nr2char(0x005F)
+    \ . ',eol:' . nr2char(0x00AC)
   " Show line breaks (arrows: 0x21AA or 0x08627)
   let &showbreak = nr2char(0x2026) " Ellipsis
 else
-  " eol:$ (vim), tab:>\ ,trail:-,nbsp:+ (nvim)
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+" set fillchars+=stl:\ ,stlnc:\
+" let &fillchars='vert:|,fold:-,stl:x,stlnc:y'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
   " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
   " let &showbreak = '-> '
 endif
-
-" if !exists('g:loaded_sleuth')
-set expandtab " Use spaces instead of tabs
-set shiftwidth=4 " >> indents by 4 spaces
-set shiftround " >> indents to net multiple of 'shiftwidth'
-set softtabstop=-1 " Use 'shiftwidth' value for editing operations
-set tabstop=4 " Number of spaces used to represent a tab (default: 8)
 
 " Folding
 " " set foldcolumn=1
