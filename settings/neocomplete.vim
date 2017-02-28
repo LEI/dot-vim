@@ -10,8 +10,8 @@ let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 
 " Key mappings
-" inoremap <expr><C-g> neocomplete#undo_completion()
-" inoremap <expr><C-l> neocomplete#complete_common_string()
+inoremap <expr><C-g> neocomplete#undo_completion()
+inoremap <expr><C-l> neocomplete#complete_common_string()
 
 " Close popup and delete backword char
 inoremap <expr><C-h> neocomplete#smart_close_popup() . "\<C-h>"
@@ -23,7 +23,7 @@ inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 
 " Close popup or expand if a snippet is selected with Enter
 " inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
-imap <expr><CR> pumvisible() ? (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<C-y>") : "\<CR>"
+imap <expr><CR> pumvisible() ? (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<C-y>") : "\<CR>"
 
 " Expand snippet or jump to next snippet placeholder with Tab
 imap <expr><Tab> pumvisible() ? "\<C-n>" : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<Tab>")
