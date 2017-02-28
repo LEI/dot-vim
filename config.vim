@@ -151,7 +151,8 @@ catch /E185:/
   " colorscheme default
 endtry
 
+set lazyredraw
 augroup VIMRC
   autocmd!
-  autocmd VimEnter * set lazyredraw | autocmd! VIMRC
+  autocmd VimEnter * redraw | autocmd! VIMRC
 augroup END
