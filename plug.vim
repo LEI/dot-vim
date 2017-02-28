@@ -22,7 +22,7 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Text Objects: kana/vim-textobj-user
 
-Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
+Plug 'Shougo/neocomplete.vim', {'on': 'NeoCompleteEnable'}
 Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
 function! YCMInstall(info)
