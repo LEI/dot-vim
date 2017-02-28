@@ -6,6 +6,16 @@ try
   colorscheme flattened_dark
   " colorscheme solarized
   " call togglebg#map('<F5>')
+  if exists('*strftime')
+    let s:hour = strftime('%H')
+    if s:hour > 7 && s:hour < 20
+      set background=light
+      colorscheme flattened_light
+    else
+      set background=dark
+      colorscheme flattened_dark
+    endif
+  endif
 catch /E185:/
   colorscheme default
 endtry

@@ -22,8 +22,8 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Text Objects: kana/vim-textobj-user
 
-" Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
-" Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
+Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
 function! YCMInstall(info)
   " The variable a:info is a dictionary with 3 fields:
@@ -41,11 +41,11 @@ function! YCMInstall(info)
   endif
 endfunction
 
-Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+" Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " command! YCM call YCMEnable()
-autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+" autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 
 " function! YCMEnable()
 "   if !exists('g:loaded_youcompleteme')
