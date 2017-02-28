@@ -12,17 +12,13 @@ let g:neocomplete#sources#syntax#min_keyword_length = 3
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
 
+" Close popup on Enter
 inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
-" Close popup and save indent on Enter
-" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" function! s:my_cr_function()
-"   return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-"   " For no inserting <CR> key.
-"   "return pumvisible() ? "\<C-y>" : "\<CR>"
-" endfunction
-" Complete on Tab
+
+" Next and previous matches with Tab and Shift-Tab
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
+
 " Close popup and delete backword char
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
