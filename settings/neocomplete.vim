@@ -15,6 +15,7 @@ inoremap <expr><C-l> neocomplete#complete_common_string()
 
 " Next and previous completion Tab and Shift-Tab
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" Fix Shift-Tab? :exe 'set t_kB=' . nr2char(27) . '[Z'
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 
 " Close popup and delete backword char
