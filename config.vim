@@ -38,9 +38,8 @@ set nostartofline " Keep the cursor on the same column if possible
 
 " set title " Set the title of the window to 'titlestring'
 
-" set complete-=i " Do not scan included files (ctags?)
-
-" set complete+=kspell " Autocompete with dictionnary words when spell check is on
+" set complete-=i " Do not scan current and included files
+set complete+=kspell " Autocompete with dictionnary words when spell check is on
 
 " set nrformats-=octal " Disable octal format for number processing using CTRL-A
 
