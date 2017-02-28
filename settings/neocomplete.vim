@@ -16,6 +16,7 @@ inoremap <expr><C-l> neocomplete#complete_common_string()
 " Close popup and delete backword char
 inoremap <expr><C-h> neocomplete#smart_close_popup() . "\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup() . "\<C-h>"
+inoremap <expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 
 " Next and previous completion Tab and Shift-Tab
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
