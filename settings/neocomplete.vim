@@ -1,4 +1,4 @@
-" Neocomplete & Neosnippet
+" Auto completion with neocomplete + neosnippet
 
 if !has('lua')
   finish
@@ -13,17 +13,17 @@ let g:neocomplete#sources#syntax#min_keyword_length = 3
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
 
+" Next and previous completion Tab and Shift-Tab
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
+
 " Close popup and delete backword char
 inoremap <expr><C-h> neocomplete#smart_close_popup() . "\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup() . "\<C-h>"
 inoremap <expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 
-" Next and previous completion Tab and Shift-Tab
-inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
-
-" Close popup or expand if a snippet is selected with Enter
-inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+" Close popup with Enter, or expand if a snippet is selected
+" inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 imap <expr><CR> pumvisible() ? (neosnippet#expandable_or_jumpable() ?
   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<C-y>") : "\<CR>"
 
