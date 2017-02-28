@@ -20,10 +20,10 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
-Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
-Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
-
 " Text Objects: kana/vim-textobj-user
+
+" Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
+" Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
 function! YCMInstall(info)
   " The variable a:info is a dictionary with 3 fields:
@@ -41,10 +41,12 @@ function! YCMInstall(info)
   endif
 endfunction
 
-" Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
-" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-" " command! YCM call YCMEnable()
-" " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
+" command! YCM call YCMEnable()
+autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+
 " function! YCMEnable()
 "   if !exists('g:loaded_youcompleteme')
 "     call plug#load('YouCompleteMe')
@@ -65,15 +67,15 @@ endfunction
 "   endif
 " endfunction
 
-function! s:VimPlug()
-  if &filetype == 'gitcommit'
-    return
-  endif
-  " call YCMEnable()
-  " call SyntasticEnable()
-endfunction
-
-augroup VimPlug
-  autocmd!
-  autocmd VimEnter * redrawstatus | call s:VimPlug() | autocmd! VimPlug
-augroup END
+" function! s:VimPlug()
+"   if &filetype == 'gitcommit'
+"     return
+"   endif
+"   " call YCMEnable()
+"   " call SyntasticEnable()
+" endfunction
+" 
+" augroup VimPlug
+"   autocmd!
+"   autocmd VimEnter * redrawstatus | call s:VimPlug() | autocmd! VimPlug
+" augroup END
