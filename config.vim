@@ -113,10 +113,9 @@ set t_vb= " Disable audible and visual bells
 
 " set mat=2 " How many tenths of a second to blink when matching brackets
 
+set list " Show invisible characters
 " set fillchars+=stl:\ ,stlnc:\
 " let &fillchars='vert:|,fold:-,stl:x,stlnc:y'
-
-set list " Show invisible characters
 
 if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars = 'tab:' . nr2char(0x25B8) . ' '
@@ -131,6 +130,7 @@ else
   " eol:$ (vim), tab:>\ ,trail:-,nbsp:+ (nvim)
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
   " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+  " let &showbreak = '-> '
 endif
 
 " Indentation
