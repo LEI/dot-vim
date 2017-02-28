@@ -153,8 +153,7 @@ catch /E185:/
   " colorscheme default
 endtry
 
-" Fix: lazyredraw prevents the first draw
 " augroup VIMRC
-"   autocmd
-"   autocmd VimEnter * redraw | autocmd!! VIMRC
+"   autocmd!
+"   autocmd VimEnter * redraw | autocmd! VIMRC " Fix: lazyredraw
 " augroup END
