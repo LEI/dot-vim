@@ -1,5 +1,9 @@
 " Load settings for installed plugins
 
+finish
+
+" TODELETE
+
 " https://github.com/skwp/dotfiles/blob/master/vim/settings.vim
 
 if get(g:, 'loaded_plugins', 0)
