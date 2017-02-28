@@ -1,6 +1,6 @@
 " Status line
 
-set cmdheight=2 " Number of screen lines to use for the command-line
+" set cmdheight=2 " Number of screen lines to use for the command-line
 
 set laststatus=2 " Always show status line
 

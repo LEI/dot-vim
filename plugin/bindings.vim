@@ -43,3 +43,16 @@ noremap <Leader>q :q<CR>
 noremap <Leader>w :w<CR>
 " Save as root (or use :SudoWrite)
 noremap <Leader>W :w !sudo tee % > /dev/null<CR>
+
+" Bubble single or multiple lines
+if get(g:, 'loaded_unimpaired', 0)
+  nmap <C-Up> [e
+  nmap <C-Down> ]e
+  vmap <C-Up> [egv
+  vmap <C-Down> ]egv
+else
+  nmap <C-Up> ddkP
+  nmap <C-Down> ddp
+  vmap <C-Up> xkP`[V`]
+  vmap <C-Down> xp`[V`]
+endif

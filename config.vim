@@ -62,7 +62,7 @@ if exists('&relativenumber')
   set relativenumber
 endif
 
-set synmaxcol=420 " Only highlight the first columns
+set synmaxcol=420 " Limit highlighted columns
 
 " set report=0 " Always report changed lines
 
@@ -82,13 +82,14 @@ set smartcase " Do not ignore when the pattern containes upper case characters
 
 " set gdefault
 
-set splitbelow " Open new split panes below the current window
+set splitbelow " Split windows below the current window
 
-set splitright " Open new split panes right of the current window
+set splitright " Split windows right of the current window
 
 set diffopt+=vertical " Always use vertical diffs
 
 " set wildmenu " Invoke completion on <Tab> in commande line mode
+
 " set wildmode=longest,full " Complete longest common string, then each full match
 
 set shortmess=atI " Avoid hit-enter prompts caused by file messages
