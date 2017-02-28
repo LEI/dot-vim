@@ -20,7 +20,7 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
-Plug 'Shougo/neocomplete.vim', {'on': 'NeoCompleteEnable'}
+Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
 Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
 " Text Objects: kana/vim-textobj-user
