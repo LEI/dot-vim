@@ -22,8 +22,10 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Text Objects: kana/vim-textobj-user
 
-Plug 'Shougo/neocomplete.vim', {'on': 'NeoCompleteEnable'}
-Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+if has('lua')
+  Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
+  Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+endif
 
 function! YCMInstall(info)
   " The variable a:info is a dictionary with 3 fields:
