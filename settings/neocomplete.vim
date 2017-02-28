@@ -24,8 +24,8 @@ inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 " Close popup and delete backword char
-" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
 " Enable omni completion
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
