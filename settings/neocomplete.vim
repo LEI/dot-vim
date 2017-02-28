@@ -21,18 +21,14 @@ inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 " Close popup and delete backword char
 inoremap <expr><C-h> neocomplete#smart_close_popup() . "\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup() . "\<C-h>"
-inoremap <expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 
 " Close popup with Enter, or expand if a snippet is selected
 " inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
-imap <expr><CR> pumvisible() ? (neosnippet#expandable_or_jumpable() ?
-  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<C-y>") : "\<CR>"
+imap <expr><CR> pumvisible() ? "\<C-y>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<CR>")
 
 " Expand snippet or jump to next snippet placeholder with Tab
-imap <expr><Tab> pumvisible() ? "\<C-n>" :
-  \ (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<Tab>")
-smap <expr><Tab> !neosnippet#expandable_or_jumpable() ? "\<Tab>" :
-  \ "\<Plug>(neosnippet_expand_or_jump)"
+imap <expr><Tab> pumvisible() ? "\<C-n>" : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<Tab>")
+smap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
 " xmap <C-k> <Plug>(neosnippet_expand_target)
 
 " Enable omni completion
