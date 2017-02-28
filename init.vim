@@ -4,7 +4,7 @@ runtime before.vim
 
 let s:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 let s:vim_plug_path = $HOME . '/.vim/autoload/plug.vim'
-let s:vim_plugins_path = $HOME . '/.vim/plugged'
+let s:vim_plugins_path = $HOME . '/.vim/plugins'
 let s:vim_settings_path = $HOME . '/.vim/settings'
 
 " Auto download vim-plug
@@ -16,8 +16,9 @@ endif
 call plug#begin(s:vim_plugins_path)
 
 " Register plugins
-runtime plug.vim
-runtime plug.vim.local
+runtime plugins.vim
+
+runtime plugins.local.vim
 
 " Add plugins to &runtimepath
 call plug#end()

@@ -22,21 +22,23 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Text Objects: kana/vim-textobj-user
 
+" Plug 'scrooloose/syntastic', {'on': []} " Syntax checker
+
+" Code Completion:
+
 if has('lua')
   Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
   Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
-
-  let g:neocomplete#enable_at_startup = 1
-  " let g:neocomplete#enable_auto_select = 1
-  " let g:neocomplete#enable_smart_case = 1
-  " let g:neocomplete#sources#syntax#min_keyword_length = 3
 endif
 
+" Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
+" The variable a:info is a dictionary with 3 fields:
+" - name: name of the plugin
+" - status: 'installed', 'updated', or 'unchanged'
+" - force: set on PlugInstall! or PlugUpdate!
 function! YCMInstall(info)
-  " The variable a:info is a dictionary with 3 fields:
-  " - name: name of the plugin
-  " - status: 'installed', 'updated', or 'unchanged'
-  " - force: set on PlugInstall! or PlugUpdate!
   if a:info.status == 'installed' || a:info.force
     " The following additional language support options are available
     " - C# support: add --omnisharp-completer to ./install.py
@@ -48,41 +50,8 @@ function! YCMInstall(info)
   endif
 endfunction
 
-" Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
-" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
-" command! YCM call YCMEnable()
 " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 
-" function! YCMEnable()
-"   if !exists('g:loaded_youcompleteme')
-"     call plug#load('YouCompleteMe')
-"   else
-"     echom "YCM is already loaded"
-"   endif
-"   if exists('g:loaded_youcompleteme')
-"     call youcompleteme#Enable()
-"   else
-"     echom "YCM was not loaded"
-"   endif
-" endfunction
-
-" Plug 'scrooloose/syntastic', {'on': []}
-" function! SyntasticEnable()
-"   if !exists('g:loaded_syntastic_plugin')
-"     call plug#load('syntastic')
-"   endif
-" endfunction
-
-" function! s:VimPlug()
-"   if &filetype == 'gitcommit'
-"     return
-"   endif
-"   " call YCMEnable()
-"   " call SyntasticEnable()
-" endfunction
-" 
-" augroup VimPlug
-"   autocmd!
-"   autocmd VimEnter * redrawstatus | call s:VimPlug() | autocmd! VimPlug
-" augroup END
+" !exists('g:loaded_youcompleteme')
+" :call plug#load('YouCompleteMe')
+" :call youcompleteme#Enable()

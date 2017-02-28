@@ -1,25 +1,5 @@
 " Main options
 
-" Colorscheme
-try
-  set background=dark
-  colorscheme flattened_dark
-  " colorscheme solarized
-  " call togglebg#map('<F5>')
-  if exists('*strftime')
-    let s:hour = strftime('%H')
-    if s:hour > 7 && s:hour < 20
-      set background=light
-      colorscheme flattened_light
-    else
-      set background=dark
-      colorscheme flattened_dark
-    endif
-  endif
-catch /E185:/
-  colorscheme default
-endtry
-
 if &term =~# '256color'
   " Disable Background Color Erase (BCE) so that color schemes
   " work properly when Vim is used inside tmux and GNU screen.
@@ -157,3 +137,26 @@ endif
 " set foldmethod=indent
 " set foldnestmax=3
 " set nofoldenable
+
+" Colorscheme
+try
+  " colorscheme solarized
+  " call togglebg#map('<F5>')
+  if exists('*strftime')
+    let s:hour = strftime('%H')
+    if s:hour > 7 && s:hour < 20
+      set background=light
+      colorscheme flattened_light
+    else
+      set background=dark
+      colorscheme flattened_dark
+    endif
+  endif
+catch /E185:/
+  colorscheme default
+endtry
+
+" augroup VIMRC
+"   autocmd
+"   autocmd VimEnter * redraw | autocmd!! VIMRC
+" augroup END
