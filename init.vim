@@ -6,8 +6,6 @@ endfunction
 
 runtime before.vim
 
-runtime config.vim
-
 let g:vim_plugins_path = '~/.vim/plugged'
 let g:vim_plug_path = '~/.vim/autoload/plug.vim'
 let g:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -29,6 +27,8 @@ call plug#end()
 if !isdirectory(g:vim_plugins)
   PlugInstall
 endif
+
+runtime config.vim
 
 if Exists('~/.vimrc.local')
   source ~/.vimrc.local

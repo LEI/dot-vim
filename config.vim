@@ -1,5 +1,15 @@
 " Main options
 
+" Colorscheme
+try
+  set background=dark
+  colorscheme flattened_dark
+  " colorscheme solarized
+  " call togglebg#map('<F5>')
+catch /E185:/
+  colorscheme default
+endtry
+
 if &term =~# '256color'
   " Disable Background Color Erase (BCE) so that color schemes
   " work properly when Vim is used inside tmux and GNU screen.
@@ -108,8 +118,6 @@ set t_vb= " Disable audible and visual bells
 
 set list " Show invisible characters
 
-" Vim: eol:$
-" Nvim: tab:>\ ,trail:-,nbsp:+
 if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars = 'tab:' . nr2char(0x25B8) . ' '
   let &listchars.= ',trail:' . nr2char(0x00B7)
@@ -120,6 +128,7 @@ if has('multi_byte') && &encoding ==# 'utf-8'
   " Show line breaks (arrows: 0x21AA or 0x08627)
   let &showbreak = nr2char(0x2026) " Ellipsis
 else
+  " eol:$ (vim), tab:>\ ,trail:-,nbsp:+ (nvim)
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
   " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
 endif
@@ -138,16 +147,6 @@ endif
 " set foldmethod=indent
 " set foldnestmax=3
 " set nofoldenable
-
-" Colorscheme
-try
-  set background=dark
-  colorscheme flattened_dark
-  " colorscheme solarized
-  " call togglebg#map('<F5>')
-catch /E185:/
-  colorscheme default
-endtry
 
 " Load plugin settings
 let s:settings_path = '~/.vim/settings'
