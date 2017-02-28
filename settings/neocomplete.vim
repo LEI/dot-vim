@@ -5,8 +5,8 @@
 " let g:neocomplete#sources#syntax#min_keyword_length = 3
 
 " Key mappings
-" inoremap <expr><C-g> neocomplete#undo_completion()
-" inoremap <expr><C-l> neocomplete#complete_common_string()
+inoremap <expr><C-g> neocomplete#undo_completion()
+inoremap <expr><C-l> neocomplete#complete_common_string()
 
 " Close popup and save indent on Enter
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
