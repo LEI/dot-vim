@@ -155,5 +155,6 @@ endtry
 
 " augroup VIMRC
 "   autocmd!
-"   autocmd VimEnter * redraw | autocmd! VIMRC " Fix: lazyredraw
+"   " Fix: lazyredraw prevents the first draw
+"   autocmd VimEnter * redraw | autocmd! VIMRC
 " augroup END
