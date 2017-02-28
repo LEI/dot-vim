@@ -21,11 +21,11 @@ if !has('nvim')
   set ttyfast
 endif
 
-set lazyredraw " Only redraw when necessary
-
 set backspace=indent,eol,start " Normal backspace in insert mode
 
 set esckeys " Recognize escape immediately
+
+set lazyredraw " Only redraw when necessary
 
 set nostartofline " Keep the cursor on the same column if possible
 
@@ -43,13 +43,13 @@ set complete+=kspell " Autocompete with dictionnary words when spell check is on
 
 " set nrformats-=octal " Disable octal format for number processing using CTRL-A
 
-if has('mouse')
-  set mouse+=a
-endif
-
 " set fileformats=unix,dos,mac " Use Unix as the standard file type
 
 set clipboard=unnamed " Use system clipboard
+
+if has('mouse')
+  set mouse+=a
+endif
 
 " Relative to textwidth
 if exists('+colorcolumn')
@@ -142,20 +142,20 @@ endif
 try
   " colorscheme solarized
   " call togglebg#map('<F5>')
+  set background=dark
+  colorscheme flattened_dark
   if exists('*strftime')
     let s:hour = strftime('%H')
     if s:hour > 7 && s:hour < 20
       set background=light
       colorscheme flattened_light
-    else
-      set background=dark
-      colorscheme flattened_dark
     endif
   endif
 catch /E185:/
-  colorscheme default
+  " colorscheme default
 endtry
 
+" Fix: lazyredraw prevents the first draw
 " augroup VIMRC
 "   autocmd
 "   autocmd VimEnter * redraw | autocmd!! VIMRC
