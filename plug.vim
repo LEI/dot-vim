@@ -4,7 +4,7 @@ Plug 'romainl/flattened' " altercation/vim-colors-solarized
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder
 " Plug 'editorconfig/editorconfig-vim'
-Plug 'mbbill/undotree' " Undo history visualizer
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-commentary' " Comment stuff out
@@ -19,6 +19,9 @@ Plug 'tpope/vim-sleuth' " Automatic indentation detection
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser
+
+Plug 'Shougo/neocomplete.vim', {'on': 'NeoCompleteEnable'}
+Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 
 " Text Objects: kana/vim-textobj-user
 
@@ -38,8 +41,8 @@ function! YCMInstall(info)
   endif
 endfunction
 
-" Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []} " Code completion
-" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' " Code snippets
+" Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 " " command! YCM call YCMEnable()
 " " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 " function! YCMEnable()
@@ -55,7 +58,7 @@ endfunction
 "   endif
 " endfunction
 
-" Plug 'scrooloose/syntastic', {'on': []} " Syntax checker
+" Plug 'scrooloose/syntastic', {'on': []}
 " function! SyntasticEnable()
 "   if !exists('g:loaded_syntastic_plugin')
 "     call plug#load('syntastic')
