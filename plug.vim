@@ -1,8 +1,8 @@
 " Vim Plug
 
-Plug 'romainl/flattened' " altercation/vim-colors-solarized
+Plug 'romainl/flattened' " (alt: altercation/vim-colors-solarized)
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
-Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder
+Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 " Plug 'editorconfig/editorconfig-vim'
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
@@ -15,7 +15,7 @@ Plug 'tpope/vim-commentary' " Comment stuff out
 " Plug 'tpope/vim-obsession' " Continuously updated session files
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 Plug 'tpope/vim-sensible' " Sane defaults
-Plug 'tpope/vim-sleuth' " Automatic indentation detection
+Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser
