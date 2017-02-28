@@ -26,7 +26,7 @@ inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<Tab>"
 imap <expr><CR> pumvisible() ? (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<C-y>") : "\<CR>"
 
 " Expand snippet or jump to next snippet placeholder with Tab
-imap <expr><Tab> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : (pumvisible() ? "\<C-n>" : "\<Tab>")
+imap <expr><Tab> pumvisible() ? "\<C-n>" : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<Tab>")
 smap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
 
 " Enable omni completion
