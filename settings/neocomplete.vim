@@ -23,8 +23,9 @@ inoremap <expr><C-h> neocomplete#smart_close_popup() . "\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup() . "\<C-h>"
 
 " Close popup with Enter, or expand if a snippet is selected
-inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
-imap <expr><CR> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<CR>"
+" inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+imap <expr><CR> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" :
+  \ (pumvisible() ? "\<C-y>" : "\<CR>")
 
 " Expand snippet or jump to next snippet placeholder with Tab
 imap <expr><Tab> pumvisible() ? "\<C-n>" : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<Tab>")
