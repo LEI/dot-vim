@@ -8,7 +8,7 @@ Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-commentary' " Comment stuff out
-" Plug 'tpope/vim-endwise' " Automatic end keywords
+Plug 'tpope/vim-endwise' " Automatic end keywords
 " Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'tpope/vim-fugitive' " Git wrapper
 " Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support
