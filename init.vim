@@ -31,10 +31,12 @@ endif
 " Load global options
 runtime config.vim
 
-" Load plugin settings
+" Load plugin settings:
+" Each file name in s:vim_settings_path must be an exact substring of the
+" plugin directory under s:vim_plugins_path to be sourced
 for s:path in split(globpath(s:vim_settings_path, '*.vim'), '\n')
   let s:name = fnamemodify(s:path, ':t:r')
-  if !empty(globpath(s:vim_plugins_path, '*' . s:name . '*')) || exists('g:loaded_' . s:name)
+  if !empty(globpath(s:vim_plugins_path, '*' . s:name . '*'))
     execute 'source ' . s:path
   endif
 endfor
