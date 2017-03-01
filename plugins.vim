@@ -9,7 +9,7 @@ Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-commentary' " Comment stuff out
 Plug 'tpope/vim-endwise' " Automatic end keywords
-" Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
+Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'tpope/vim-fugitive' " Git wrapper
 " Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support
 " Plug 'tpope/vim-obsession' " Continuously updated session files
@@ -23,14 +23,15 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-d
 " Text Objects: kana/vim-textobj-user
 
 " Syntax checkers: scrooloose/syntastic, maralla/validator.vim, w0rp/ale
-" vim >= 7.4.503, nvim >= 0.0.0-alpha+201503292107
+" Neomake: vim >= 7.4.503, nvim >= 0.0.0-alpha+201503292107
 Plug 'neomake/neomake', has('nvim') ? {} : {'on': 'Neomake'}
 
-" Code completion and snippets:
-if has('lua')
-  Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
-  Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
-endif
+" Code Completion:
+
+" if has('lua')
+"   Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
+"   Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+" endif
 
 " Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
 " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'

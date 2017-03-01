@@ -1,5 +1,9 @@
 " Vim
 
+if &compatible
+  set nocompatible
+end
+
 runtime before.vim
 
 let s:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'

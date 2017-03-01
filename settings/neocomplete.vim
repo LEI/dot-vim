@@ -1,12 +1,8 @@
-" Auto completion with neocomplete + neosnippet
+" Auto completion
 
-if !has('lua') " !exists('g:loaded_neocomplete')
+if !has('lua') || !exists('g:loaded_neocomplete')
   finish
 endif
-
-" if !exists('g:loaded_neocomplete')
-"   finish
-" endif
 
 let g:neocomplete#enable_at_startup = 1
 " let g:neocomplete#enable_auto_select = 1

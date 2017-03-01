@@ -1,0 +1,3 @@
+" Scss
+
+setlocal iskeyword+=-

@@ -1,0 +1,3 @@
+" Css
+
+setlocal iskeyword+=-

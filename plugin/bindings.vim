@@ -56,3 +56,16 @@ else
   vmap <C-Up> xkP`[V`]
   vmap <C-Down> xp`[V`]
 endif
+
+" Insert tab at beginning of line, or use completion if not at beginning
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<Tab>"
+  else
+    return "\<C-n>"
+  endif
+endfunction
+
+inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
+inoremap <S-Tab> <C-p>
