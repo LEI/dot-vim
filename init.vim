@@ -33,9 +33,8 @@ runtime config.vim
 
 " Load plugin settings
 for s:path in split(globpath(s:vim_settings_path, '*.vim'), '\n')
-  " let s:name = fnamemodify(s:path, ':t:r')
-  " if !empty(globpath(s:vim_plugins_path, '*' . s:name . '*'))
-  if filereadable(s:path)
+  let s:name = fnamemodify(s:path, ':t:r')
+  if !empty(globpath(s:vim_plugins_path, '*' . s:name . '*')) || exists('g:loaded_' . s:name)
     execute 'source ' . s:path
   endif
 endfor

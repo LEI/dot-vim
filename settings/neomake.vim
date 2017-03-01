@@ -1,9 +1,5 @@
 " Neomake
 
-if !exists('g:loaded_neomake')
-  finish
-endif
-
 " let g:neomake_serialize = 1
 " let g:neomake_serialize_abort_on_error = 1
 
