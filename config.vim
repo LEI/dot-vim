@@ -23,9 +23,11 @@ endif
 
 set backspace=indent,eol,start " Normal backspace in insert mode
 
-set esckeys " Recognize escape immediately
-
 set nostartofline " Keep the cursor on the same column if possible
+
+" set esckeys " Recognize escape immediately
+" set timeoutlen=
+" set ttimeoutlen=
 
 " Enable per-directory .vimrc files and disable unsafe commands in them
 " set exrc
@@ -149,7 +151,8 @@ catch /E185:/
 endtry
 
 set lazyredraw
+
 augroup VIMRC
   autocmd!
-  autocmd VimEnter * redraw | autocmd! VIMRC
+  autocmd ColorScheme * redraw | autocmd! VIMRC
 augroup END

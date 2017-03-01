@@ -22,7 +22,15 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Text Objects: kana/vim-textobj-user
 
-" Plug 'scrooloose/syntastic', {'on': []} " Syntax checker
+" Syntax Checker:
+
+" Vim >= 7.4.503
+" Nvim >= 0.0.0-alpha+201503292107
+
+" if has('python') || has('python3')
+Plug 'neomake/neomake', has('nvim') ? {} : {'on': 'Neomake'}
+
+" Plug 'scrooloose/syntastic', {'on': []}
 
 " Code Completion:
 
