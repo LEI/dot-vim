@@ -70,6 +70,6 @@ inoremap <expr> <Tab> InsertTabWrapper()
 " Select previous completion
 inoremap <S-Tab> <C-p>
 " Select the completed word with Enter
-inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+" inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 " Close the popup menu (using <Esc> or <BR> breaks enter and arrow keys)
 " inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"

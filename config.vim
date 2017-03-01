@@ -26,8 +26,8 @@ set backspace=indent,eol,start " Normal backspace in insert mode
 set nostartofline " Keep the cursor on the same column if possible
 
 " set esckeys " Recognize escape immediately
-" set timeoutlen=
-" set ttimeoutlen=
+" set timeoutlen=1000
+" set ttimeoutlen=-1
 
 set exrc " Enable per-directory .vimrc files
 set secure " Disable unsafe commands
@@ -71,7 +71,7 @@ set splitright " Split windows right of the current window
 
 set wildmenu " Invoke completion on <Tab> in commande line mode
 
-set wildmode=list:longest ",full " Complete longest common string, then each full match
+set wildmode=longest,full " Complete longest common string, then each full match
 
 " set complete-=i " Do not scan current and included files
 

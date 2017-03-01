@@ -16,11 +16,14 @@ Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support
 " Plug 'tpope/vim-obsession' " Continuously updated session files
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
-Plug 'tpope/vim-sensible' " Sane defaults
 Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
+
+if !has('nvim')
+  Plug 'tpope/vim-sensible' " Sane defaults
+endif
 
 " Text Objects: kana/vim-textobj-user
 

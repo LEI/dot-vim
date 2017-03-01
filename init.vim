@@ -33,7 +33,7 @@ if !isdirectory(s:vim_plugins_path)
 endif
 
 " Load global options
-runtime config.vim
+source config.vim
 
 " Load plugin settings:
 " Each file name in s:vim_settings_path must be an exact substring of the
