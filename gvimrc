@@ -8,6 +8,9 @@ endtry
 set guioptions+=c " Use console dialogs
 set guioptions-=T " Make the toolbar stay hidden after a restart
 set guioptions-=r " Disable right-hand scrollbar
+if &showtabline > 0
+  set guioptions-=e " Use a non-GUI tab pages line
+endif
 
 " set backupcopy=yes " Prevent Finder file labels from disappearing
 

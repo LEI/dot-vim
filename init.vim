@@ -21,7 +21,6 @@ call plug#begin(s:vim_plugins_path)
 
 " Register plugins
 runtime plugins.vim
-
 runtime plugins.local.vim
 
 " Add plugins to &runtimepath
@@ -33,7 +32,7 @@ if !isdirectory(s:vim_plugins_path)
 endif
 
 " Load global options
-source config.vim
+source ~/.vim/config.vim
 
 " Load plugin settings:
 " Each file name in s:vim_settings_path must be an exact substring of the
@@ -45,4 +44,6 @@ for s:path in split(globpath(s:vim_settings_path, '*.vim'), '\n')
   endif
 endfor
 
-runtime vimrc.local
+if filereadable($HOME . '/.vimrc.local')
+  source ~/.vimrc.local
+endif

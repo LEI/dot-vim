@@ -1,5 +1,20 @@
 " Main vim options
 
+" Colorscheme
+set background=dark
+if exists('*strftime')
+  let s:hour = strftime('%H')
+  if s:hour > 7 && s:hour < 20
+    set background=light
+  endif
+endif
+try
+  colorscheme solarized
+  call togglebg#map('<F5>')
+catch /E185:/
+  " colorscheme default
+endtry
+
 if &term =~# '256color'
   " Disable Background Color Erase (BCE) so that color schemes
   " work properly when Vim is used inside tmux and GNU screen.
@@ -21,12 +36,20 @@ if !has('nvim')
   set ttyfast
 endif
 
+if has('mouse')
+  set mouse+=a
+endif
+
 set backspace=indent,eol,start " Normal backspace in insert mode
 
 set nostartofline " Keep the cursor on the same column if possible
 
+set lazyredraw
+
 " set esckeys " Recognize escape immediately
+" set timeout
 " set timeoutlen=1000
+" set nottimeout
 " set ttimeoutlen=-1
 
 set exrc " Enable per-directory .vimrc files
@@ -97,19 +120,14 @@ set formatoptions-=o " Disable automatic comment after hitting 'o' or 'O'
 
 set nojoinspaces " Insert only one space after punctuation
 
-if has('mouse')
-  set mouse+=a
-endif
+set number " Print the line number in front of each line
+" set numberwidth=4 " Minimal number of columns to use for the line number
+set relativenumber " Show the line number relative to the line with the cursor
 
 " Relative to textwidth
 if exists('+colorcolumn')
   set colorcolumn=+1
 endif
-
-set number " Print the line number in front of each line
-" set numberwidth=4 " Minimal number of columns to use for the line number
-set relativenumber " Show the line number relative to the line with the cursor
-
 
 " Indentation
 set expandtab " Use spaces instead of tabs
@@ -148,24 +166,7 @@ set scrolloff=3 " Minimal number of screen lines to keep above and below the cur
 set sidescroll=1 " Minimal number to scroll horizontally when 'wrap' is set
 set sidescrolloff=5 " Minimum number to the left and right if 'nowrap' is set
 
-" Colorscheme
-set background=dark
-if exists('*strftime')
-  let s:hour = strftime('%H')
-  if s:hour > 7 && s:hour < 20
-    set background=light
-  endif
-endif
-try
-  colorscheme solarized
-  call togglebg#map('<F5>')
-catch /E185:/
-  " colorscheme default
-endtry
-
-set lazyredraw
-
-augroup VIMRC
-  autocmd!
-  autocmd ColorScheme * redraw | autocmd! VIMRC
-augroup END
+" augroup VIMRC
+"   autocmd!
+"   autocmd ColorScheme * redraw | autocmd! VIMRC
+" augroup END

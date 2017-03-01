@@ -12,7 +12,7 @@ Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 Plug 'tpope/vim-commentary' " Comment stuff out
 Plug 'tpope/vim-endwise' " Automatic end keywords
 Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
-" Plug 'tpope/vim-fugitive' " Git wrapper
+Plug 'tpope/vim-fugitive' " Git wrapper
 " Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support
 " Plug 'tpope/vim-obsession' " Continuously updated session files
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
