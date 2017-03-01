@@ -1,6 +1,6 @@
 " Auto completion with neocomplete + neosnippet
 
-if !has('lua')
+if !exists('g:loaded_neocomplete') || !has('lua')
   finish
 endif
 

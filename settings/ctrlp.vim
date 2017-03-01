@@ -3,6 +3,10 @@
 " https://github.com/thoughtbot/dotfiles/blob/master/vimrc
 " https://github.com/ggreer/the_silver_searcher
 
+if !exists('g:loaded_ctrlp')
+  finish
+endif
+
 "let g:ctrlp_map = '<leader>f'
 "let g:ctrlp_max_height = 30
 "let g:ctrlp_working_path_mode = 0
