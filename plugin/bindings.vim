@@ -39,33 +39,37 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " Quicker quit
 noremap <Leader>q :q<CR>
+
 " Save a file
 noremap <Leader>w :w<CR>
+
 " Save as root (or use :SudoWrite)
-noremap <Leader>W :w !sudo tee % > /dev/null<CR>
+cmap w!! w !sudo tee % >/dev/null
+noremap <Leader>W :w!!<CR>
 
 " Bubble single or multiple lines
-if get(g:, 'loaded_unimpaired', 0)
-  nmap <C-Up> [e
-  nmap <C-Down> ]e
-  vmap <C-Up> [egv
-  vmap <C-Down> ]egv
-else
-  nmap <C-Up> ddkP
-  nmap <C-Down> ddp
-  vmap <C-Up> xkP`[V`]
-  vmap <C-Down> xp`[V`]
-endif
+nmap <C-Up> ddkP
+nmap <C-Down> ddp
+vmap <C-Up> xkP`[V`]
+vmap <C-Down> xp`[V`]
 
-" Insert tab at beginning of line, or use completion if not at beginning
+" Insert a tab at the beginning of line if the popup menu is not visible
+" or select the next completion
 function! InsertTabWrapper()
   let col = col('.') - 1
-  if !col || getline('.')[col - 1] !~ '\k'
+  if !pumvisible() && (!col || getline('.')[col - 1] !~ '\k')
     return "\<Tab>"
   else
     return "\<C-n>"
   endif
 endfunction
 
-inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
+" Select next completion or insert a Tab
+" inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
+inoremap <expr> <Tab> InsertTabWrapper()
+" Select previous completion
 inoremap <S-Tab> <C-p>
+" Select the completed word with Enter
+inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+" Close the popup menu (using <Esc> or <BR> breaks enter and arrow keys)
+" inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"

@@ -5,7 +5,9 @@ Plug 'altercation/vim-colors-solarized' " (alt: romainl/flattened)
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 " Plug 'editorconfig/editorconfig-vim'
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
+" Plug 'metakirby5/codi.vim' " Interactive scratchpad
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
+" Plug 'ternjs/tern_for_vim' " Tern-based JavaScript support
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-commentary' " Comment stuff out
 Plug 'tpope/vim-endwise' " Automatic end keywords

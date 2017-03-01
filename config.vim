@@ -43,19 +43,6 @@ set modelines=2 " Number of lines checked for set commands
 
 set clipboard=unnamed " Use system clipboard
 
-if has('mouse')
-  set mouse+=a
-endif
-
-" Relative to textwidth
-if exists('+colorcolumn')
-  set colorcolumn=+1
-endif
-
-set number " Print the line number in front of each line
-" set numberwidth=4 " Minimal number of columns to use for the line number
-set relativenumber " Show the line number relative to the line with the cursor
-
 set synmaxcol=200 " Limit syntax highlighting for long lines
 
 set report=0 " Always report changed lines (default threshold: 2)
@@ -82,14 +69,17 @@ set splitbelow " Split windows below the current window
 
 set splitright " Split windows right of the current window
 
+set wildmenu " Invoke completion on <Tab> in commande line mode
+
+set wildmode=list:longest ",full " Complete longest common string, then each full match
+
 " set complete-=i " Do not scan current and included files
+
 set complete+=kspell " Autocompete with dictionnary words when spell check is on
 
+set completeopt+=longest " Only insert the longest common text for matches
+
 set diffopt+=vertical " Always use vertical diffs
-
-" set wildmenu " Invoke completion on <Tab> in commande line mode
-
-" set wildmode=longest,full " Complete longest common string, then each full match
 
 set shortmess=atI " Avoid hit-enter prompts caused by file messages
 
@@ -99,9 +89,27 @@ set t_vb= " Disable audible and visual bells
 "
 " set noshowmatch " Do not show matching brackets when text indicator is over them
 
+" set matchtime=2 " How many tenths of a second to blink when matching brackets
+
 " set matchpairs+=<:> " HTML brackets
 
-" set mat=2 " How many tenths of a second to blink when matching brackets
+set formatoptions-=o " Disable automatic comment after hitting 'o' or 'O'
+
+set nojoinspaces " Insert only one space after punctuation
+
+if has('mouse')
+  set mouse+=a
+endif
+
+" Relative to textwidth
+if exists('+colorcolumn')
+  set colorcolumn=+1
+endif
+
+set number " Print the line number in front of each line
+" set numberwidth=4 " Minimal number of columns to use for the line number
+set relativenumber " Show the line number relative to the line with the cursor
+
 
 " Indentation
 set expandtab " Use spaces instead of tabs
@@ -136,16 +144,9 @@ endif
 " set foldnestmax=3
 " set nofoldenable
 
-" " Start scrolling before the window border
-" if !&scrolloff
-"   set scrolloff=1
-" endif
-" if !&sidescrolloff
-"   set sidescrolloff=5
-" endif
-" if !&sidescroll
-"   set sidescroll=1
-" endif
+set scrolloff=3 " Minimal number of screen lines to keep above and below the cursor
+set sidescroll=1 " Minimal number to scroll horizontally when 'wrap' is set
+set sidescrolloff=5 " Minimum number to the left and right if 'nowrap' is set
 
 " Colorscheme
 set background=dark

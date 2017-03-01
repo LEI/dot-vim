@@ -6,5 +6,3 @@
 
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
-
-" command! SudoWrite :execute ':silent w !sudo tee % > /dev/null' | :edit!
