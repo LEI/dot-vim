@@ -1,8 +1,8 @@
 " Change cursor shape in iTerm2
 
-try
-catch " /E355:/
-endtry
+" try
+" catch " /E355:/
+" endtry
 
 if has('nvim')
   let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1

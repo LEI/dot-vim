@@ -2,6 +2,7 @@
 
 " http://vimcasts.org/episodes/tidying-whitespace/
 " https://github.com/bronson/vim-trailing-whitespace
+" https://github.com/csexton/trailertrash.vim
 
 " Error detected while processing BufWritePre Auto commands for "*.js":
 " E488: Trailing characters

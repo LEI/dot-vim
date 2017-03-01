@@ -1,4 +1,5 @@
 " Restore cursor position and toggle cursor line
+" https://github.com/farmergreg/vim-lastplace
 
 function! s:RestoreCursorPosition()
   if line("'\"") > 0 && line("'\"") <= line("$")
@@ -10,12 +11,4 @@ endfunction
 augroup RestoreCursorPosition
   autocmd!
   autocmd BufReadPost * call s:RestoreCursorPosition()
-augroup END
-
-" Show cursor line on active window only
-" Add InsertLeave / InsertEnter to disable in insert mode
-augroup ToggleCursorline
-  autocmd!
-  autocmd WinEnter * set cursorline
-  autocmd WinLeave * set nocursorline
 augroup END

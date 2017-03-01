@@ -18,22 +18,15 @@ Plug 'tpope/vim-sensible' " Sane defaults
 Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
-Plug 'tpope/vim-vinegar' " Improved netrw directory browser
+Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
 " Text Objects: kana/vim-textobj-user
 
-" Syntax Checker:
-
-" Vim >= 7.4.503
-" Nvim >= 0.0.0-alpha+201503292107
-
-" if has('python') || has('python3')
+" Syntax checkers: scrooloose/syntastic, maralla/validator.vim, w0rp/ale
+" vim >= 7.4.503, nvim >= 0.0.0-alpha+201503292107
 Plug 'neomake/neomake', has('nvim') ? {} : {'on': 'Neomake'}
 
-" Plug 'scrooloose/syntastic', {'on': []}
-
-" Code Completion:
-
+" Code completion and snippets:
 if has('lua')
   Plug 'Shougo/neocomplete.vim' ", {'on': 'NeoCompleteEnable'}
   Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
