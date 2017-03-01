@@ -134,18 +134,16 @@ endif
 " set nofoldenable
 
 " Colorscheme
-try
-  " colorscheme solarized
-  " call togglebg#map('<F5>')
-  set background=dark
-  colorscheme flattened_dark
-  if exists('*strftime')
-    let s:hour = strftime('%H')
-    if s:hour > 7 && s:hour < 20
-      set background=light
-      colorscheme flattened_light
-    endif
+set background=dark
+if exists('*strftime')
+  let s:hour = strftime('%H')
+  if s:hour > 7 && s:hour < 20
+    set background=light
   endif
+endif
+try
+  colorscheme solarized
+  call togglebg#map('<F5>')
 catch /E185:/
   " colorscheme default
 endtry
