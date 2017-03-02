@@ -26,6 +26,10 @@ nmap <C-Down> ddp
 vmap <C-Up> xkP`[V`]
 vmap <C-Down> xp`[V`]
 
+" Paragraph reflow according to textwidth?
+" vmap Q gv
+" nmap Q gqap
+
 " Clear highlighted search results (vim-sensible: Ctrl-L)
 nnoremap <Space> :nohlsearch<CR>
 
@@ -70,6 +74,9 @@ inoremap <S-Tab> <C-p>
 
 " Change leader
 let g:mapleader = "\<Space>"
+
+" Sort selection
+noremap <Leader>s :sort<CR>
 
 " Quicker quit
 noremap <Leader>q :q<CR>
