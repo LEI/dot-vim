@@ -1,8 +1,5 @@
 " Key bindings
 
-" Change leader
-let g:mapleader = "\<Space>"
-
 " Yank from the cursor to the end of the line
 map Y y$
 
@@ -13,14 +10,24 @@ nmap gV `[v`]
 nnoremap j gj
 nnoremap k gk
 
+" Restore visual selection after indent
+vnoremap < <gv
+vnoremap > >gv
+
 " Split navigation shortcuts
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" Bubble single or multiple lines
+nmap <C-Up> ddkP
+nmap <C-Down> ddp
+vmap <C-Up> xkP`[V`]
+vmap <C-Down> xp`[V`]
+
 " Clear highlighted search results (vim-sensible: Ctrl-L)
-" nnoremap <Space> :nohlsearch<CR>
+nnoremap <Space> :nohlsearch<CR>
 
 " Repeat latest f, t, F or T [count] times
 noremap <Tab> ;
@@ -37,21 +44,8 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " cnoremap <Left> <Space><BS><Left>
 " cnoremap <Right> <Space><BS><Right>
 
-" Quicker quit
-noremap <Leader>q :q<CR>
-
-" Save a file
-noremap <Leader>w :w<CR>
-
 " Save as root (or use :SudoWrite)
 cmap w!! w !sudo tee % >/dev/null
-noremap <Leader>W :w!!<CR>
-
-" Bubble single or multiple lines
-nmap <C-Up> ddkP
-nmap <C-Down> ddp
-vmap <C-Up> xkP`[V`]
-vmap <C-Down> xp`[V`]
 
 " Insert a tab at the beginning of line if the popup menu is not visible
 " or select the next completion
@@ -73,3 +67,15 @@ inoremap <S-Tab> <C-p>
 " inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 " Close the popup menu (using <Esc> or <BR> breaks enter and arrow keys)
 " inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"
+
+" Change leader
+let g:mapleader = "\<Space>"
+
+" Quicker quit
+noremap <Leader>q :q<CR>
+
+" Save a file
+noremap <Leader>w :w<CR>
+
+" Write as root
+noremap <Leader>W :w!!<CR>

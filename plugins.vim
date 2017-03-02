@@ -28,8 +28,9 @@ endif
 " Text Objects: kana/vim-textobj-user
 
 " Syntax checkers: scrooloose/syntastic, maralla/validator.vim, w0rp/ale
-" Neomake: vim >= 7.4.503, nvim >= 0.0.0-alpha+201503292107
-Plug 'neomake/neomake', has('nvim') ? {} : {'on': 'Neomake'}
+if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+  Plug 'neomake/neomake', has('nvim') ? {} : {'on': 'Neomake'}
+endif
 
 " Code Completion:
 

@@ -31,34 +31,35 @@ set ruler " Always show current position
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
 
-let s:separator = nr2char(0x2502)
+let s:ep = nr2char(0x2502)
 " '&paste ? " PASTE" : ""'
 let &statusline = ' %{StatusLineMode()} '
-let &statusline.= s:separator
+let &statusline.= s:ep
+" Git branch
+let &statusline.= '%( %{exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . '%)'
 let &statusline.= '%< '
-''
 " Buffer
 let &statusline.= '%f '
-" Git branch
-let &statusline.= '%([%{exists("*fugitive#head")?fugitive#head(7):""}] %)'
 " Flags
-let &statusline.= '%h%m%r'
+let &statusline.= '%w%h%r%m'
 let &statusline.= '%=' " Break
 " Errors and warnings
 let &statusline.= '%#ErrorMsg#'
-let &statusline.= '%( %{exists("g:loaded_neomake")?neomake#statusline#QflistStatus("qf: "):""} %)'
-let &statusline.= '%( %{exists("g:loaded_neomake")?neomake#statusline#LoclistStatus():""} %)'
-let &statusline.= '%( %{exists("g:loaded_syntastic")?SyntasticStatuslineFlag():""} %)'
+let &statusline.= '%( %{exists("g:loaded_neomake") ? neomake#statusline#QflistStatus("qf: ") : ""} %)'
+let &statusline.= '%( %{exists("g:loaded_neomake") ? neomake#statusline#LoclistStatus() : ""} %)'
+let &statusline.= '%( %{exists("g:loaded_syntastic") ? SyntasticStatuslineFlag() : ""} %)'
 " Reset highlight group
 let &statusline.= '%0* '
 " File type
 let &statusline.= '%{strlen(&filetype) ? &filetype : "no ft"}'
+" Netrw plugin
+let &statusline.= '%([%{get(b:, "netrw_browser_active", 0) == 1 ? g:netrw_sort_by.(g:netrw_sort_direction =~ "n" ? "+" : "-") : ""}]%)'
 " let &statusline.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
-let &statusline.= ' ' . s:separator . ' '
+let &statusline.= ' ' . s:ep . ' '
 " File encoding
 let &statusline.= '%{strlen(&fileencoding) ? &fileencoding : &encoding}'
 let &statusline.= '%{exists("+bomb") && &bomb ? ",B" : ""}[%{&fileformat}]'
-let &statusline.= ' '
+let &statusline.= ' ' . s:ep . ' '
 " Default ruler
 let &statusline.= '%-14.(%l,%c%V%) %P'
 
