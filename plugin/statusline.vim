@@ -31,17 +31,21 @@ set ruler " Always show current position
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
 
-let s:ep = nr2char(0x2502)
+if has('multi_byte') && &encoding ==# 'utf-8'
+  let s:ep = nr2char(0x2502)
+else
+  let s:ep = '|'
+endif
 " '&paste ? " PASTE" : ""'
-let &statusline = ' %{StatusLineMode()} '
-let &statusline.= s:ep
+let &statusline = ' %{&modifiable?StatusLineMode().(&paste?" PASTE":"")." ' . s:ep . ' ":""}'
+let &statusline.= '%<'
 " Git branch
-let &statusline.= '%( %{exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . '%)'
-let &statusline.= '%< '
+let &statusline.= '%(%{winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . ' %)'
 " Buffer
 let &statusline.= '%f '
 " Flags
-let &statusline.= '%w%h%r%m'
+" let &statusline.= '%([%W%H%R%M]%)'
+let &statusline.= '%(%{&buftype=="help" ? "[H]" : (&previewwindow?"[PRV]":"").(&readonly?"[RO]":"").(&modified ? "[+]" : (!&modifiable ? "[-]" : ""))}%)'
 let &statusline.= '%=' " Break
 " Errors and warnings
 let &statusline.= '%#ErrorMsg#'
@@ -57,11 +61,9 @@ let &statusline.= '%([%{get(b:, "netrw_browser_active", 0) == 1 ? g:netrw_sort_b
 " let &statusline.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
 let &statusline.= ' ' . s:ep . ' '
 " File encoding
-let &statusline.= '%{strlen(&fileencoding) ? &fileencoding : &encoding}'
-let &statusline.= '%{exists("+bomb") && &bomb ? ",B" : ""}[%{&fileformat}]'
-let &statusline.= ' ' . s:ep . ' '
+let &statusline.= '%{&buftype != "nofile" && winwidth(0) > 80 ? (strlen(&fileencoding) ? &fileencoding : &encoding).(exists("+bomb") && &bomb ? ",B" : "")."[".&fileformat."] ' . s:ep . ' " : ""}'
 " Default ruler
-let &statusline.= '%-14.(%l,%c%V%) %P'
+let &statusline.= '%-14.(%l,%c%V/%L%) %P '
 
 " Modes:
 " n       Normal
