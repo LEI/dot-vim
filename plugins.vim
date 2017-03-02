@@ -29,7 +29,7 @@ endif
 
 " Syntax checkers: scrooloose/syntastic, maralla/validator.vim, w0rp/ale
 if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-  Plug 'neomake/neomake', has('nvim') ? {} : {'on': 'Neomake'}
+  Plug 'neomake/neomake' ", {'on': 'Neomake'}
 endif
 
 " Code Completion:

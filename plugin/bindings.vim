@@ -6,9 +6,11 @@ map Y y$
 " Visually select the text that was last edited/pasted
 nmap gV `[v`]
 
-" Move vertically on wrapped lines
+" Intuitive movement on wrapped lines
 nnoremap j gj
 nnoremap k gk
+nnoremap 0 g0
+nnoremap $ g$
 
 " Restore visual selection after indent
 vnoremap < <gv

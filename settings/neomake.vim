@@ -1,5 +1,8 @@
 " Neomake
 
+" let g:neomake_verbose = 3
+" let g:neomake_echo_current_error = 1
+
 " let g:neomake_serialize = 1
 " let g:neomake_serialize_abort_on_error = 1
 
@@ -9,8 +12,6 @@ let g:neomake_open_list = 2
 
 " Height of the list openened by Neomake, defaults to 10
 let g:neomake_list_height = 5
-
-" let g:neomake_echo_current_error = 1
 
 " let g:neomake_error_sign = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
 " let g:neomake_warning_sign = {
@@ -25,11 +26,13 @@ let g:neomake_list_height = 5
 
 augroup NeomakeConfig
   autocmd!
-  autocmd BufWritePost,BufReadPost * Neomake
+  autocmd BufReadPost,BufWritePost * Neomake
   " autocmd NeomakeFinished * ...
   " autocmd BufWinEnter quickfix nnoremap <silent> <buffer>
   "   \ q :cclose<cr>:lclose<cr>
   " autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) |
   "   \ bd |
   "   \ q | endif
+  " Hide check status on :wq
+  autocmd VimLeave * let g:neomake_verbose = 0
 augroup  END

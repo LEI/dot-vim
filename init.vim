@@ -13,7 +13,10 @@ let s:vim_settings_path = $HOME . '/.vim/settings'
 
 " Auto download vim-plug
 if !filereadable(s:vim_plug_path)
-  execute 'silent !curl -sfLo ' . s:vim_plug_path . '  --create-dirs ' . s:vim_plug_url
+  " echo "Installing Vim-Plug..."
+  execute 'silent !curl -fLo ' . s:vim_plug_path . '  --create-dirs ' . s:vim_plug_url
+  " Install plugins on first run
+  autocmd VimEnter * if !isdirectory(s:vim_plugins_path) | PlugInstall | endif
 endif
 
 " Start Vim Plug
@@ -25,11 +28,6 @@ runtime plugins.local.vim
 
 " Add plugins to &runtimepath
 call plug#end()
-
-" Install plugins on first run
-if !isdirectory(s:vim_plugins_path)
-  PlugInstall
-endif
 
 " Load global options
 source ~/.vim/config.vim

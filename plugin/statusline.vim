@@ -36,7 +36,6 @@ if has('multi_byte') && &encoding ==# 'utf-8'
 else
   let s:ep = '|'
 endif
-" '&paste ? " PASTE" : ""'
 let &statusline = ' %{&modifiable?StatusLineMode().(&paste?" PASTE":"")." ' . s:ep . ' ":""}'
 let &statusline.= '%<'
 " Git branch
@@ -45,12 +44,12 @@ let &statusline.= '%(%{winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#h
 let &statusline.= '%f '
 " Flags
 " let &statusline.= '%([%W%H%R%M]%)'
-let &statusline.= '%(%{&buftype=="help" ? "[H]" : (&previewwindow?"[PRV]":"").(&readonly?"[RO]":"").(&modified ? "[+]" : (!&modifiable ? "[-]" : ""))}%)'
+let &statusline.= '%{&buftype=="help" ? "[H]" : &filetype=="netrw" ? "" : (&previewwindow?"[PRV]":"").(&readonly?"[RO]":"").(&modified ? "[+]" : (!&modifiable ? "[-]" : ""))}'
 let &statusline.= '%=' " Break
 " Errors and warnings
 let &statusline.= '%#ErrorMsg#'
-let &statusline.= '%( %{exists("g:loaded_neomake") ? neomake#statusline#QflistStatus("qf: ") : ""} %)'
-let &statusline.= '%( %{exists("g:loaded_neomake") ? neomake#statusline#LoclistStatus() : ""} %)'
+let &statusline.= '%( %{exists("*neomake#Make") ? neomake#statusline#QflistStatus("qf: ") : ""} %)'
+let &statusline.= '%( %{exists("*neomake#Make") ? neomake#statusline#LoclistStatus() : ""} %)'
 let &statusline.= '%( %{exists("g:loaded_syntastic") ? SyntasticStatuslineFlag() : ""} %)'
 " Reset highlight group
 let &statusline.= '%0* '
@@ -61,7 +60,7 @@ let &statusline.= '%([%{get(b:, "netrw_browser_active", 0) == 1 ? g:netrw_sort_b
 " let &statusline.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
 let &statusline.= ' ' . s:ep . ' '
 " File encoding
-let &statusline.= '%{&buftype != "nofile" && winwidth(0) > 80 ? (strlen(&fileencoding) ? &fileencoding : &encoding).(exists("+bomb") && &bomb ? ",B" : "")."[".&fileformat."] ' . s:ep . ' " : ""}'
+let &statusline.= '%{&buftype != "help" && winwidth(0) > 80 ? (strlen(&fileencoding) ? &fileencoding : &encoding).(exists("+bomb") && &bomb ? ",B" : "").(&fileformat != "unix" ? "[".&fileformat."]" : "")." ' . s:ep . ' " : ""}'
 " Default ruler
 let &statusline.= '%-14.(%l,%c%V/%L%) %P '
 
