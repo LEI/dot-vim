@@ -2,15 +2,17 @@
 
 " Colorscheme
 set background=dark
+colorscheme flattened_dark
 if exists('*strftime')
   let s:hour = strftime('%H')
   if s:hour > 7 && s:hour < 20
     set background=light
+    colorscheme flattened_light
   endif
 endif
 try
-  colorscheme solarized
-  call togglebg#map('<F5>')
+  " colorscheme solarized
+  " call togglebg#map('<F5>')
 catch /E185:/
   " colorscheme default
 endtry
@@ -66,7 +68,7 @@ set modelines=2 " Number of lines checked for set commands
 
 set clipboard=unnamed " Use system clipboard
 
-set synmaxcol=200 " Limit syntax highlighting for long lines
+set synmaxcol=420 " Limit syntax highlighting for long lines
 
 set report=0 " Always report changed lines (default threshold: 2)
 

@@ -9,8 +9,8 @@ nmap gV `[v`]
 " Intuitive movement on wrapped lines
 nnoremap j gj
 nnoremap k gk
-nnoremap 0 g0
-nnoremap $ g$
+" nnoremap 0 g0
+" nnoremap $ g$ " Do not use with :set wrap
 
 " Restore visual selection after indent
 vnoremap < <gv

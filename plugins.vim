@@ -1,6 +1,7 @@
 " Vim Plug
 
-Plug 'altercation/vim-colors-solarized' " (alt: romainl/flattened)
+Plug 'LEI/flattened'
+Plug 'altercation/vim-colors-solarized'
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 " Plug 'editorconfig/editorconfig-vim'
@@ -20,6 +21,7 @@ Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectin
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
+" Plug 'godlygeek/tabular' " Text aligning
 
 if !has('nvim')
   Plug 'tpope/vim-sensible' " Sane defaults
