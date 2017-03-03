@@ -1,5 +1,5 @@
 dir: ".vim"
-link: "*:.vim"
+link: "[^.]*:.vim"
 line:
   path: ".vim/vimrc"
   line: "source ~/.vim/init.vim"
