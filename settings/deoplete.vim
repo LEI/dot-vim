@@ -16,16 +16,15 @@ if !exists('g:loaded_deoplete')
   finish
 endif
 
-let g:popup_menu_close = 'deoplete#close_popup'
+let g:popup_menu_accept = 'deoplete#close_popup'
+let g:popup_menu_cancel = 'deoplete#smart_close_popup'
 
 " Auto select first match
 " set completeopt+=noinsert
 
 " Conflicts: SuperTab, endwise?
 " Cancel the completion = <C-e> (use C-h to delete one char)
-if get(g:, 'vim_completion_backspace_cancel', 0) > 0
-  inoremap <expr> <BS> pumvisible() ? deoplete#smart_close_popup() : "\<BS>"
-endif
+" inoremap <expr> <BS> (pumvisible() ? deoplete#smart_close_popup() : "") . "\<BS>"
 
 " Undo completion
 " inoremap <expr> <C-e> deoplete#undo_completion()

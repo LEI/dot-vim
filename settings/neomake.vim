@@ -1,8 +1,12 @@
 " Neomake
 
+" Disable airline extension
+let g:airline#extensions#neomake#enabled = 0
+
 if !exists('g:loaded_neomake')
   finish
 endif
+
 " let g:neomake_verbose = 3
 " let g:neomake_echo_current_error = 1
 
@@ -21,22 +25,20 @@ let g:neomake_warning_sign = {'text': '!', 'texthl': 'WarningMsg'}
 " let g:neomake_message_sign = {'text': '➤', 'texthl': 'NeomakeMessageSign'}
 " let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 
-" Disable airline extension
-let g:airline#extensions#neomake#enabled = 0
-
 augroup NeomakeConfig
   autocmd!
   " Run checkers on open and on save
   autocmd BufReadPost,BufWritePost * 0verb Neomake
-  " Auto close loclist
-  autocmd BufWinLeave * if empty(&bt) | lclose | endif
+  " " Auto close loclist
+  " autocmd BufWinLeave * if empty(&bt) | lclose | endif
+  " " Fix sign column background
+  " autocmd VimEnter,ColorScheme * highlight clear SignColumn
+
   " autocmd NeomakeFinished * ...
   " autocmd BufWinEnter quickfix nnoremap <silent> <buffer>
   "   \ q :cclose<cr>:lclose<cr>
   " autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) |
   "   \ bd |
   "   \ q | endif
-  " Fix sign column background
-  autocmd VimEnter,ColorScheme * highlight clear SignColumn
   " autocmd ColorScheme * highlight! link SignColumn ColorColumn
 augroup  END

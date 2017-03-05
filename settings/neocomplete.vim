@@ -17,12 +17,11 @@ if !exists('g:loaded_neocomplete')
 endif
 
 " let g:popup_menu_close = 'neocomplete#complete_common_string'
-let g:popup_menu_close = '' " Defaults to C-y
+let g:popup_menu_accept = ''
+let g:popup_menu_cancel = 'neocomplete#smart_close_popup'
 
 " Cancel the completion = <C-e> (use C-h to delete one char)
-if get(g:, 'vim_completion_backspace_cancel', 0) > 0
-  inoremap <expr> <BS> pumvisible() ? neocomplete#smart_close_popup() : "\<BS>"
-endif
+" inoremap <expr> <BS> (pumvisible() ? neocomplete#smart_close_popup() : "") . "\<BS>"
 
 " Undo completion
 " inoremap <expr> <C-e> (pumvisible() ? neocomplete#undo_completion() : "\<C-e>")

@@ -1,6 +1,5 @@
 " Extra plugins
 " let g:vim_completion = 1
-" let g:vim_completion_backspace_cancel = 1
 " let g:vim_syntax_check = 1
 
 " Auto Completion:
@@ -55,6 +54,6 @@ endif
 if get(g:, 'vim_syntax_check', 0)
   " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
   if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-    Plug 'neomake/neomake', {'on': 'Neomake'}
+    Plug 'neomake/neomake' ", {'on': 'Neomake'}
   endif
 endif
