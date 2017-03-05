@@ -1,49 +1,50 @@
 " Deoplete
 
-" let g:deoplete#disable_auto_complete = 1
+" This option should be set earlier
 " let g:deoplete#enable_at_startup = 1
+
+" This option enables deoplete only when the popup menu is manually opened
+" let g:deoplete#disable_auto_complete = 1
+
+" Enable case sensitivity when an uppercase letter is used
 " let g:deoplete#enable_smart_case = 1
-" let g:deoplete#max_list = 100
+
+" Number of matches to display
+let g:deoplete#max_list = 42
 
 if !exists('g:loaded_deoplete')
   finish
 endif
 
+let g:popup_menu_close = 'deoplete#close_popup'
+
 " Auto select first match
 " set completeopt+=noinsert
 
 " Conflicts: SuperTab, endwise?
-" Use Backspace or Ctrl-h to stop completion go back to original text
-inoremap <expr><BS> (pumvisible() ? deoplete#smart_close_popup() . "\<C-e>" : "") . "\<BS>"
-" imap <expr><BS> pumvisible() ? deoplete#smart_close_popup() : "\<BS>"
-" inoremap <expr><C-h> (pumvisible() ? deoplete#close_popup() . "\<C-e>" : "") . "\<C-h>"
-
-" inoremap <expr><C-h> deoplete#smart_close_popup() . "\<C-h>"
-" inoremap <expr><C-h> pumvisible() ? ("\<Plug>deoplete#smart_close_popup()" : "") . "\<C-h>"
-" inoremap <expr><BS> pumvisible() ? deoplete#close_popup() : "\<BS>"
+" Cancel the completion = <C-e> (use C-h to delete one char)
+if get(g:, 'vim_completion_backspace_cancel', 0) > 0
+  inoremap <expr> <BS> pumvisible() ? deoplete#smart_close_popup() : "\<BS>"
+endif
 
 " Undo completion
-" inoremap <expr><C-e> deoplete#undo_completion()
+" inoremap <expr> <C-e> deoplete#undo_completion()
 
 " Refresh candidates list (conflicts: surround)
-" imap <expr><C-g> pumvisible() ? deoplete#refresh() : "\<C-g>"
+" imap <expr> <C-g> pumvisible() ? deoplete#refresh() : "\<C-g>"
 
 " Select match or expand snippet
-" imap <expr><C-l> pumvisible() ? deoplete#close_popup() : "\<C-l>"
+" imap <expr> <C-l> pumvisible() ? deoplete#close_popup() : "\<C-l>"
 
 " Insert candidate and close popup menu
-" inoremap <expr><CR> <C-r>=<SID>deoplete_close_popup()<CR>
+" inoremap <expr> <CR> <C-r>=<SID>deoplete_close_popup()<CR>
 " function! s:deoplete_close_popup() abort
 "   return pumvisible() ? deoplete#close_popup() . "\<CR>" : "\<CR>"
 " endfunction
 
 if get(g:, 'deoplete#disable_auto_complete', 0) > 0
   " Enable autocomplete on Tab
-  " inoremap <expr><Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : deoplete#mappings#manual_complete()
-  imap <expr><Tab> CheckBackSpace() ? "\<Tab>" : "\<C-n>"
-  imap <expr><C-n> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
+  " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : deoplete#mappings#manual_complete()
+  imap <expr> <Tab> CheckBackSpace() ? "\<Tab>" : "\<C-n>"
+  imap <expr> <C-n> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
 endif
-
-function! ClosePopupMenu()
-  return "\<C-n>" . deoplete#close_popup()
-endfunction

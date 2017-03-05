@@ -1,7 +1,10 @@
 " Extra plugins
+" let g:vim_completion = 1
+" let g:vim_completion_backspace_cancel = 1
+" let g:vim_syntax_check = 1
 
 " Auto Completion:
-if get(g:, 'vim_auto_complete', 0)
+if get(g:, 'vim_completion', 0)
   if v:version >= 704
     Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
     " if has('python') || has('python3')
