@@ -23,7 +23,7 @@ inoremap <expr><BS> (pumvisible() ? deoplete#smart_close_popup() . "\<C-e>" : ""
 " inoremap <expr><BS> pumvisible() ? deoplete#close_popup() : "\<BS>"
 
 " Undo completion
-" imap <expr><C-g> pumvisible() ? "\<Plug>(deoplete#undo_completion())" : "\<C-g>"
+" inoremap <expr><C-e> deoplete#undo_completion()
 
 " Refresh candidates list (conflicts: surround)
 " imap <expr><C-g> pumvisible() ? deoplete#refresh() : "\<C-g>"

@@ -15,7 +15,7 @@ endif
 inoremap <expr><BS> (pumvisible() ? neocomplete#smart_close_popup() . "\<C-e>" : "") . "\<BS>"
 
 " Undo completion
-" inoremap <expr><C-g> neocomplete#undo_completion()
+" inoremap <expr><C-e> (pumvisible() ? neocomplete#undo_completion() : "\<C-e>")
 
 " Select match
 " inoremap <expr><C-y> neocomplete#complete_common_string()
