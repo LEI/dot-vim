@@ -74,17 +74,15 @@ function! s:cr_close_popup() abort
   "return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
 
-
-" Select next completion or insert a Tab
+" Next and previous completion Tab and Shift-Tab
 " inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : "\<C-n>"
-" Select previous completion
-" inoremap <S-Tab> <C-p>
+" inoremap <S-Tab> <C-p> " Fix Shift-Tab? :exe 'set t_kB=' . nr2char(27) . '[Z'
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Select the completed word with Enter
 " inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
-inoremap <CR> <C-r>=<SID>cr_close_popup()<CR>
-" Close the popup menu (using <Esc> or <BR> breaks enter and arrow keys)
+" inoremap <CR> <C-r>=<SID>cr_close_popup()<CR>
+" Close the popup menu (using <Esc> or <CR> breaks enter and arrow keys)
 " inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"
 
 " Change leader

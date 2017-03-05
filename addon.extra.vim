@@ -2,17 +2,21 @@
 
 " Auto Completion:
 if get(g:, 'vim_auto_complete', 0)
-  let g:snippet_engine = 'Shougo/neosnippet' " SirVer/ultisnips
-  let g:snippet_files = 'Shougo/neosnippet-snippets' " honza/vim-snippets
+  if v:version >= 704
+    Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+    " if has('python') || has('python3')
+    "   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+    " endif
+    " " Enable snipMate compatibility feature
+    " let g:neosnippet#enable_snipmate_compatibility = 1
+    " " Set snippets drectory path
+    " let g:neosnippet#snippets_directory = s:snippets_dir
+  endif
   if has('nvim') && has('python3') " pip3 install --upgrade neovim
-    " Deoplete:
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-    Plug g:snippet_engine | Plug g:snippet_files
     let g:deoplete#enable_at_startup = 1
   elseif has('lua')
-    " NeoComplete:
     Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-    Plug g:snippet_engine | Plug g:snippet_files
     let g:neocomplete#enable_at_startup = 1
     " augroup NeoCompleteEnable
     "   autocmd!
@@ -20,13 +24,6 @@ if get(g:, 'vim_auto_complete', 0)
     " augroup END
   endif
 
-  let s:snippets_dir = get(g:, 'snippets_dir', $PLUGINS . '/vim-snippets/snippets')
-  if g:snippet_files == 'honza/vim-snippets' && isdirectory(s:snippets_dir)
-    let g:neosnippet#enable_snipmane_compatibility = 1
-    let g:neosnippet#snippets_directory = s:snippets_dir
-  endif
-
-  " YouCompleteMe:
   " Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
   " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
@@ -51,9 +48,9 @@ endif
 
 " Formatting: google/vim-codefmt
 
-" Syntax Checkers: scrooloose/syntastic, maralla/validator.vim, w0rp/ale
+" Syntax Checkers:
 if get(g:, 'vim_syntax_check', 0)
-  " Neomake:
+  " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
   if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
     Plug 'neomake/neomake', {'on': 'Neomake'}
   endif

@@ -102,7 +102,7 @@ set wildmode=longest,full " Complete longest common string, then each full match
 
 set complete+=kspell " Autocompete with dictionnary words when spell check is on
 
-set completeopt+=longest " Only insert the longest common text for matches
+set completeopt+=longest,menuone " Only insert the longest common text for matches
 
 set diffopt+=vertical " Always use vertical diffs
 

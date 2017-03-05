@@ -9,15 +9,27 @@ if !exists('g:loaded_deoplete')
   finish
 endif
 
-" Use C-h or Backspace to delete backword char (conflicts: SuperTab, endwise?)
-inoremap <expr><C-h> deoplete#smart_close_popup() . "\<C-h>"
-inoremap <expr><BS> deoplete#smart_close_popup() . "\<C-h>"
+" Auto select first match
+" set completeopt+=noinsert
 
-" Undo completion (conflicts: surround?)
-inoremap <expr><C-g> deoplete#undo_completion()
+" Conflicts: SuperTab, endwise?
+" Use Backspace or Ctrl-h to stop completion go back to original text
+inoremap <expr><BS> (pumvisible() ? deoplete#smart_close_popup() . "\<C-e>" : "") . "\<BS>"
+" imap <expr><BS> pumvisible() ? deoplete#smart_close_popup() : "\<BS>"
+" inoremap <expr><C-h> (pumvisible() ? deoplete#close_popup() . "\<C-e>" : "") . "\<C-h>"
 
-" Refresh candidates list
-inoremap <expr><C-l> pumvisible() ? deoplete#refresh() : "\<C-l>"
+" inoremap <expr><C-h> deoplete#smart_close_popup() . "\<C-h>"
+" inoremap <expr><C-h> pumvisible() ? ("\<Plug>deoplete#smart_close_popup()" : "") . "\<C-h>"
+" inoremap <expr><BS> pumvisible() ? deoplete#close_popup() : "\<BS>"
+
+" Undo completion
+" imap <expr><C-g> pumvisible() ? "\<Plug>(deoplete#undo_completion())" : "\<C-g>"
+
+" Refresh candidates list (conflicts: surround)
+" imap <expr><C-g> pumvisible() ? deoplete#refresh() : "\<C-g>"
+
+" Select match or expand snippet
+" imap <expr><C-l> pumvisible() ? deoplete#close_popup() : "\<C-l>"
 
 " Insert candidate and close popup menu
 " inoremap <expr><CR> <C-r>=<SID>deoplete_close_popup()<CR>
@@ -27,5 +39,11 @@ inoremap <expr><C-l> pumvisible() ? deoplete#refresh() : "\<C-l>"
 
 if get(g:, 'deoplete#disable_auto_complete', 0) > 0
   " Enable autocomplete on Tab
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : deoplete#mappings#manual_complete()
+  " inoremap <expr><Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : deoplete#mappings#manual_complete()
+  imap <expr><Tab> CheckBackSpace() ? "\<Tab>" : "\<C-n>"
+  imap <expr><C-n> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
 endif
+
+function! ClosePopupMenu()
+  return "\<C-n>" . deoplete#close_popup()
+endfunction
