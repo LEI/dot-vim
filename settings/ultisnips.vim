@@ -1,8 +1,8 @@
 " UltiSnips
 
-" if !exists('g:loaded_ultisnips')
-"   finish
-" endif
+if !exists('g:loaded_ultisnips')
+  finish
+endif
 
 " Trigger configuration
 " Note: do not use <Tab> if YouCompleteMe is installed

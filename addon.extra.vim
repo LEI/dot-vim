@@ -2,20 +2,28 @@
 
 " Auto Completion:
 if get(g:, 'vim_auto_complete', 0)
+  let g:snippet_engine = 'Shougo/neosnippet' " SirVer/ultisnips
+  let g:snippet_files = 'Shougo/neosnippet-snippets' " honza/vim-snippets
   if has('nvim') && has('python3') " pip3 install --upgrade neovim
     " Deoplete:
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-    Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+    Plug g:snippet_engine | Plug g:snippet_files
     let g:deoplete#enable_at_startup = 1
   elseif has('lua')
     " NeoComplete:
     Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-    Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+    Plug g:snippet_engine | Plug g:snippet_files
     let g:neocomplete#enable_at_startup = 1
     " augroup NeoCompleteEnable
     "   autocmd!
     "   autocmd VimEnter * call NeoCompleteEnable()
     " augroup END
+  endif
+
+  let s:snippets_dir = get(g:, 'snippets_dir', $PLUGINS . '/vim-snippets/snippets')
+  if g:snippet_files == 'honza/vim-snippets' && isdirectory(s:snippets_dir)
+    let g:neosnippet#enable_snipmane_compatibility = 1
+    let g:neosnippet#snippets_directory = s:snippets_dir
   endif
 
   " YouCompleteMe:

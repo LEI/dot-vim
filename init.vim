@@ -11,6 +11,8 @@ let s:vim_plug_path = $HOME . '/.vim/autoload/plug.vim'
 let s:vim_plugins_path = $HOME . '/.vim/plugins'
 let s:vim_settings_path = $HOME . '/.vim/settings'
 
+let $PLUGINS = s:vim_plugins_path
+
 " Auto download vim-plug and install plugins
 if empty(glob(s:vim_plug_path)) " !isdirectory(s:vim_plugins_path)
   echo "Installing Vim-Plug..."
