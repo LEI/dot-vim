@@ -1,0 +1,39 @@
+" Vim Plug
+
+" Color Schemes:
+Plug 'LEI/flattened'
+Plug 'altercation/vim-colors-solarized'
+
+" Improvments:
+" Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
+" Plug 'editorconfig/editorconfig-vim'
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
+" Plug 'metakirby5/codi.vim' " Interactive scratchpad
+" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+Plug 'tpope/vim-commentary' " Comment stuff out
+Plug 'tpope/vim-endwise' " Automatic end keywords
+Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
+" Plug 'tpope/vim-obsession' " Continuously updated session files
+Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
+Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
+Plug 'tpope/vim-surround' " Quoting/parenthesizing
+Plug 'tpope/vim-unimpaired' " Mappings
+" Plug 'godlygeek/tabular' " Text aligning
+
+if !has('nvim')
+  Plug 'tpope/vim-sensible' " Sane defaults
+endif
+
+" Navigation:
+Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
+Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
+
+" Version Control:
+Plug 'tpope/vim-fugitive' " Git wrapper
+" Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support
+
+" Languages:
+Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
+" Plug 'ternjs/tern_for_vim' " Tern-based JavaScript support
+
+" Text Objects: kana/vim-textobj-user

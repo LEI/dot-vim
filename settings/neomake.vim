@@ -1,5 +1,8 @@
 " Neomake
 
+if !exists('g:loaded_neomake')
+  finish
+endif
 " let g:neomake_verbose = 3
 " let g:neomake_echo_current_error = 1
 

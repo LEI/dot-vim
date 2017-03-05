@@ -1,6 +1,6 @@
 " Statusline
 
-set statusline=%!StatusLine()
+set laststatus=2 " Always show statusline
 
 set display+=lastline " Display as much as possible of the last line
 
@@ -13,6 +13,8 @@ set ruler " Always show current position
 " set rulerformat=%l,%c%V%=%P
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+
+set statusline=%!StatusLine()
 
 " Format Markers:
 " %< Where to truncate line if too long

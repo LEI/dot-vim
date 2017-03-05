@@ -1,16 +1,16 @@
 " Main vim options
 
 " Colorscheme
-set background=dark
-colorscheme flattened_dark
-if exists('*strftime')
-  let s:hour = strftime('%H')
-  if s:hour > 7 && s:hour < 20
-    set background=light
-    colorscheme flattened_light
-  endif
-endif
 try
+  set background=dark
+  colorscheme flattened_dark
+  if exists('*strftime')
+    let s:hour = strftime('%H')
+    if s:hour > 7 && s:hour < 20
+      set background=light
+      colorscheme flattened_light
+    endif
+  endif
   " colorscheme solarized
   " call togglebg#map('<F5>')
 catch /E185:/
@@ -131,6 +131,12 @@ if exists('+colorcolumn')
   set colorcolumn=+1
 endif
 
+set nowrap " Do not wrap by default
+
+set scrolloff=3 " Minimal number of screen lines to keep above and below the cursor
+set sidescroll=1 " Minimal number to scroll horizontally when 'wrap' is set
+set sidescrolloff=5 " Minimum number to the left and right if 'nowrap' is set
+
 " Indentation
 set expandtab " Use spaces instead of tabs
 set shiftround " >> indents to net multiple of 'shiftwidth'
@@ -164,11 +170,14 @@ endif
 " set foldnestmax=3
 " set nofoldenable
 
-set scrolloff=3 " Minimal number of screen lines to keep above and below the cursor
-set sidescroll=1 " Minimal number to scroll horizontally when 'wrap' is set
-set sidescrolloff=5 " Minimum number to the left and right if 'nowrap' is set
-
 " augroup VIMRC
 "   autocmd!
 "   autocmd ColorScheme * redraw | autocmd! VIMRC
 " augroup END
+
+" Enable omni completion
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags

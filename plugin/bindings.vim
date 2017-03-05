@@ -53,24 +53,37 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " Save as root (or use :SudoWrite)
 cmap w!! w !sudo tee % >/dev/null
 
-" Insert a tab at the beginning of line if the popup menu is not visible
-" or select the next completion
-function! InsertTabWrapper()
+" function! InsertTabWrapper()
+"   if !pumvisible() && ()
+"     return "\<Tab>"
+"   else
+"     return "\<C-n>"
+"   endif
+" endfunction
+
+function! CheckBackSpace() abort
   let col = col('.') - 1
-  if !pumvisible() && (!col || getline('.')[col - 1] !~ '\k')
-    return "\<Tab>"
-  else
-    return "\<C-n>"
-  endif
+  " !col || getline('.')[col - 1] !~ '\k'
+  return !col || getline('.')[col - 1] =~ '\s'
 endfunction
+
+function! s:cr_close_popup() abort
+  return pumvisible() ? "\<C-y>" : "\<CR>"
+  " return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+
 
 " Select next completion or insert a Tab
 " inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
-inoremap <expr> <Tab> InsertTabWrapper()
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : "\<C-n>"
 " Select previous completion
-inoremap <S-Tab> <C-p>
+" inoremap <S-Tab> <C-p>
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Select the completed word with Enter
 " inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <CR> <C-r>=<SID>cr_close_popup()<CR>
 " Close the popup menu (using <Esc> or <BR> breaks enter and arrow keys)
 " inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"
 
