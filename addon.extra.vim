@@ -53,7 +53,11 @@ endif
 " Syntax Checkers:
 if get(g:, 'vim_syntax_check', 0)
   " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
-  if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-    Plug 'neomake/neomake' ", {'on': 'Neomake'}
-  endif
+
+  " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+  Plug 'neomake/neomake' ", {'on': 'Neomake'}
+
+  " Shell: bashate, shellcheck
+  " VimL: vim-vint
+  Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
 endif

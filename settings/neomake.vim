@@ -1,13 +1,17 @@
 " Neomake
 
+" if !exists('g:loaded_neomake')
+"   finish
+" endif
+
+" let g:neomake_vim_enabled_makers = ['vimlint']
+" let g:neomake_vim_vimlint_exe = $PLUGINS . '/vim-vimlint/bin/vimlint.sh'
+" let g:neomake_vim_vimlint_args = ['-u']
+
 " Disable airline extension
-let g:airline#extensions#neomake#enabled = 0
+" let g:airline#extensions#neomake#enabled = 0
 
-if !exists('g:loaded_neomake')
-  finish
-endif
-
-" let g:neomake_verbose = 3
+let g:neomake_verbose = 1
 " let g:neomake_echo_current_error = 1
 
 " let g:neomake_serialize = 1
@@ -27,18 +31,22 @@ let g:neomake_warning_sign = {'text': '!', 'texthl': 'WarningMsg'}
 
 augroup NeomakeConfig
   autocmd!
-  " Run checkers on open and on save
-  autocmd BufReadPost,BufWritePost * 0verb Neomake
-  " " Auto close loclist
-  " autocmd BufWinLeave * if empty(&bt) | lclose | endif
-  " " Fix sign column background
+  " Run checkers on open and on save in location list
+  " 0verb Neomake!
+  autocmd BufReadPost,BufWritePost * Neomake
+  " Auto close loclist
+  autocmd BufWinLeave * if empty(&bt) | lclose | endif
+  " autocmd User NeomakeFinished
+  autocmd User NeomakeCountsChanged redrawstatus
+  " " Reset sign column background
   " autocmd VimEnter,ColorScheme * highlight clear SignColumn
 
   " autocmd NeomakeFinished * ...
+  autocmd! QuitPre * let g:neomake_verbose = 0
   " autocmd BufWinEnter quickfix nnoremap <silent> <buffer>
   "   \ q :cclose<cr>:lclose<cr>
   " autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) |
   "   \ bd |
   "   \ q | endif
   " autocmd ColorScheme * highlight! link SignColumn ColorColumn
-augroup  END
+augroup END

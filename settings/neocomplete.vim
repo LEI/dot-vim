@@ -20,16 +20,8 @@ endif
 let g:popup_menu_accept = ''
 let g:popup_menu_cancel = 'neocomplete#smart_close_popup'
 
-" Cancel the completion = <C-e> (use C-h to delete one char)
-" inoremap <expr> <BS> (pumvisible() ? neocomplete#smart_close_popup() : "") . "\<BS>"
-
 " Undo completion
 " inoremap <expr> <C-e> (pumvisible() ? neocomplete#undo_completion() : "\<C-e>")
 
 " Complete common string
-" inoremap <expr> <C-y> neocomplete#complete_common_string()
-inoremap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? neocomplete#complete_common_string() : "\<C-l>"
-" imap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? neocomplete#complete_common_string() : "\<C-l>")
-
-" Complete <C-y>
-" inoremap <CR> <C-r>=<SID>neocomplete_close_popup()<CR>
+" inoremap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? neocomplete#complete_common_string() : "\<C-l>"
