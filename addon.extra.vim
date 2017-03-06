@@ -6,21 +6,14 @@
 if get(g:, 'vim_completion', 0)
   if has('nvim') && has('python3') " pip3 install --upgrade neovim
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-<<<<<<< HEAD
-    let g:deoplete#enable_at_startup = 1
     if v:version >= 704
         Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
     endif
   elseif has('lua')
     Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-    let g:neocomplete#enable_at_startup = 1
     if v:version >= 704
         Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
     endif
-=======
-  elseif has('lua')
-    Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
->>>>>>> cb04794c9055d1e3f938d9550c0959cdab2f2559
     " augroup NeoCompleteEnable
     "   autocmd!
     "   autocmd VimEnter * call NeoCompleteEnable()
