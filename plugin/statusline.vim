@@ -35,21 +35,20 @@ set statusline=%!StatusLine()
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
 
-let s:ep = ' '
+let s:ep_char = ' '
 if has('multi_byte') && &encoding ==# 'utf-8'
-  let s:ep = ' ' . nr2char(0x2502) . ' '
+  let s:ep_char = nr2char(0x2502)
 endif
+let s:ep = ' ' . nr2char(0x2502) . ' '
 
-function! StatusLine()
-  let l:stl = ' '
-  let l:stl.= '%{&modifiable ? StatusLineMode().(&paste?" PASTE":"")."' . s:ep . '" : ""}'
-  let l:stl.= '%<'
+function! StatusLine() abort
+  let l:stl = ''
+  let l:stl.= '%( %{&modifiable ? StatusLineMode() . (&paste ?" PASTE":"") : ""}' . s:ep . '%<%)'
   " Git branch
   let l:stl.= '%(%{winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""}' . s:ep . '%)'
   " Buffer
   let l:stl.= '%f'
-  " Flags
-  " let l:stl.= '%([%W%H%R%M]%)'
+  " Flags [%W%H%R%M]
   let l:stl.= '%( [%{StatusLineFlags()}]%)'
   let l:stl.= '%=' " Break
   " Errors and warnings
@@ -58,21 +57,20 @@ function! StatusLine()
   let l:stl.= '%( %{exists("*neomake#Make") ? neomake#statusline#LoclistStatus() : ""} %)'
   let l:stl.= '%( %{exists("g:loaded_syntastic") ? SyntasticStatuslineFlag() : ""} %)'
   " Reset highlight group
-  let l:stl.= '%0* '
+  let l:stl.= '%0*'
   " File type
-  let l:stl.= '%{winwidth(0) > 40 ? StatusLineFileType() : ""}'
+  let l:stl.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""}' . s:ep . '%)'
   " Netrw plugin
   " let l:stl.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
-  let l:stl.= s:ep
   " File encoding
-  let l:stl.= '%{winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo()."' . s:ep . '" : ""}'
+  let l:stl.= '%(%{winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""}' . s:ep . '%)'
   " Default ruler
   let l:stl.= '%-14.(%l,%c%V/%L%) %P'
   let l:stl.= ' '
   return l:stl
 endfunction
 
-function! StatusLineFlags()
+function! StatusLineFlags() abort
   if &filetype =~ 'netrw\|vim-plug'
     return ''
   endif
@@ -94,7 +92,7 @@ function! StatusLineFlags()
   return join(l:flags, ',')
 endfunction
 
-function! StatusLineFileType()
+function! StatusLineFileType() abort
   if strlen(&filetype) == 0
     return 'no ft'
   endif
@@ -106,7 +104,7 @@ function! StatusLineFileType()
   return &filetype
 endfunction
 
-function! StatusLineFileInfo()
+function! StatusLineFileInfo() abort
   let l:str = ''
   if strlen(&fileencoding) > 0
     let l:str.= &fileencoding
@@ -122,24 +120,27 @@ function! StatusLineFileInfo()
   return l:str
 endfunction
 
-function! StatusLineColors()
-  highlight! link StatusLineNormal StatusLine
+function! StatusLineColors() abort
+  highlight link StatusLineBranch StatusLine
+  " Reverse: cterm=NONE gui=NONE
   if &background ==# 'dark'
+    " highlight User1 term=reverse ctermfg=10 ctermbg=7
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
     "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
     highlight StatusLineInsert ctermfg=0 ctermbg=2
     highlight StatusLineReplace ctermfg=0 ctermbg=9
     highlight StatusLineVisual ctermfg=0 ctermbg=3
   else
+    " highlight User1 term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=7 ctermbg=4
-    "erm=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
+    "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
     highlight StatusLineInsert ctermfg=7 ctermbg=2
     highlight StatusLineReplace ctermfg=7 ctermbg=9
-    highlight StatusLineVisual ctermfg=7 ctermbg=5
+    highlight StatusLineVisual ctermfg=7 ctermbg=3
   endif
 endfunction
 
-function! StatusLineInsertMode(...)
+function! StatusLineInsertMode(...) abort
   let l:insertmode = a:0 ? a:1 : v:insertmode
   if l:insertmode ==# 'i' " Insert mode
     highlight! link StatusLine StatusLineInsert
@@ -154,12 +155,12 @@ function! StatusLineInsertMode(...)
   endif
 endfunction
 
-function! StatusLineMode(...)
+function! StatusLineMode(...) abort
   let l:mode = a:0 ? a:1 : mode()
   if exists('g:statusline_insertmode') && strlen(g:statusline_insertmode) > 0
     call StatusLineInsertMode(g:statusline_insertmode)
-  elseif l:mode == 'n'
-    highlight! link StatusLine StatusLineNormal
+  " elseif l:mode == 'n'
+  "   highlight! link StatusLine StatusLineNormal
   elseif l:mode == 'i'
     highlight! link StatusLine StatusLineInsert
   elseif l:mode == 'R'
@@ -208,8 +209,9 @@ let g:statusline_modes = {
 augroup StatusLine
   autocmd!
   autocmd VimEnter,ColorScheme * call StatusLineColors() | redrawstatus
-  autocmd CmdWinEnter,CmdWinLeave * redrawstatus
-  autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode() | redrawstatus
-  autocmd InsertChange * let g:statusline_insertmode = v:insertmode | call StatusLineMode() | redrawstatus
-  autocmd InsertLeave * unlet g:statusline_insertmode | call StatusLineMode() | redrawstatus
+  " autocmd CmdWinEnter,CmdWinLeave * redrawstatus
+  autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
+  autocmd InsertChange * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
+  autocmd InsertLeave * unlet g:statusline_insertmode | call StatusLineMode()
+  " | redrawstatus
 augroup END

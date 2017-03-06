@@ -1,12 +1,12 @@
 " Extra plugins
 " let g:vim_completion = 1
-" let g:vim_completion_backspace_cancel = 1
 " let g:vim_syntax_check = 1
 
 " Auto Completion:
 if get(g:, 'vim_completion', 0)
   if has('nvim') && has('python3') " pip3 install --upgrade neovim
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+<<<<<<< HEAD
     let g:deoplete#enable_at_startup = 1
     if v:version >= 704
         Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
@@ -17,6 +17,10 @@ if get(g:, 'vim_completion', 0)
     if v:version >= 704
         Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
     endif
+=======
+  elseif has('lua')
+    Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+>>>>>>> cb04794c9055d1e3f938d9550c0959cdab2f2559
     " augroup NeoCompleteEnable
     "   autocmd!
     "   autocmd VimEnter * call NeoCompleteEnable()
@@ -57,7 +61,11 @@ endif
 " Syntax Checkers:
 if get(g:, 'vim_syntax_check', 0)
   " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
-  if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-    Plug 'neomake/neomake', {'on': 'Neomake'}
-  endif
+
+  " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+  Plug 'neomake/neomake', {'on': 'Neomake'}
+
+  " Shell: bashate, shellcheck
+  " VimL: vim-vint
+  Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
 endif
