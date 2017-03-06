@@ -5,27 +5,30 @@
 
 " Auto Completion:
 if get(g:, 'vim_completion', 0)
-  if v:version >= 704
-    Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
-    " if has('python') || has('python3')
+  if has('nvim') && has('python3') " pip3 install --upgrade neovim
+    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+    let g:deoplete#enable_at_startup = 1
+    if v:version >= 704
+        Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+    endif
+  elseif has('lua')
+    Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+    let g:neocomplete#enable_at_startup = 1
+    if v:version >= 704
+        Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+    endif
+    " augroup NeoCompleteEnable
+    "   autocmd!
+    "   autocmd VimEnter * call NeoCompleteEnable()
+    " augroup END
+  endif
+" if has('python') || has('python3')
     "   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
     " endif
     " " Enable snipMate compatibility feature
     " let g:neosnippet#enable_snipmate_compatibility = 1
     " " Set snippets drectory path
     " let g:neosnippet#snippets_directory = s:snippets_dir
-  endif
-  if has('nvim') && has('python3') " pip3 install --upgrade neovim
-    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-    let g:deoplete#enable_at_startup = 1
-  elseif has('lua')
-    Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-    let g:neocomplete#enable_at_startup = 1
-    " augroup NeoCompleteEnable
-    "   autocmd!
-    "   autocmd VimEnter * call NeoCompleteEnable()
-    " augroup END
-  endif
 
   " Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
   " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
