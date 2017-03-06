@@ -1,7 +1,10 @@
 " Deoplete
 
-" This option should be set earlier
-" let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_at_startup = 1
+
+" if !exists('g:loaded_deoplete')
+"   finish
+" endif
 
 " This option enables deoplete only when the popup menu is manually opened
 " let g:deoplete#disable_auto_complete = 1
@@ -11,10 +14,6 @@
 
 " Number of matches to display
 let g:deoplete#max_list = 42
-
-if !exists('g:loaded_deoplete')
-  finish
-endif
 
 let g:popup_menu_accept = 'deoplete#close_popup'
 let g:popup_menu_cancel = 'deoplete#smart_close_popup'

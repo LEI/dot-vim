@@ -32,21 +32,16 @@ let g:neomake_warning_sign = {'text': '!', 'texthl': 'WarningMsg'}
 augroup NeomakeConfig
   autocmd!
   " Run checkers on open and on save in location list
-  " 0verb Neomake!
   autocmd BufReadPost,BufWritePost * Neomake
-  " Auto close loclist
-  autocmd BufWinLeave * if empty(&bt) | lclose | endif
   " autocmd User NeomakeFinished
   autocmd User NeomakeCountsChanged redrawstatus
-  " " Reset sign column background
-  " autocmd VimEnter,ColorScheme * highlight clear SignColumn
-
-  " autocmd NeomakeFinished * ...
-  autocmd! QuitPre * let g:neomake_verbose = 0
+  " Auto close loclist
+  " autocmd BufWinLeave * if empty(&bt) | lclose | endif
   " autocmd BufWinEnter quickfix nnoremap <silent> <buffer>
   "   \ q :cclose<cr>:lclose<cr>
   " autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) |
   "   \ bd |
   "   \ q | endif
   " autocmd ColorScheme * highlight! link SignColumn ColorColumn
+  autocmd! QuitPre * let g:neomake_verbose = 0
 augroup END

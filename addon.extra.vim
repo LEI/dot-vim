@@ -16,10 +16,8 @@ if get(g:, 'vim_completion', 0)
   endif
   if has('nvim') && has('python3') " pip3 install --upgrade neovim
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-    let g:deoplete#enable_at_startup = 1
   elseif has('lua')
     Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-    let g:neocomplete#enable_at_startup = 1
     " augroup NeoCompleteEnable
     "   autocmd!
     "   autocmd VimEnter * call NeoCompleteEnable()
@@ -55,7 +53,7 @@ if get(g:, 'vim_syntax_check', 0)
   " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
 
   " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-  Plug 'neomake/neomake' ", {'on': 'Neomake'}
+  Plug 'neomake/neomake', {'on': 'Neomake'}
 
   " Shell: bashate, shellcheck
   " VimL: vim-vint

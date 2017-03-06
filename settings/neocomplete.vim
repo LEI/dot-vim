@@ -1,7 +1,10 @@
 " NeoComplete
 
-" This option should be set earlier
-" let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_at_startup = 1
+
+" if !exists('g:loaded_neocomplete')
+"   finish
+" endif
 
 " Automatically select the first match
 " let g:neocomplete#enable_auto_select = 1
@@ -11,10 +14,6 @@
 "
 " Number of matches to display
 let g:neocomplete#max_list = 42
-
-if !exists('g:loaded_neocomplete')
-  finish
-endif
 
 " let g:popup_menu_close = 'neocomplete#complete_common_string'
 let g:popup_menu_accept = ''
