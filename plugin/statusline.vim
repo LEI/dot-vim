@@ -40,43 +40,49 @@ if has('multi_byte') && &encoding ==# 'utf-8'
   let s:sep = nr2char(0x2502)
 endif
 
-let s:is_file = "&bt !~# '\\|nofile\\|nowrite\\|quickfix'"
-
-function! StatusLine() abort
-  let l:stl = ''
-  let l:stl.= '%( %{&modifiable ? StatusLineMode() . (&paste ?" PASTE":"") : ""} ' . s:sep . '%)'
-  " Git branch
-  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:sep . '%)'
+function! StatusLine(...) abort
+  let l:name = a:0 ? a:1 : '%f'
+  let l:s = ''
+  let l:s.= '%1*%( %{&paste ? "PASTE" : ""} %)%0*'
+  let l:s.= '%( %{&modifiable ? StatusLineMode() : ""} ' . s:sep . '%)'
+  " Git branch &bt !~ 'nofile\|quickfix'
+  let l:s.= '%( %{winwidth(0) > 60 ? StatusLineBranch() : ""} ' . s:sep . '%)'
   " Buffer
-  let l:stl.= '%< %f'
-  " Quickfix or location list title
-  let l:stl.= '%( %{exists("w:quickfix_title") ? w:quickfix_title : ""}%)'
+  let l:s.= '%< ' . l:name
+  " let l:s.= '%( %{exists("w:quickfix_title") ? w:quickfix_title : ""}%)'
   " Flags [%W%H%R%M]
-  let l:stl.= '%( [%{!exists("w:quickfix_title") ? StatusLineFlags() : ""}]%)'
-  let l:stl.= ' %=' " Break
+  let l:s.= '%( [%{StatusLineFlags()}]%)'
+  let l:s.= ' %=' " Break
   " Warnings
-  let l:stl.= '%#StatusLineWarn#%('
-  let l:stl.= '%( %{StatusLineIndent()}%)' " &bt nofile, nowrite
-  let l:stl.= '%( %{' . s:is_file . ' ? StatusLineTrailing() : ' . s:is_file . ' ? &bt : ""}%)'
-  let l:stl.= ' %)%0*'
+  let l:s.= '%#StatusLineWarn#%('
+  let l:s.= '%( %{StatusLineIndent()}%)' " &bt nofile, nowrite
+  let l:s.= '%( %{empty(&bt) ? StatusLineTrailing() : ""}%)'
+  let l:s.= ' %)%0*'
   " Errors
-  let l:stl.= '%#StatusLineError#'
-  let l:stl.= '%( %{StatusLineErrors()} %)'
-  let l:stl.= '%0*'
+  let l:s.= '%#StatusLineError#'
+  let l:s.= '%( %{StatusLineErrors()} %)'
+  let l:s.= '%0*'
   " File type
-  let l:stl.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:sep . '%)'
+  let l:s.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:sep . '%)'
   " Netrw plugin
-  " let l:stl.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
+  " let l:s.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
   " File encoding
-  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""} ' . s:sep . '%)'
+  let l:s.= "%( %{&bt != '" . 'help\|quickfix' . "' && winwidth(0) > 80 ? StatusLineFileInfo() : ''} " . s:sep . "%)"
   " Default ruler
-  let l:stl.= ' %-14.(%l,%c%V/%L%) %P'
-  let l:stl.= ' '
-  return l:stl
+  let l:s.= ' %-14.(%l,%c%V/%L%) %P'
+  let l:s.= ' '
+  return l:s
+endfunction
+
+function! StatusLineBranch() abort
+  if !exists('*fugitive#head') || &buftype ==# 'quickfix'
+    return ''
+  endif
+  return fugitive#head(7)
 endfunction
 
 function! StatusLineFlags() abort
-  if &filetype =~# 'netrw\|vim-plug'
+  if &filetype =~# 'netrw\|vim-plug' || &buftype ==# 'quickfix'
     return ''
   endif
   if &buftype ==# 'help'
@@ -101,10 +107,12 @@ function! StatusLineFileType() abort
   if strlen(&filetype) == 0
     return 'no ft'
   endif
-  if &filetype =~# 'netrw'
+  if &filetype ==# 'netrw'
     if get(b:, 'netrw_browser_active', 0) == 1
       return &filetype . '[' . g:netrw_sort_by . (g:netrw_sort_direction =~# 'n' ? '+' : '-') . ']'
     endif
+  " elseif &filetype ==# 'qf'
+  "   return 'quickfix'
   endif
   return &filetype
 endfunction
@@ -185,14 +193,14 @@ function! StatusLineColors() abort
   highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
   " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
   if &background ==# 'dark'
-    " highlight User1 term=reverse ctermfg=10 ctermbg=7
+    highlight User1 term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
     "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
     highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
     highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
     highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
   else
-    " highlight User1 term=reverse ctermfg=14 ctermbg=0
+    highlight User1 term=reverse ctermfg=10 ctermbg=7
     " highlight StatusLineNormal ctermfg=7 ctermbg=4
     "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
     highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
@@ -272,14 +280,17 @@ let &statusline = StatusLine()
 augroup StatusLine
   autocmd!
   autocmd VimEnter,ColorScheme * call StatusLineColors() | redrawstatus
-  " autocmd CmdWinEnter,CmdWinLeave * redrawstatus
   autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
   autocmd InsertChange * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
   autocmd InsertLeave * unlet g:statusline_insertmode | call StatusLineMode()
   " | redrawstatus
+
   " Update whitespace warnings
   autocmd BufWritePost,CursorHold,InsertLeave * unlet! b:statusline_indent | unlet! b:statusline_trailing
-  " autocmd CmdWinEnter * let b:is_command_window = true
+
+  autocmd CmdWinEnter * let &l:statusline = StatusLine('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
-  autocmd FileType qf let &l:statusline = StatusLine()
+
+  " Quickfix or location list title
+  autocmd FileType qf let &l:statusline = StatusLine('%f' . (exists('w:quickfix_title') ? ' ' . w:quickfix_title : ''))
 augroup END

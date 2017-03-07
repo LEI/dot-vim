@@ -11,7 +11,7 @@ endif
 " Disable airline extension
 " let g:airline#extensions#neomake#enabled = 0
 
-" let g:neomake_verbose = 1
+let g:neomake_verbose = 1
 " let g:neomake_echo_current_error = 1
 
 " let g:neomake_serialize = 1
@@ -31,7 +31,8 @@ let g:neomake_warning_sign = {'text': '!'} ", 'texthl': 'WarningMsg'}
 
   " Run checkers on open and save in quickfix list
 function! Neomake()
-  let l:cmd = '0verb Neomake'
+  " 0verb Neomake!
+  let l:cmd = 'Neomake'
   if &filetype ==# 'go'
     " Use location list for `go vet`
     let l:cmd.= '!'
@@ -46,11 +47,12 @@ augroup NeomakeConfig
   autocmd BufReadPost,BufWritePost * call Neomake()
 
   " Remap 'q' to close quickfix or location list
-  autocmd BufWinEnter quickfix nnoremap <silent> <buffer> q :cclose<cr>:lclose<cr>
+  autocmd BufWinEnter quickfix nnoremap <silent> <buffer> q :cclose<CR>:lclose<CR>
   "autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) | bd | q | endif
 
   " Automatically close corresponding loclist when quitting a window
-  autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+  autocmd BufHidden,QuitPre * if &filetype != 'qf' | silent! lclose | endif
+  " autocmd BufUnload * if &filetype != 'qf' | silent! lclose | endif
   " autocmd QuitPre * let g:neomake_verbose = 0
 
   " Reset sign column color background
