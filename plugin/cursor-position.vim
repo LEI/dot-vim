@@ -2,7 +2,10 @@
 " https://github.com/farmergreg/vim-lastplace
 
 function! s:RestoreCursorPosition()
-  if &filetype !=# 'gitcommit' && line("'\"") > 0 && line("'\"") <= line('$')
+  if &filetype !=# 'gitcommit'
+    return 0
+  endif
+  if line("'\"") > 0 && line("'\"") <= line('$')
     normal! g`"
     return 1
   endif

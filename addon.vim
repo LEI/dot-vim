@@ -42,13 +42,9 @@ Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 
 " Syntax Checkers:
 " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
-" has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-Plug 'neomake/neomake' ", {'on': 'Neomake'}
-augroup NeomakeCheck
-  autocmd!
-  " Run checkers on open and on save in quickfix list (location list for golang)
-  autocmd BufReadPost,BufWritePost call s:neomake_check()
-augroup END
+if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+  Plug 'neomake/neomake'
+endif
 
 " Shell: bashate, shellcheck
 

@@ -35,16 +35,18 @@ set ruler " Always show current position
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
 
-let s:ep = ' '
+let s:sep = ' '
 if has('multi_byte') && &encoding ==# 'utf-8'
-  let s:ep = nr2char(0x2502)
+  let s:sep = nr2char(0x2502)
 endif
+
+let s:is_file = "&bt !~# '\\|nofile\\|nowrite\\|quickfix'"
 
 function! StatusLine() abort
   let l:stl = ''
-  let l:stl.= '%( %{&modifiable ? StatusLineMode() . (&paste ?" PASTE":"") : ""} ' . s:ep . '%)'
+  let l:stl.= '%( %{&modifiable ? StatusLineMode() . (&paste ?" PASTE":"") : ""} ' . s:sep . '%)'
   " Git branch
-  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . '%)'
+  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:sep . '%)'
   " Buffer
   let l:stl.= '%< %f'
   " Quickfix or location list title
@@ -54,19 +56,19 @@ function! StatusLine() abort
   let l:stl.= ' %=' " Break
   " Warnings
   let l:stl.= '%#StatusLineWarn#%('
-  let l:stl.= '%( %{StatusLineIndent()}%)'
-  let l:stl.= '%( %{&ft !=# "help" ? StatusLineTrailing() : ""}%)'
+  let l:stl.= '%( %{StatusLineIndent()}%)' " &bt nofile, nowrite
+  let l:stl.= '%( %{' . s:is_file . ' ? StatusLineTrailing() : ' . s:is_file . ' ? &bt : ""}%)'
   let l:stl.= ' %)%0*'
   " Errors
   let l:stl.= '%#StatusLineError#'
   let l:stl.= '%( %{StatusLineErrors()} %)'
   let l:stl.= '%0*'
   " File type
-  let l:stl.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:ep . '%)'
+  let l:stl.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:sep . '%)'
   " Netrw plugin
   " let l:stl.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
   " File encoding
-  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""} ' . s:ep . '%)'
+  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""} ' . s:sep . '%)'
   " Default ruler
   let l:stl.= ' %-14.(%l,%c%V/%L%) %P'
   let l:stl.= ' '
@@ -179,8 +181,8 @@ endfunction
 
 function! StatusLineColors() abort
   highlight link StatusLineBranch StatusLine
-  highlight StatusLineError ctermfg=7 ctermbg=1 guifg=#eee8d5 guibg=#cb4b16
-  highlight StatusLineWarn ctermfg=7 ctermbg=9 guifg=#eee8d5 guibg=#dc322f
+  highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+  highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
   " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
   if &background ==# 'dark'
     " highlight User1 term=reverse ctermfg=10 ctermbg=7
