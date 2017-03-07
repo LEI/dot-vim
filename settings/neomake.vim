@@ -11,7 +11,7 @@
 " Disable airline extension
 " let g:airline#extensions#neomake#enabled = 0
 
-let g:neomake_verbose = 1
+" let g:neomake_verbose = 1
 " let g:neomake_echo_current_error = 1
 
 " let g:neomake_serialize = 1
@@ -32,7 +32,7 @@ let g:neomake_warning_sign = {'text': '!', 'texthl': 'WarningMsg'}
 augroup NeomakeConfig
   autocmd!
   " Run checkers on open and on save in location list
-  autocmd BufReadPost,BufWritePost * Neomake
+  autocmd BufReadPost,BufWritePost * 0verb Neomake!
   " autocmd User NeomakeFinished
   autocmd User NeomakeCountsChanged redrawstatus
   " Auto close loclist
