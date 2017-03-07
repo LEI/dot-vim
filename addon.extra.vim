@@ -53,7 +53,7 @@ if get(g:, 'vim_syntax_check', 0)
   " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
 
   " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-  Plug 'neomake/neomake', {'on': 'Neomake'}
+  Plug 'neomake/neomake' ", {'on': 'Neomake'}
 
   " Shell: bashate, shellcheck
   " VimL: vim-vint

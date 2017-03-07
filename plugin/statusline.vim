@@ -14,7 +14,7 @@ set ruler " Always show current position
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-set statusline=%!StatusLine()
+" set statusline=%!StatusLine()
 
 " Format Markers:
 " %< Where to truncate line if too long
@@ -208,6 +208,7 @@ let g:statusline_modes = {
 
 augroup StatusLine
   autocmd!
+  autocmd VimEnter * let &statusline = StatusLine()
   autocmd VimEnter,ColorScheme * call StatusLineColors() | redrawstatus
   " autocmd CmdWinEnter,CmdWinLeave * redrawstatus
   autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode()

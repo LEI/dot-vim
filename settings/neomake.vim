@@ -36,7 +36,11 @@ augroup NeomakeConfig
   " autocmd User NeomakeFinished
   autocmd User NeomakeCountsChanged redrawstatus
   " Auto close loclist
-  " autocmd BufWinLeave * if empty(&bt) | lclose | endif
+  autocmd BufWinLeave * if empty(&bt) | lclose | endif
+
+  " Automatically close corresponding loclist when quitting a window
+  " autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+
   " autocmd BufWinEnter quickfix nnoremap <silent> <buffer>
   "   \ q :cclose<cr>:lclose<cr>
   " autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) |
