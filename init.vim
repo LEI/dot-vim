@@ -1,8 +1,8 @@
 " Vim
 
-if &compatible
-  set nocompatible
-end
+" if &compatible
+"   set nocompatible
+" end
 
 runtime before.vim
 
@@ -15,9 +15,12 @@ let $PLUGINS = s:vim_plugins_path
 
 " Auto download vim-plug and install plugins
 if empty(glob(s:vim_plug_path)) " !isdirectory(s:vim_plugins_path)
-  echo "Installing Vim-Plug..."
+  echo 'Installing Vim-Plug...'
   execute 'silent !curl -fLo ' . s:vim_plug_path . '  --create-dirs ' . s:vim_plug_url
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  augroup VimPlug
+    autocmd!
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  augroup END
 endif
 
 " Start Vim Plug

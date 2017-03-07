@@ -35,21 +35,20 @@ set ruler " Always show current position
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
 
-let s:ep_char = ' '
+let s:ep = ' '
 if has('multi_byte') && &encoding ==# 'utf-8'
-  let s:ep_char = nr2char(0x2502)
+  let s:ep = nr2char(0x2502)
 endif
-let s:ep = ' ' . nr2char(0x2502) . ' '
 
 function! StatusLine() abort
   let l:stl = ''
-  let l:stl.= '%( %{&modifiable ? StatusLineMode() . (&paste ?" PASTE":"") : ""}' . s:ep . '%<%)'
+  let l:stl.= '%( %{&modifiable ? StatusLineMode() . (&paste ?" PASTE":"") : ""} ' . s:ep . '%)'
   " Git branch
-  let l:stl.= '%(%{winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""}' . s:ep . '%)'
+  let l:stl.= '%( %{winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . '%)'
   " Buffer
-  let l:stl.= '%f'
+  let l:stl.= '%< %f'
   " Flags [%W%H%R%M]
-  let l:stl.= '%( [%{StatusLineFlags()}]%)'
+  let l:stl.= '%( [%{StatusLineFlags()}] %)'
   let l:stl.= '%=' " Break
   " Errors and warnings
   let l:stl.= '%#ErrorMsg#'
@@ -59,11 +58,11 @@ function! StatusLine() abort
   " Reset highlight group
   let l:stl.= '%0*'
   " File type
-  let l:stl.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""}' . s:ep . '%)'
+  let l:stl.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:ep . '%)'
   " Netrw plugin
   " let l:stl.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
   " File encoding
-  let l:stl.= '%(%{winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""}' . s:ep . '%)'
+  let l:stl.= '%( %{winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""} ' . s:ep . '%)'
   " Default ruler
   let l:stl.= '%-14.(%l,%c%V/%L%) %P'
   let l:stl.= ' '
@@ -71,7 +70,7 @@ function! StatusLine() abort
 endfunction
 
 function! StatusLineFlags() abort
-  if &filetype =~ 'netrw\|vim-plug'
+  if &filetype =~# 'netrw\|vim-plug'
     return ''
   endif
   if &buftype ==# 'help'
@@ -96,9 +95,9 @@ function! StatusLineFileType() abort
   if strlen(&filetype) == 0
     return 'no ft'
   endif
-  if &filetype =~ 'netrw'
+  if &filetype =~# 'netrw'
     if get(b:, 'netrw_browser_active', 0) == 1
-      return &filetype . '[' . g:netrw_sort_by . (g:netrw_sort_direction =~ 'n' ? '+' : '-') . ']'
+      return &filetype . '[' . g:netrw_sort_by . (g:netrw_sort_direction =~# 'n' ? '+' : '-') . ']'
     endif
   endif
   return &filetype
@@ -114,7 +113,7 @@ function! StatusLineFileInfo() abort
   if exists('+bomb') && &bomb
     let l:str.= ',B'
   endif
-  if &fileformat != "unix"
+  if &fileformat !=# 'unix'
     let l:str.= '[' . &fileformat . ']'
   endif
   return l:str
@@ -159,11 +158,11 @@ function! StatusLineMode(...) abort
   let l:mode = a:0 ? a:1 : mode()
   if exists('g:statusline_insertmode') && strlen(g:statusline_insertmode) > 0
     call StatusLineInsertMode(g:statusline_insertmode)
-  " elseif l:mode == 'n'
+  " elseif l:mode ==# 'n'
   "   highlight! link StatusLine StatusLineNormal
-  elseif l:mode == 'i'
+  elseif l:mode ==# 'i'
     highlight! link StatusLine StatusLineInsert
-  elseif l:mode == 'R'
+  elseif l:mode ==# 'R'
     highlight! link StatusLine StatusLineReplace
   " elseif l:mode == 'v' || l:mode == 'V' || l:mode == '^V'
   "   highlight! link StatusLine StatusLineVisual
@@ -206,9 +205,10 @@ let g:statusline_modes = {
   \   't': 'TERMINAL',
   \ }
 
+" autocmd VimEnter *
+let &statusline = StatusLine()
 augroup StatusLine
   autocmd!
-  autocmd VimEnter * let &statusline = StatusLine()
   autocmd VimEnter,ColorScheme * call StatusLineColors() | redrawstatus
   " autocmd CmdWinEnter,CmdWinLeave * redrawstatus
   autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode()

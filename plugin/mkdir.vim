@@ -1,19 +1,22 @@
 " Automatically create intermediate directories before writing the bufer
 " https://github.com/pbrisbin/vim-mkdir
 
-if exists("g:mkdir_loaded")
+if exists('g:mkdir_loaded')
   finish
 endif
 
 let g:mkdir_loaded = 1
 
 function s:Mkdir()
-  let dir = expand('%:p:h')
+  let l:dir = expand('%:p:h')
 
-  if !isdirectory(dir)
-    call mkdir(dir, 'p')
-    echo 'Created non-existing directory: '.dir
+  if !isdirectory(l:dir)
+    call mkdir(l:dir, 'p')
+    echo 'Created non-existing directory: '.l:dir
   endif
 endfunction
 
-autocmd BufWritePre * call s:Mkdir()
+augroup AutoMkdir
+  autocmd!
+  autocmd BufWritePre * call s:Mkdir()
+augroup END

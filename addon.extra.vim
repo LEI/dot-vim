@@ -3,7 +3,7 @@
 " let g:vim_syntax_check = 1
 
 " Auto Completion:
-if get(g:, 'vim_completion', 0)
+if get(g:, 'vim_completion', 0) > 0
   if has('nvim') && has('python3') " pip3 install --upgrade neovim
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
     if v:version >= 704
@@ -35,7 +35,7 @@ if get(g:, 'vim_completion', 0)
   " - status: 'installed', 'updated', or 'unchanged'
   " - force: set on PlugInstall! or PlugUpdate!
   function! YCMInstall(info)
-    if a:info.status == 'installed' || a:info.force
+    if a:info.status ==# 'installed' || a:info.force
       " The following additional language support options are available
       " - C# support: add --omnisharp-completer to ./install.py
       " - Go support: ensure go is installed and add --gocode-completer
@@ -52,11 +52,11 @@ endif
 " Formatting: google/vim-codefmt
 
 " Syntax Checkers:
-if get(g:, 'vim_syntax_check', 0)
+if get(g:, 'vim_syntax_check', 0) > 0
   " scrooloose/syntastic, maralla/validator.vim, w0rp/ale
 
   " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-  Plug 'neomake/neomake' ", {'on': 'Neomake'}
+  Plug 'neomake/neomake', {'on': 'Neomake'}
 
   " Shell: bashate, shellcheck
   " VimL: vim-vint
