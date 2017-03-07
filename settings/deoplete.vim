@@ -4,7 +4,7 @@ if !exists('g:loaded_deoplete')
   finish
 endif
 
-" Should be set earlier
+" Should be set before
 " let g:deoplete#enable_at_startup = 1
 
 " This option enables deoplete only when the popup menu is manually opened

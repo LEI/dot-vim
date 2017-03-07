@@ -1,8 +1,8 @@
 " Neomake
 
-" if !exists('g:loaded_neomake')
-"   finish
-" endif
+if !exists('g:loaded_neomake')
+  finish
+endif
 
 " let g:neomake_vim_enabled_makers = ['vimlint']
 " let g:neomake_vim_vimlint_exe = $PLUGINS . '/vim-vimlint/bin/vimlint.sh'
@@ -29,60 +29,50 @@ let g:neomake_warning_sign = {'text': '!'} ", 'texthl': 'WarningMsg'}
 " let g:neomake_message_sign = {'text': '➤', 'texthl': 'NeomakeMessageSign'}
 " let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 
-function! s:NeomakeCheck()
+function! s:neomake_check()
   let l:cmd = '0verb Neomake'
+  " Use location list for `go vet`
   if &filetype ==# 'go'
     let l:cmd.= '!'
   endif
   execute l:cmd
 endfunction
 
-function! s:NeomakeClose()
-  if !empty(&buftype) || winnr('$') < 3
-    return
-  endif
-  " winnr('$') == 2 " bdelete | quit
-  if len(getloclist(0)) > 0
-    lclose
-  elseif len(getqflist()) > 0
-    cclose
+" Close vim if the last buffer is a quickfix
+function! s:close_last_list()
+  if &buftype ==# 'quickfix' && winnr('$') == 1
+    quit
   endif
 endfunction
 
-" Close vim if the last buffer is a quickfix
-function! s:CloseLastQf()
-  if winnr('$') > 1
+" Close the quickfx list when the buffer is left
+function s:auto_close_list()
+  if !empty(&buftype) || winnr('$') < 3
     return
   endif
-  if &buftype ==# 'quickfix'
-    quit
+  if len(getloclist(0))
+    lclose
+  elseif len(getqflist())
+    cclose
   endif
-  " if empty(&buftype)
-  "   if len(getloclist(0)) > 0
-  "     lopen " TODO fix cursor
-  "   elseif len(getqflist()) > 0
-  "     copen " TODO fix cursor
-  "   endif
-  " endif
 endfunction
 
 augroup NeomakeConfig
   autocmd!
   " Run checkers on open and on save in quickfix list (location list for golang)
-  autocmd BufReadPost,BufWritePost * call s:NeomakeCheck()
+  autocmd BufReadPost,BufWritePost * if exists('*neomake#Make') | call s:neomake_check() | endif
   " autocmd User NeomakeFinished
   " autocmd User NeomakeCountsChanged redrawstatus
-  autocmd BufWinLeave * call s:NeomakeClose()
-  autocmd BufEnter * call s:CloseLastQf()
+  " autocmd BufWinLeave * call s:auto_close_list()
 
   " Automatically close corresponding loclist when quitting a window
-  " autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+  autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+  " autocmd QuitPre * let g:neomake_verbose = 0
 
-  " autocmd BufWinEnter quickfix nnoremap <silent> <buffer>
-  "   \ q :cclose<cr>:lclose<cr>
-  " autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) |
-  "   \ bd |
-  "   \ q | endif
-  " autocmd ColorScheme * highlight! link SignColumn ColorColumn
-  autocmd! QuitPre * let g:neomake_verbose = 0
+  " Remap 'q' to close quickfix or location list
+  "autocmd BufWinEnter quickfix nnoremap <silent> <buffer> q :cclose<cr>:lclose<cr>
+  "autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) | bd | q | endif
+
+  " Reset sign column color
+  "autocmd ColorScheme * highlight! link SignColumn ColorColumn
 augroup END

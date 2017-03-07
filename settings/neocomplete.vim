@@ -4,7 +4,7 @@ if !exists('g:loaded_neocomplete')
   finish
 endif
 
-" Should be set earlier
+" Should be set before
 " let g:neocomplete#enable_at_startup = 1
 
 " Automatically select the first match

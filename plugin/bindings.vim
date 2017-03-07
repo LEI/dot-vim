@@ -74,6 +74,8 @@ function! s:cr_close_popup() abort
   "return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
 
+" imap <expr> <CR> pumvisible() ? <SID>cr_close_popup() : "\<CR>"
+
 " Next and previous completion Tab and Shift-Tab
 " inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : "\<C-n>"

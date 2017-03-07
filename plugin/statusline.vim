@@ -47,25 +47,26 @@ function! StatusLine() abort
   let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . '%)'
   " Buffer
   let l:stl.= '%< %f'
-
-  let l:stl.= '%(%{exists("w:quickfix_title") ? w:quickfix_title : " "}%)'
+  " Quickfix or location list title
+  let l:stl.= '%( %{exists("w:quickfix_title") ? w:quickfix_title : ""}%)'
   " Flags [%W%H%R%M]
   let l:stl.= '%( [%{!exists("w:quickfix_title") ? StatusLineFlags() : ""}]%)'
   let l:stl.= ' %=' " Break
   " Warnings
-  let l:stl.= '%#WarningMsg#'
-  let l:stl.= '%( %{StatusLineWarnings()} %)'
+  let l:stl.= '%#StatusLineWarn#%('
+  let l:stl.= '%( %{StatusLineIndent()}%)'
+  let l:stl.= '%( %{&ft !=# "help" ? StatusLineTrailing() : ""}%)'
+  let l:stl.= ' %)%0*'
   " Errors
-  let l:stl.= '%#ErrorMsg#'
+  let l:stl.= '%#StatusLineError#'
   let l:stl.= '%( %{StatusLineErrors()} %)'
-  " Reset highlight group
   let l:stl.= '%0*'
   " File type
   let l:stl.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:ep . '%)'
   " Netrw plugin
   " let l:stl.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
   " File encoding
-  let l:stl.= '%( %{winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""} ' . s:ep . '%)'
+  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""} ' . s:ep . '%)'
   " Default ruler
   let l:stl.= ' %-14.(%l,%c%V/%L%) %P'
   let l:stl.= ' '
@@ -122,19 +123,6 @@ function! StatusLineFileInfo() abort
   return l:str
 endfunction
 
-function! StatusLineWarnings() abort
-  let l:indent = StatusLineIndent()
-  let l:trailing = StatusLineTrailing()
-  if !empty(l:indent) && !empty(l:trailing)
-    return l:indent . ',' . l:trailing
-  elseif !empty(l:indent)
-    return l:indent
-  elseif !empty(l:trailing)
-    return l:trailing
-  endif
-  return ''
-endfunction
-
 function! StatusLineIndent() abort
   if !exists('b:statusline_indent')
     let b:statusline_indent = ''
@@ -146,11 +134,16 @@ function! StatusLineIndent() abort
     let l:tabs = search('^\t', 'nw')
     if l:tabs != 0 && l:spaces != 0
       " Spaces and tabs are used to indent
-      let b:statusline_indent = 'mixed-indent'
+      let b:statusline_indent = 'mixed-'
+      if !&expandtab
+        let b:statusline_indent.= 'spaces:' . l:spaces
+      else
+        let b:statusline_indent.= 'tabs:' . l:tabs
+      endif
     elseif l:spaces != 0 && !&expandtab
-      let b:statusline_indent = 'spaces' " line nr: l:spaces
+      let b:statusline_indent = 'spaces:' . l:spaces
     elseif l:tabs != 0 && &expandtab
-      let b:statusline_indent = 'tabs' " line nr: l:tabs
+      let b:statusline_indent = 'tabs:' .l:tabs
     endif
   endif
   return b:statusline_indent
@@ -186,6 +179,8 @@ endfunction
 
 function! StatusLineColors() abort
   highlight link StatusLineBranch StatusLine
+  highlight StatusLineError ctermfg=7 ctermbg=1 guifg=#eee8d5 guibg=#cb4b16
+  highlight StatusLineWarn ctermfg=7 ctermbg=9 guifg=#eee8d5 guibg=#dc322f
   " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
   if &background ==# 'dark'
     " highlight User1 term=reverse ctermfg=10 ctermbg=7
@@ -279,9 +274,9 @@ augroup StatusLine
   autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
   autocmd InsertChange * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
   autocmd InsertLeave * unlet g:statusline_insertmode | call StatusLineMode()
-  " Update whitespace warnings
-  autocmd BufWritePost,InsertLeave * unlet! b:statusline_indent | unlet! b:statusline_trailing
   " | redrawstatus
+  " Update whitespace warnings
+  autocmd BufWritePost,CursorHold,InsertLeave * unlet! b:statusline_indent | unlet! b:statusline_trailing
   " autocmd CmdWinEnter * let b:is_command_window = true
   " autocmd CmdWinLeave * unlet b:is_command_window
   autocmd FileType qf let &l:statusline = StatusLine()

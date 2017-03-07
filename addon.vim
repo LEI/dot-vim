@@ -37,3 +37,15 @@ Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 " Plug 'ternjs/tern_for_vim' " Tern-based JavaScript support
 
 " Text Objects: kana/vim-textobj-user
+
+" Formatting: google/vim-codefmt
+
+" Syntax Checkers:
+" scrooloose/syntastic, maralla/validator.vim, w0rp/ale
+" has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+Plug 'neomake/neomake' ", {'on': 'Neomake'}
+
+" Shell: bashate, shellcheck
+
+" VimL: vim-vint
+Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
