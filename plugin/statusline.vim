@@ -44,17 +44,20 @@ function! StatusLine() abort
   let l:stl = ''
   let l:stl.= '%( %{&modifiable ? StatusLineMode() . (&paste ?" PASTE":"") : ""} ' . s:ep . '%)'
   " Git branch
-  let l:stl.= '%( %{winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . '%)'
+  let l:stl.= '%( %{!exists("w:quickfix_title") && winwidth(0) > 60 && exists("*fugitive#head") ? fugitive#head(7) : ""} ' . s:ep . '%)'
   " Buffer
   let l:stl.= '%< %f'
+
+  let l:stl.= '%(%{exists("w:quickfix_title") ? w:quickfix_title : " "}%)'
   " Flags [%W%H%R%M]
-  let l:stl.= '%( [%{StatusLineFlags()}] %)'
-  let l:stl.= '%=' " Break
-  " Errors and warnings
+  let l:stl.= '%( [%{!exists("w:quickfix_title") ? StatusLineFlags() : ""}]%)'
+  let l:stl.= ' %=' " Break
+  " Warnings
+  let l:stl.= '%#WarningMsg#'
+  let l:stl.= '%( %{StatusLineWarnings()} %)'
+  " Errors
   let l:stl.= '%#ErrorMsg#'
-  let l:stl.= '%( %{exists("*neomake#Make") ? neomake#statusline#QflistStatus("qf: ") : ""} %)'
-  let l:stl.= '%( %{exists("*neomake#Make") ? neomake#statusline#LoclistStatus() : ""} %)'
-  let l:stl.= '%( %{exists("g:loaded_syntastic") ? SyntasticStatuslineFlag() : ""} %)'
+  let l:stl.= '%( %{StatusLineErrors()} %)'
   " Reset highlight group
   let l:stl.= '%0*'
   " File type
@@ -64,7 +67,7 @@ function! StatusLine() abort
   " File encoding
   let l:stl.= '%( %{winwidth(0) > 80 && &buftype != "help" ? StatusLineFileInfo() : ""} ' . s:ep . '%)'
   " Default ruler
-  let l:stl.= '%-14.(%l,%c%V/%L%) %P'
+  let l:stl.= ' %-14.(%l,%c%V/%L%) %P'
   let l:stl.= ' '
   return l:stl
 endfunction
@@ -119,23 +122,85 @@ function! StatusLineFileInfo() abort
   return l:str
 endfunction
 
+function! StatusLineWarnings() abort
+  let l:indent = StatusLineIndent()
+  let l:trailing = StatusLineTrailing()
+  if !empty(l:indent) && !empty(l:trailing)
+    return l:indent . ',' . l:trailing
+  elseif !empty(l:indent)
+    return l:indent
+  elseif !empty(l:trailing)
+    return l:trailing
+  endif
+  return ''
+endfunction
+
+function! StatusLineIndent() abort
+  if !exists('b:statusline_indent')
+    let b:statusline_indent = ''
+    if !&modifiable
+      return b:statusline_indent
+    endif
+    " Find spaces that arent used as alignment in the first indent column
+    let l:spaces = search('^ \{' . &tabstop . ',}[^\t]', 'nw')
+    let l:tabs = search('^\t', 'nw')
+    if l:tabs != 0 && l:spaces != 0
+      " Spaces and tabs are used to indent
+      let b:statusline_indent = 'mixed-indent'
+    elseif l:spaces != 0 && !&expandtab
+      let b:statusline_indent = 'spaces' " line nr: l:spaces
+    elseif l:tabs != 0 && &expandtab
+      let b:statusline_indent = 'tabs' " line nr: l:tabs
+    endif
+  endif
+  return b:statusline_indent
+endfunction
+
+function! StatusLineTrailing() abort
+  if !exists('b:statusline_trailing')
+    let l:msg = ''
+    let l:match = search('\s\+$', 'nw')
+    if l:match != 0
+      let l:msg = 'trailing:' . l:match " '\s$'
+    endif
+    let b:statusline_trailing = l:msg
+  endif
+  return b:statusline_trailing
+endfunction
+
+function! StatusLineErrors() abort
+  let l:str = ''
+  if exists('*neomake#Make')
+    if !empty(neomake#statusline#QflistCounts())
+      let l:str.= neomake#statusline#QflistStatus('qf: ')
+    endif
+    if !empty(neomake#statusline#LoclistCounts())
+      let l:str.= neomake#statusline#LoclistStatus()
+    endif
+  endif
+  if exists('g:loaded_syntastic_plugin')
+    let l:str.= SyntasticStatuslineFlag()
+  endif
+  return l:str
+endfunction
+
 function! StatusLineColors() abort
   highlight link StatusLineBranch StatusLine
-  " Reverse: cterm=NONE gui=NONE
+  " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
   if &background ==# 'dark'
     " highlight User1 term=reverse ctermfg=10 ctermbg=7
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
     "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
-    highlight StatusLineInsert ctermfg=0 ctermbg=2
-    highlight StatusLineReplace ctermfg=0 ctermbg=9
-    highlight StatusLineVisual ctermfg=0 ctermbg=3
+    highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
+    highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
+    highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
   else
     " highlight User1 term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=7 ctermbg=4
     "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
-    highlight StatusLineInsert ctermfg=7 ctermbg=2
-    highlight StatusLineReplace ctermfg=7 ctermbg=9
-    highlight StatusLineVisual ctermfg=7 ctermbg=3
+    highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
+    highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+    highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
   endif
 endfunction
 
@@ -164,7 +229,7 @@ function! StatusLineMode(...) abort
     highlight! link StatusLine StatusLineInsert
   elseif l:mode ==# 'R'
     highlight! link StatusLine StatusLineReplace
-  " elseif l:mode == 'v' || l:mode == 'V' || l:mode == '^V'
+  " elseif l:mode ==# 'v' || l:mode ==# 'V' || l:mode ==# '^V'
   "   highlight! link StatusLine StatusLineVisual
   else
     highlight link StatusLine NONE
@@ -214,5 +279,10 @@ augroup StatusLine
   autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
   autocmd InsertChange * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
   autocmd InsertLeave * unlet g:statusline_insertmode | call StatusLineMode()
+  " Update whitespace warnings
+  autocmd BufWritePost,InsertLeave * unlet! b:statusline_indent | unlet! b:statusline_trailing
   " | redrawstatus
+  " autocmd CmdWinEnter * let b:is_command_window = true
+  " autocmd CmdWinLeave * unlet b:is_command_window
+  autocmd FileType qf let &l:statusline = StatusLine()
 augroup END

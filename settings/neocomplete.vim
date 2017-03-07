@@ -1,10 +1,11 @@
 " NeoComplete
 
-let g:neocomplete#enable_at_startup = 1
+if !exists('g:loaded_neocomplete')
+  finish
+endif
 
-" if !exists('g:loaded_neocomplete')
-"   finish
-" endif
+" Should be set earlier
+" let g:neocomplete#enable_at_startup = 1
 
 " Automatically select the first match
 " let g:neocomplete#enable_auto_select = 1

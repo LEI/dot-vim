@@ -1,10 +1,11 @@
 " Deoplete
 
-let g:deoplete#enable_at_startup = 1
+if !exists('g:loaded_deoplete')
+  finish
+endif
 
-" if !exists('g:loaded_deoplete')
-"   finish
-" endif
+" Should be set earlier
+" let g:deoplete#enable_at_startup = 1
 
 " This option enables deoplete only when the popup menu is manually opened
 " let g:deoplete#disable_auto_complete = 1

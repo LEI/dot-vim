@@ -4,10 +4,10 @@ if !exists('g:loaded_neosnippet')
   finish
 endif
 
-" Conceal snippet markers
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
+" Conceal snippet markers (FIXME: markdown)
+" if has('conceal')
+"   set conceallevel=2 concealcursor=niv
+" endif
 
 function! s:pmenu_accept() abort
   if exists('g:popup_menu_accept') && g:popup_menu_accept !=# ''
