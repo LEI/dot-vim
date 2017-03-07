@@ -44,7 +44,7 @@ function! StatusLine(...) abort
   let l:name = a:0 ? a:1 : '%f'
   let l:s = ''
   let l:s.= '%1*%( %{&paste ? "PASTE" : ""} %)%0*'
-  let l:s.= '%( %{&modifiable ? StatusLineMode() : ""} ' . s:sep . '%)'
+  let l:s.= '%( %{winwidth(0) > 20 && &modifiable ? StatusLineMode() : ""} ' . s:sep . '%)'
   " Git branch &bt !~ 'nofile\|quickfix'
   let l:s.= '%( %{winwidth(0) > 60 ? StatusLineBranch() : ""} ' . s:sep . '%)'
   " Buffer
@@ -64,10 +64,8 @@ function! StatusLine(...) abort
   let l:s.= '%0*'
   " File type
   let l:s.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:sep . '%)'
-  " Netrw plugin
-  " let l:s.= '%{g:netrw_sort_by}[%{(g:netrw_sort_direction =~ "n") ? "+" : "-"}]'
   " File encoding
-  let l:s.= "%( %{&bt != '" . 'help\|quickfix' . "' && winwidth(0) > 80 ? StatusLineFileInfo() : ''} " . s:sep . "%)"
+  let l:s.= "%( %{winwidth(0) > 80 ? StatusLineFileInfo() : ''} " . s:sep . "%)"
   " Default ruler
   let l:s.= ' %-14.(%l,%c%V/%L%) %P'
   let l:s.= ' '
@@ -76,6 +74,9 @@ endfunction
 
 function! StatusLineBranch() abort
   if !exists('*fugitive#head') || &buftype ==# 'quickfix'
+    return ''
+  endif
+  if exists('b:branch_hidden') && b:branch_hidden == 1
     return ''
   endif
   return fugitive#head(7)
@@ -118,6 +119,9 @@ function! StatusLineFileType() abort
 endfunction
 
 function! StatusLineFileInfo() abort
+  if &buftype =~# 'help\|quickfix'
+    return ''
+  endif
   let l:str = ''
   if strlen(&fileencoding) > 0
     let l:str.= &fileencoding
@@ -288,7 +292,7 @@ augroup StatusLine
   " Update whitespace warnings
   autocmd BufWritePost,CursorHold,InsertLeave * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
-  autocmd CmdWinEnter * let &l:statusline = StatusLine('Command Line')
+  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = StatusLine('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
 
   " Quickfix or location list title

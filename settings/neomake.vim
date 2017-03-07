@@ -51,6 +51,7 @@ augroup NeomakeConfig
   "autocmd BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) | bd | q | endif
 
   " Automatically close corresponding loclist when quitting a window
+  " TODO: auto open on BufReload?
   autocmd BufHidden,QuitPre * if &filetype != 'qf' | silent! lclose | endif
   " autocmd BufUnload * if &filetype != 'qf' | silent! lclose | endif
   " autocmd QuitPre * let g:neomake_verbose = 0
