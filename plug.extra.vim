@@ -2,32 +2,28 @@
 " let g:vim_completion = 1
 " let g:vim_syntax_check = 1
 
-finish
 " Auto Completion:
 if get(g:, 'vim_completion', 0) > 0
-  let s:has_completion = 0
+  let g:has_completion = 0
   if has('nvim') && has('python3') " pip3 install --upgrade neovim
-    let s:has_completion = 1
+    let g:has_completion = 1
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
     let g:deoplete#enable_at_startup = 1
   elseif has('lua')
-    let s:has_completion = 1
+    let g:has_completion = 1
     Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
     let g:neocomplete#enable_at_startup = 1
-    " augroup NeoCompleteEnable
-    "   autocmd!
-    "   autocmd VimEnter * call NeoCompleteEnable()
-    " augroup END
   endif
-  if s:has_completion == 1 && v:version >= 704
-      Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+
+  " if g:has_completion == 1 && v:version >= 704
+  "     Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+  " endif
+
+  if g:has_completion && (has('python') || has('python3'))
+    Plug 'SirVer/ultisnips', {'on': []} | Plug 'honza/vim-snippets'
   endif
 
   " Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
-  " if s:has_completion && (has('python') || has('python3'))
-  "   Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-  " endif
-
   " The variable a:info is a dictionary with 3 fields:
   " - name: name of the plugin
   " - status: 'installed', 'updated', or 'unchanged'

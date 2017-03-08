@@ -1,8 +1,8 @@
 " Restore cursor position and toggle cursor line
 " https://github.com/farmergreg/vim-lastplace
 
-function! s:RestoreCursorPosition()
-  if &filetype !=# 'gitcommit'
+function! RestoreCursorPosition()
+  if &filetype ==# 'gitcommit'
     return 0
   endif
   if line("'\"") > 0 && line("'\"") <= line('$')
@@ -13,5 +13,5 @@ endfunction
 
 augroup RestoreCursorPosition
   autocmd!
-  autocmd BufReadPost * call s:RestoreCursorPosition()
+  autocmd BufReadPost * call RestoreCursorPosition()
 augroup END

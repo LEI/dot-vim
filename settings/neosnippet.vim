@@ -5,9 +5,22 @@ if !exists('g:loaded_neosnippet')
 endif
 
 " Conceal snippet markers (FIXME: markdown)
-" if has('conceal')
-"   set conceallevel=2 concealcursor=niv
-" endif
+if has('conceal')
+  set conceallevel=2 " concealcursor=niv
+endif
+
+" Expand snippet or jump to next placeholder
+" imap <expr> <Tab> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
+" imap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? <SID>pmenu_close() : "\<C-l>")
+imap <expr> <C-j> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<C-j>"
+smap <expr> <C-j> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<C-j>"
+xmap <C-j> <Plug>(neosnippet_expand_target)
+" xmap <C-j> <Plug>(neosnippet_register_oneshot_snippet)
+
+" " Enter to close popup, or expand if a snippet is selected
+" imap <expr> <CR> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? <SID>pmenu_accept() : <SID>cr_imap())
+" " Close popup menu and cancel completion
+" imap <expr> <C-h> (pumvisible() ? <SID>pmenu_cancel() : "") . "\<C-h>"
 
 function! s:pmenu_accept() abort
   if exists('g:popup_menu_accept') && g:popup_menu_accept !=# ''
@@ -43,20 +56,3 @@ function! s:cr_imap(...) abort
   return "\<CR>"
   " return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
 endfunction
-
-" Enter to close popup, or expand if a snippet is selected
-imap <expr> <CR> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? <SID>pmenu_accept() : <SID>cr_imap())
-" Close popup menu and cancel completion
-imap <expr> <C-h> (pumvisible() ? <SID>pmenu_cancel() : "") . "\<C-h>"
-
-" Expand snippet or jump to next placeholder
-" imap <expr> <Tab> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
-" imap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? <SID>pmenu_close() : "\<C-l>")
-imap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<C-l>"
-smap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<C-l>"
-xmap <C-l> <Plug>(neosnippet_expand_target)
-
-" Jump to next placeholder without expanding snippet
-imap <expr> <C-j> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<C-j>"
-smap <expr> <C-j> neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)" : "\<C-j>"
-" xmap <C-j> <Plug>(neosnippet_register_oneshot_snippet)

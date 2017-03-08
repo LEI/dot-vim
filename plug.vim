@@ -1,29 +1,52 @@
 " Vim Plug
 
-let g:vim_plug_url = 'httpg://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-let g:vim_plug_path = $HOME . '/.vim/autoload/plug.vim'
-let g:vim_plugins_path = $HOME . '/.vim/plugins'
-let g:vim_settings_path = $HOME . '/.vim/settings'
+" Color Schemes:
+Plug 'LEI/flattened'
+" Plug 'altercation/vim-colors-solarized'
 
-let $PLUGINS = g:vim_plugins_path
+" Improvments:
+" Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
+" Plug 'editorconfig/editorconfig-vim'
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
+" Plug 'metakirby5/codi.vim' " Interactive scratchpad
+" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+Plug 'tpope/vim-commentary' " Comment stuff out
+Plug 'tpope/vim-endwise' " Automatic end keywords
+Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
+" Plug 'tpope/vim-obsession' " Continuously updated session files
+Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
+Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
+Plug 'tpope/vim-surround' " Quoting/parenthesizing
+Plug 'tpope/vim-unimpaired' " Mappings
+" Plug 'godlygeek/tabular' " Text aligning
 
-" Auto download vim-plug and install plugins
-if empty(glob(g:vim_plug_path)) " !isdirectory(g:vim_plugins_path)
-  echo 'Installing Vim-Plug...'
-  execute 'silent !curl -fLo ' . g:vim_plug_path . '  --create-dirs ' . g:vim_plug_url
-  augroup VimPlug
-    autocmd!
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-  augroup END
+if !has('nvim')
+  Plug 'tpope/vim-sensible' " Sane defaults
 endif
 
-" Start Vim Plug
-call plug#begin(g:vim_plugins_path)
+" Navigation:
+Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
+Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
-" Register plugins
-runtime plug.vim
-runtime plug.local.vim
-runtime plug.extra.vim
+" Version Control:
+Plug 'tpope/vim-fugitive' " Git wrapper
+" Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support
 
-" Add plugins to &runtimepath
-call plug#end()
+" Languages:
+Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
+" Plug 'ternjs/tern_for_vim' " Tern-based JavaScript support
+
+" Text Objects: kana/vim-textobj-user
+
+" Formatting: google/vim-codefmt
+
+" Syntax Checkers:
+" scrooloose/syntastic, maralla/validator.vim, w0rp/ale
+if has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+  Plug 'neomake/neomake'
+endif
+
+" Shell: bashate, shellcheck
+
+" VimL: vim-vint
+Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'

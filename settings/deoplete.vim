@@ -28,9 +28,7 @@ let g:popup_menu_cancel = 'deoplete#smart_close_popup'
 " Refresh matches (conflicts: surround)
 " imap <expr> <C-g> pumvisible() ? deoplete#refresh() : "\<C-g>"
 
-if get(g:, 'deoplete#disable_auto_complete', 0) > 0
-  " Enable autocomplete on Tab
-  " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : CheckBackSpace() ? "\<Tab>" : deoplete#mappings#manual_complete()
-  imap <expr> <Tab> CheckBackSpace() ? "\<Tab>" : "\<C-n>"
-  imap <expr> <C-n> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
-endif
+" if get(g:, 'deoplete#disable_auto_complete', 0) > 0
+"   imap <expr> <Tab> CheckBackSpace() ? "\<Tab>" : "\<C-n>"
+"   imap <expr> <C-n> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
+" endif
