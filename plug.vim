@@ -1,8 +1,8 @@
 " Vim Plug
 
-" Color Schemes:
-Plug 'LEI/flattened'
-Plug 'altercation/vim-colors-solarized'
+" Theme
+Plug 'LEI/flattened' " altercation/vim-colors-solarized
+" Plug 'LEI/vim-statusline'
 
 " Improvments:
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions

@@ -11,7 +11,7 @@
 
 " Plugins {{{1
 
-let g:vim_plug_url = 'httpg://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+let g:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 let g:vim_plug_path = $HOME . '/.vim/autoload/plug.vim'
 let g:vim_plugins_path = $HOME . '/.vim/plugins'
 let g:vim_settings_path = $HOME . '/.vim/settings'
@@ -20,7 +20,7 @@ let $PLUGINS = g:vim_plugins_path
 
 " Auto download vim-plug and install plugins
 if empty(glob(g:vim_plug_path)) " !isdirectory(g:vim_plugins_path)
-  echo 'Installing Vim-Plug...'
+  " echo 'Installing Vim-Plug...'
   execute 'silent !curl -fLo ' . g:vim_plug_path . '  --create-dirs ' . g:vim_plug_url
   augroup VimPlug
     autocmd!
@@ -38,6 +38,214 @@ runtime plug.extra.vim
 
 " Add plugins to &runtimepath
 call plug#end()
+
+" Load matchit.vim
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
+  runtime! macros/matchit.vim
+endif
+
+" General {{{1
+
+if has('autocmd')
+  filetype plugin indent on
+endif
+
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
+
+if has('path_extra')
+  setglobal tags-=./tags tags-=./tags; tags^=./tags;
+endif
+
+if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
+  set shell=/bin/bash
+endif
+
+" Options {{{
+
+set timeout
+set timeoutlen=1000
+set nottimeout
+" set ttimeoutlen=-1
+
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
+
+set nrformats-=octal " Disable octal format for number processing using CTRL-A
+
+set backspace=indent,eol,start " Normal backspace in insert mode
+
+set nostartofline " Keep the cursor on the same column if possible
+
+set lazyredraw " Redraw only if necessary, faster macros
+
+" set esckeys " Recognize escape immediately
+
+set exrc " Enable per-directory .vimrc files
+set secure " Disable unsafe commands
+
+set modeline " Allow setting some options at the beginning and end of the file
+set modelines=2 " Number of lines checked for set commands
+
+" set title " Set the title of the window to 'titlestring'
+
+" set fileformats=unix,dos,mac " Use Unix as the standard file type
+
+set clipboard=unnamed " Use system clipboard
+
+set synmaxcol=420 " Limit syntax highlighting for long lines
+
+set report=0 " Always report changed lines (default threshold: 2)
+
+set autoread " Reload unmodified files when changes are detected outside
+
+" set autowrite " Automatically :write before running commands
+
+set hidden " Allow modified buffers in the background
+
+set splitbelow " Split windows below the current window
+
+set splitright " Split windows right of the current window
+
+set diffopt+=vertical " Always use vertical diffs
+
+set shortmess=atI " Avoid hit-enter prompts caused by file messages
+"
+" set noshowmatch " Do not show matching brackets when text indicator is over them
+
+" set matchtime=2 " How many tenths of a second to blink when matching brackets
+
+" set matchpairs+=<:> " HTML brackets
+
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
+
+set nojoinspaces " Insert only one space after punctuation
+
+set nowrap " Do not wrap by default
+
+if &history < 1000
+  set history=1000
+endif
+
+if &tabpagemax < 50
+  set tabpagemax=50
+endif
+
+if !empty(&viminfo)
+  set viminfo^=!
+endif
+
+set sessionoptions-=options
+
+" Mouse {{{1
+
+if !has('nvim')
+  " Fix mouse inside screen and tmux
+  if &term =~# '^screen' || strlen($TMUX) > 0
+    set ttymouse=xterm2
+  endif
+  " Faster terminal redrawing
+  set ttyfast
+endif
+
+if has('mouse')
+  set mouse+=a
+endif
+
+" Completion {{{1
+
+" set complete-=i " Do not scan current and included files
+
+set complete+=kspell " Autocompete with dictionnary words when spell check is on
+
+set completeopt+=longest,menuone " Only insert the longest common text for matches
+
+" Search {{{1
+
+set incsearch
+
+set hlsearch " Keep matches highlighted
+
+set ignorecase " Ignore case in search patterns
+
+set smartcase " Do not ignore when the pattern containes upper case characters
+
+" set magic " Changes the special characters that can be used in search patterns
+
+" set gdefault " Reverse global flag: always apply to all, except if /g
+
+
+" Indentation {{{1
+
+set smarttab
+set autoindent
+" set smartindent " When starting a new line
+set expandtab " Use spaces instead of tabs
+set shiftround " >> indents to net multiple of 'shiftwidth'
+set shiftwidth=4 " >> indents by 4 spaces
+set softtabstop=-1 " Use 'shiftwidth' value for editing operations
+set tabstop=4 " Spaces used to represent a tab (default: 8)
+
+" Scrolling {{{1
+
+set scrolloff=3 " Lines to keep above and below the cursor
+set sidescroll=1 " Lines to scroll horizontally when 'wrap' is set
+set sidescrolloff=5 " Lines to the left and right if 'nowrap' is set
+
+" Folding {{{1
+
+" set foldcolumn=1
+set foldmethod=indent
+set foldnestmax=3
+set nofoldenable
+
+" Statusline {{{1
+
+set laststatus=2 " Always show statusline
+
+set display+=lastline " Display as much as possible of the last line
+
+set noshowmode " Do not display current mode
+
+set showcmd " Display incomplete commands
+
+set ruler " Always show current position
+
+" set rulerformat=%l,%c%V%=%P
+
+" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+
+set statusline=%!statusline#StatusLine()
+
+set wildmenu " Invoke completion on <Tab> in command line mode
+
+set wildmode=longest,full " Complete longest common string, then each full match
+
+" Characters {{{1
+
+" Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
+" let &fillchars='stl: ,stlnc: '
+
+set list " Show invisible characters
+
+if has('multi_byte') && &encoding ==# 'utf-8'
+  let &listchars = 'tab:' . nr2char(0x25B8) . ' '
+        \ . ',trail:' . nr2char(0x00B7)
+        \ . ',extends:' . nr2char(0x276F)
+        \ . ',precedes:' . nr2char(0x276E)
+        \ . ',nbsp:' . nr2char(0x005F)
+        \ . ',eol:' . nr2char(0x00AC)
+  " Show line breaks (arrows: 0x21AA or 0x08627)
+  let &showbreak = nr2char(0x2026) " Ellipsis
+else
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
+  " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+  " let &showbreak = '-> '
+endif
 
 " Colors {{{1
 
@@ -65,109 +273,16 @@ if &term =~# '256color'
 endif
 
 " Allow color schemes to do bright colors without forcing bold
-" if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-"   set t_Co=16
-" endif
-
-" Mouse {{{1
-
-if !has('nvim')
-  " Fix mouse inside screen and tmux
-  if &term =~# '^screen' || strlen($TMUX) > 0
-    set ttymouse=xterm2
-  endif
-  " Faster terminal redrawing
-  set ttyfast
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+  set t_Co=16
 endif
 
-if has('mouse')
-  set mouse+=a
-endif
-
-" General options {{{1
-
-set backspace=indent,eol,start " Normal backspace in insert mode
-
-set nostartofline " Keep the cursor on the same column if possible
-
-set lazyredraw " Redraw only if necessary, faster macros
-
-" set esckeys " Recognize escape immediately
-" set timeout
-" set timeoutlen=1000
-" set nottimeout
-" set ttimeoutlen=-1
-
-set exrc " Enable per-directory .vimrc files
-set secure " Disable unsafe commands
-
-set modeline " Allow setting some options at the beginning and end of the file
-set modelines=2 " Number of lines checked for set commands
-
-" set title " Set the title of the window to 'titlestring'
-
-" set nrformats-=octal " Disable octal format for number processing using CTRL-A
-
-" set fileformats=unix,dos,mac " Use Unix as the standard file type
-
-set clipboard=unnamed " Use system clipboard
-
-set synmaxcol=420 " Limit syntax highlighting for long lines
-
-set report=0 " Always report changed lines (default threshold: 2)
-
-set autoread " Reload unmodified files when changes are detected outside
-
-" set autowrite " Automatically :write before running commands
-
-set hidden " Allow modified buffers in the background
-
-set hlsearch " Keep matches highlighted
-
-set ignorecase " Ignore case in search patterns
-
-set smartcase " Do not ignore when the pattern containes upper case characters
-
-" set smartindent " Smart autoindenting when starting a new line
-
-" set magic " Changes the special characters that can be used in search patterns
-
-" set gdefault " Reverse global flag (always apply to  all, except if /g)
-
-set splitbelow " Split windows below the current window
-
-set splitright " Split windows right of the current window
-
-set wildmenu " Invoke completion on <Tab> in commande line mode
-
-set wildmode=longest,full " Complete longest common string, then each full match
-
-" set complete-=i " Do not scan current and included files
-
-set complete+=kspell " Autocompete with dictionnary words when spell check is on
-
-set completeopt+=longest,menuone " Only insert the longest common text for matches
-
-set diffopt+=vertical " Always use vertical diffs
-
-set shortmess=atI " Avoid hit-enter prompts caused by file messages
-
-set noerrorbells " Disable audible bell for error messages
-set visualbell " Use visual bell instead of beeping
-set t_vb= " Disable audible and visual bells
-"
-" set noshowmatch " Do not show matching brackets when text indicator is over them
-
-" set matchtime=2 " How many tenths of a second to blink when matching brackets
-
-" set matchpairs+=<:> " HTML brackets
-
-set formatoptions-=o " Disable automatic comment after hitting 'o' or 'O'
-
-set nojoinspaces " Insert only one space after punctuation
+" Columns {{{1
 
 set number " Print the line number in front of each line
+
 " set numberwidth=4 " Minimal number of columns to use for the line number
+
 set relativenumber " Show the line number relative to the line with the cursor
 
 " Relative to textwidth
@@ -175,68 +290,11 @@ if exists('+colorcolumn')
   set colorcolumn=+1
 endif
 
-set nowrap " Do not wrap by default
+" Bells {{{1
 
-" Statusline {{{1
-
-set laststatus=2 " Always show statusline
-
-set display+=lastline " Display as much as possible of the last line
-
-set noshowmode " Do not display current mode
-
-set showcmd " Display incomplete commands
-
-set ruler " Always show current position
-
-" set rulerformat=%l,%c%V%=%P
-
-" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-
-" set statusline=%!StatusLine()
-
-" Characters {{{1
-
-" Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
-" let &fillchars='stl: ,stlnc: '
-
-set list " Show invisible characters
-
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let &listchars = 'tab:' . nr2char(0x25B8) . ' '
-        \ . ',trail:' . nr2char(0x00B7)
-        \ . ',extends:' . nr2char(0x276F)
-        \ . ',precedes:' . nr2char(0x276E)
-        \ . ',nbsp:' . nr2char(0x005F)
-        \ . ',eol:' . nr2char(0x00AC)
-  " Show line breaks (arrows: 0x21AA or 0x08627)
-  let &showbreak = nr2char(0x2026) " Ellipsis
-else
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
-  " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
-  " let &showbreak = '-> '
-endif
-
-" Indentation {{{1
-
-set expandtab " Use spaces instead of tabs
-set shiftround " >> indents to net multiple of 'shiftwidth'
-set shiftwidth=4 " >> indents by 4 spaces
-set softtabstop=-1 " Use 'shiftwidth' value for editing operations
-set tabstop=4 " Number of spaces used to represent a tab (default: 8)
-
-" Scrolling {{{1
-
-set scrolloff=3 " Minimal number of screen lines to keep above and below the cursor
-set sidescroll=1 " Minimal number to scroll horizontally when 'wrap' is set
-set sidescrolloff=5 " Minimum number to the left and right if 'nowrap' is set
-
-" Folding {{{1
-
-" set foldcolumn=1
-set foldmethod=indent
-set foldnestmax=3
-set nofoldenable
+set noerrorbells " Disable audible bell for error messages
+set visualbell " Use visual bell instead of beeping
+set t_vb= " Disable audible and visual bells
 
 " Abbreviations {{{1
 
@@ -317,6 +375,11 @@ endfunction
 " inoremap <CR> <C-r>=<SID>cr_close_popup()<CR>
 " " Close the popup menu (using <Esc> or <CR> breaks enter and arrow keys)
 " inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"
+
+" Use <C-L> to clear the highlighting of :set hlsearch
+if maparg('<C-L>', 'n') ==# ''
+  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
 
 " Change leader
 let g:mapleader = "\<Space>"
