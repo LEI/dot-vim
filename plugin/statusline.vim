@@ -35,7 +35,7 @@ set ruler " Always show current position
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
 
-let s:sep = ' '
+let s:sep = '|'
 if has('multi_byte') && &encoding ==# 'utf-8'
   let s:sep = nr2char(0x2502)
 endif
@@ -44,15 +44,18 @@ function! StatusLine(...) abort
   let l:name = a:0 ? a:1 : '%f'
   let l:s = ''
   let l:s.= '%1*%( %{&paste ? "PASTE" : ""} %)%0*'
-  let l:s.= '%( %{winwidth(0) > 20 && &modifiable ? StatusLineMode() : ""} ' . s:sep . '%)'
+  let l:s.= '%( %{winwidth(0) > 40 && &modifiable ? StatusLineMode() : ""} ' . s:sep . '%)'
+  let l:s.= '%<'
   " Git branch &bt !~ 'nofile\|quickfix'
-  let l:s.= '%( %{winwidth(0) > 60 ? StatusLineBranch() : ""} ' . s:sep . '%)'
-  " Buffer
-  let l:s.= '%< ' . l:name
+  let l:s.= '%( %{winwidth(0) > 80 ? StatusLineBranch() : ""} ' . s:sep . '%)'
+  " Buffer name
+  let l:s.= ' ' . l:name
   " let l:s.= '%( %{exists("w:quickfix_title") ? w:quickfix_title : ""}%)'
   " Flags [%W%H%R%M]
   let l:s.= '%( [%{StatusLineFlags()}]%)'
-  let l:s.= ' %=' " Break
+
+  let l:s.= ' %='
+
   " Warnings
   let l:s.= '%#StatusLineWarn#%('
   let l:s.= '%( %{StatusLineIndent()}%)' " &bt nofile, nowrite
@@ -65,7 +68,7 @@ function! StatusLine(...) abort
   " File type
   let l:s.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:sep . '%)'
   " File encoding
-  let l:s.= "%( %{winwidth(0) > 80 ? StatusLineFileInfo() : ''} " . s:sep . "%)"
+  let l:s.= '%( %{winwidth(0) > 80 ? StatusLineFileInfo() : ""} ' . s:sep . '%)'
   " Default ruler
   let l:s.= ' %-14.(%l,%c%V/%L%) %P'
   let l:s.= ' '
