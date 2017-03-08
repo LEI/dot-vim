@@ -1,21 +1,5 @@
 " Statusline
 
-set laststatus=2 " Always show statusline
-
-set display+=lastline " Display as much as possible of the last line
-
-set noshowmode " Do not display current mode
-
-set showcmd " Display incomplete commands
-
-set ruler " Always show current position
-
-" set rulerformat=%l,%c%V%=%P
-
-" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-
-" set statusline=%!StatusLine()
-
 " Format Markers:
 " %< Where to truncate line if too long
 " %n Buffer number
@@ -111,10 +95,9 @@ function! StatusLineFileType() abort
   if strlen(&filetype) == 0
     return 'no ft'
   endif
-  if &filetype ==# 'netrw'
-    if get(b:, 'netrw_browser_active', 0) == 1
-      return &filetype . '[' . g:netrw_sort_by . (g:netrw_sort_direction =~# 'n' ? '+' : '-') . ']'
-    endif
+  if &filetype ==# 'netrw' && get(b:, 'netrw_browser_active', 0) == 1
+    let l:netrw_direction = (g:netrw_sort_direction =~# 'n' ? '+' : '-')
+    return g:netrw_sort_by . '['. l:netrw_direction . '] ' . &filetype
   " elseif &filetype ==# 'qf'
   "   return 'quickfix'
   endif
@@ -122,7 +105,7 @@ function! StatusLineFileType() abort
 endfunction
 
 function! StatusLineFileInfo() abort
-  if &buftype =~# 'help\|quickfix'
+  if &filetype =~# 'netrw' || &buftype =~# 'help\|quickfix'
     return ''
   endif
   let l:str = ''
@@ -282,8 +265,8 @@ let g:statusline_modes = {
   \   't': 'TERMINAL',
   \ }
 
-" autocmd VimEnter *
-let &statusline = StatusLine()
+" autocmd VimEnter * let &statusline = StatusLine()
+set statusline=%!StatusLine()
 augroup StatusLine
   autocmd!
   autocmd VimEnter,ColorScheme * call StatusLineColors() | redrawstatus
@@ -302,3 +285,44 @@ augroup StatusLine
   autocmd FileType qf let &l:statusline = StatusLine('%f' . (exists('w:quickfix_title') ? ' ' . w:quickfix_title : ''))
   autocmd FileType vim-plug let &l:statusline = StatusLine('Plugins')
 augroup END
+
+" Make sure ctrlp is installed and loaded
+"if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
+"  finish
+"endif
+
+" Both functions must be global and return a full statusline
+let g:ctrlp_status_func = {'main': 'StatusLine_CtrlP_Main', 'prog': 'StatusLine_CtrlP_Prog'}
+
+" Arguments: focus, byfname, s:regexp, prv, item, nxt, marked
+"            a:1    a:2      a:3       a:4  a:5   a:6  a:7
+function! StatusLine_CtrlP_Main(...)
+  " let focus = '%#LineNr# '.a:1.' %*'
+  " let byfname = '%#Character# '.a:2.' %*'
+  " let regex = a:3 ? '%#LineNr# regex %*' : ''
+  " let prv = ' <'.a:4.'>='
+  " let item = '{%#Character# '.a:5.' %*}'
+  " let nxt = '=<'.a:6.'>'
+  " let marked = ' '.a:7.' '
+  " let dir = ' %=%<%#LineNr# '.getcwd().' %*'
+  let regex = a:3 ? ' regex ' : ''
+  let prv = ' ' . a:4 . ' ' . s:sep
+  let item = '%0* ' . a:5 . ' %*' . s:sep
+  let nxt = ' ' . a:6 . ' '
+  let marked = ' ' . a:7 . ' '
+  let mid = '%='
+  let focus = ' ' . a:1 . ' ' . s:sep
+  let byfname = ' ' . a:2 . ' ' . s:sep
+  let dir = '%<%0* ' . getcwd() . ' %*'
+  " Return the full statusline
+  return regex.prv.item.nxt.marked.mid.focus.byfname.dir
+endfunction
+
+" Argument: len
+"           a:1
+function! StatusLine_CtrlP_Prog(...)
+  let len = '%0* ' . a:1 . ' '
+  let dir = '%=' . s:sep . '%<%0* ' . getcwd() . ' %*'
+  " Return the full statusline
+  return len.dir
+endfunction

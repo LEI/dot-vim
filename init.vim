@@ -84,7 +84,7 @@ if has('mouse')
   set mouse+=a
 endif
 
-" General {{{1
+" General options {{{1
 
 set backspace=indent,eol,start " Normal backspace in insert mode
 
@@ -176,6 +176,24 @@ if exists('+colorcolumn')
 endif
 
 set nowrap " Do not wrap by default
+
+" Statusline {{{1
+
+set laststatus=2 " Always show statusline
+
+set display+=lastline " Display as much as possible of the last line
+
+set noshowmode " Do not display current mode
+
+set showcmd " Display incomplete commands
+
+set ruler " Always show current position
+
+" set rulerformat=%l,%c%V%=%P
+
+" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+
+" set statusline=%!StatusLine()
 
 " Characters {{{1
 
