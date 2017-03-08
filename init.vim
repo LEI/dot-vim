@@ -1,10 +1,12 @@
 " Vim
 
 runtime before.vim
+
+" Initialize plugins
 runtime plug.vim
 
 " Load global options
-source ~/.vim/config.vim
+runtime config.vim
 
 if filereadable($HOME . '/.vimrc.local')
   source ~/.vimrc.local

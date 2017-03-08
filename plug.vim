@@ -21,9 +21,9 @@ endif
 call plug#begin(g:vim_plugins_path)
 
 " Register plugins
-runtime addon.vim
-runtime addon.local.vim
-runtime addon.extra.vim
+runtime plug.vim
+runtime plug.local.vim
+runtime plug.extra.vim
 
 " Add plugins to &runtimepath
 call plug#end()

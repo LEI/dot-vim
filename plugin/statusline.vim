@@ -300,4 +300,5 @@ augroup StatusLine
 
   " Quickfix or location list title
   autocmd FileType qf let &l:statusline = StatusLine('%f' . (exists('w:quickfix_title') ? ' ' . w:quickfix_title : ''))
+  autocmd FileType vim-plug let &l:statusline = StatusLine('Plugins')
 augroup END
