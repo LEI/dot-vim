@@ -1,8 +1,4 @@
-" Statusline
-
-function! statusline#StatusLine()
-  return StatusLine()
-endfunction
+" Status line
 
 " Modes:
 " n       Normal
@@ -61,42 +57,40 @@ if has('multi_byte') && &encoding ==# 'utf-8'
   let s:sep = nr2char(0x2502)
 endif
 
-function! StatusLine(...) abort
-  let l:name = a:0 ? a:1 : '%f'
-  let l:s = ''
-  let l:s.= '%1*%( %{&paste ? "PASTE" : ""} %)%0*'
-  let l:s.= '%( %{winwidth(0) > 40 && &modifiable ? StatusLineMode() : ""} ' . s:sep . '%)'
-  let l:s.= '%<'
-  " Git branch &bt !~ 'nofile\|quickfix'
-  let l:s.= '%( %{winwidth(0) > 80 ? StatusLineBranch() : ""} ' . s:sep . '%)'
+function! statusline#Build(...) abort
+  let l:name = a:0 ? a:1 : ''
+  " Mode
+  let l:paste = '%1*%( %{&paste ? "PASTE" : ""} %)%0*'
+  let l:mode = '%( %{winwidth(0) > 40 && &modifiable ? statusline#Mode() : ""} ' . s:sep . '%)'
+  " Git branch
+  let l:branch = '%( %{winwidth(0) > 80 ? statusline#Branch() : ""} ' . s:sep . '%)'
   " Buffer name
-  let l:s.= ' ' . l:name
-  " let l:s.= '%( %{exists("w:quickfix_title") ? w:quickfix_title : ""}%)'
+  let l:buffer = ' ' . (len(l:name) > 0 ? l:name : '%f')
   " Flags [%W%H%R%M]
-  let l:s.= '%( [%{StatusLineFlags()}]%)'
-
-  let l:s.= ' %='
-
+  let l:flags = '%( [%{statusline#Flags()}]%)'
   " Warnings
-  let l:s.= '%#StatusLineWarn#%('
-  let l:s.= '%( %{StatusLineIndent()}%)' " &bt nofile, nowrite
-  let l:s.= '%( %{empty(&bt) ? StatusLineTrailing() : ""}%)'
-  let l:s.= ' %)%0*'
+  let l:warn = '%#StatusLineWarn#%('
+  let l:warn.= '%( %{statusline#Indent()}%)' " &bt nofile, nowrite
+  let l:warn.= '%( %{empty(&bt) ? statusline#Trailing() : ""}%)'
+  let l:warn.= ' %)%0*'
   " Errors
-  let l:s.= '%#StatusLineError#'
-  let l:s.= '%( %{StatusLineErrors()} %)'
-  let l:s.= '%0*'
+  let l:err = '%#StatusLineError#'
+  let l:err.= '%( %{statusline#Errors()} %)'
+  let l:err.= '%0*'
   " File type
-  let l:s.= '%( %{winwidth(0) > 40 ? StatusLineFileType() : ""} ' . s:sep . '%)'
+  let l:type = '%( %{winwidth(0) > 40 ? statusline#FileType() : ""} ' . s:sep . '%)'
   " File encoding
-  let l:s.= '%( %{winwidth(0) > 80 ? StatusLineFileInfo() : ""} ' . s:sep . '%)'
+  let l:info = '%( %{winwidth(0) > 80 ? statusline#FileInfo() : ""} ' . s:sep . '%)'
   " Default ruler
-  let l:s.= ' %-14.(%l,%c%V/%L%) %P'
-  let l:s.= ' '
-  return l:s
+  let l:ruler = ' %-14.(%l,%c%V/%L%) %P '
+
+  let l:left = l:paste . l:mode . '%<' . l:branch . l:buffer . l:flags
+  let l:right = l:warn . l:err . l:type . l:info . l:ruler
+  return l:left . ' %=' . l:right
 endfunction
 
-function! StatusLineBranch() abort
+function! statusline#Branch() abort
+  " &bt !~ 'nofile\|quickfix'
   if !exists('*fugitive#head') || &buftype ==# 'quickfix'
     return ''
   endif
@@ -106,12 +100,12 @@ function! StatusLineBranch() abort
   return fugitive#head(7)
 endfunction
 
-function! StatusLineFlags() abort
+function! statusline#Flags() abort
   if &filetype =~# 'netrw\|vim-plug' || &buftype ==# 'quickfix'
     return ''
   endif
   if &filetype ==# '' && &buftype ==# 'nofile'
-    return ''
+    return '' " NetrwMessage
   endif
   if &buftype ==# 'help'
     return 'H'
@@ -131,26 +125,24 @@ function! StatusLineFlags() abort
   return join(l:flags, ',')
 endfunction
 
-function! StatusLineFileType() abort
+function! statusline#FileType() abort
   if &filetype ==# ''
     if &buftype !=# 'nofile'
       return &buftype
     endif
     return ''
   endif
-  if &filetype ==# 'qf'
-    return &buftype
-  endif
+  " if &filetype ==# 'qf'
+  "   return &buftype
+  " endif
   if &filetype ==# 'netrw' && get(b:, 'netrw_browser_active', 0) == 1
     let l:netrw_direction = (g:netrw_sort_direction =~# 'n' ? '+' : '-')
     return g:netrw_sort_by . '['. l:netrw_direction . '] ' . &filetype
-  " elseif &filetype ==# 'qf'
-  "   return 'quickfix'
   endif
   return &filetype
 endfunction
 
-function! StatusLineFileInfo() abort
+function! statusline#FileInfo() abort
   if &filetype ==# '' && &buftype !=# 'nofile'
     return ''
   endif
@@ -172,7 +164,7 @@ function! StatusLineFileInfo() abort
   return l:str
 endfunction
 
-function! StatusLineIndent() abort
+function! statusline#Indent() abort
   if !exists('b:statusline_indent')
     let b:statusline_indent = ''
     if !&modifiable
@@ -198,7 +190,7 @@ function! StatusLineIndent() abort
   return b:statusline_indent
 endfunction
 
-function! StatusLineTrailing() abort
+function! statusline#Trailing() abort
   if !exists('b:statusline_trailing')
     let l:msg = ''
     let l:match = search('\s\+$', 'nw')
@@ -210,7 +202,7 @@ function! StatusLineTrailing() abort
   return b:statusline_trailing
 endfunction
 
-function! StatusLineErrors() abort
+function! statusline#Errors() abort
   let l:str = ''
   if exists('*neomake#Make')
     if !empty(neomake#statusline#QflistCounts())
@@ -226,7 +218,7 @@ function! StatusLineErrors() abort
   return l:str
 endfunction
 
-function! StatusLineColors() abort
+function! statusline#Colors() abort
   highlight link StatusLineBranch StatusLine
   highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
   highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
@@ -248,7 +240,7 @@ function! StatusLineColors() abort
   endif
 endfunction
 
-function! StatusLineInsertMode(...) abort
+function! statusline#InsertMode(...) abort
   let l:insertmode = a:0 ? a:1 : v:insertmode
   if l:insertmode ==# 'i' " Insert mode
     highlight! link StatusLine StatusLineInsert
@@ -263,10 +255,10 @@ function! StatusLineInsertMode(...) abort
   endif
 endfunction
 
-function! StatusLineMode(...) abort
+function! statusline#Mode(...) abort
   let l:mode = a:0 ? a:1 : mode()
   if exists('g:statusline_insertmode') && strlen(g:statusline_insertmode) > 0
-    call StatusLineInsertMode(g:statusline_insertmode)
+    call statusline#InsertMode(g:statusline_insertmode)
   " elseif l:mode ==# 'n'
   "   highlight! link StatusLine StatusLineNormal
   elseif l:mode ==# 'i'
@@ -281,29 +273,29 @@ function! StatusLineMode(...) abort
   return get(g:statusline_modes, l:mode, l:mode)
 endfunction
 
-" autocmd VimEnter * let &statusline = StatusLine()
-" set statusline=%!StatusLine()
+" autocmd VimEnter * let &statusline = statusline#Build()
+" set statusline=%!statusline#Build()
 augroup StatusLine
   autocmd!
-  autocmd VimEnter,ColorScheme * call StatusLineColors() | redrawstatus
-  autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
-  autocmd InsertChange * let g:statusline_insertmode = v:insertmode | call StatusLineMode()
-  autocmd InsertLeave * unlet g:statusline_insertmode | call StatusLineMode()
+  autocmd VimEnter,ColorScheme * call statusline#Colors() | redrawstatus
+  autocmd InsertEnter * let g:statusline_insertmode = v:insertmode | call statusline#Mode()
+  autocmd InsertChange * let g:statusline_insertmode = v:insertmode | call statusline#Mode()
+  autocmd InsertLeave * unlet g:statusline_insertmode | call statusline#Mode()
   " | redrawstatus
 
   " Update whitespace warnings
   autocmd BufWritePost,CursorHold,InsertLeave * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
-  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = StatusLine('Command Line')
+  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = statusline#Build('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
 
   " Quickfix or location list title
-  autocmd FileType qf let &l:statusline = StatusLine('%f' . (exists('w:quickfix_title') ? ' ' . w:quickfix_title : ''))
-  autocmd FileType vim-plug let &l:statusline = StatusLine('Plugins')
+  autocmd FileType qf let &l:statusline = statusline#Build('%f' . (exists('w:quickfix_title') ? ' ' . w:quickfix_title : ''))
+  autocmd FileType vim-plug let &l:statusline = statusline#Build('Plugins')
 augroup END
 
 if !has('vim_starting') " v:vim_did_enter
-  call StatusLineColors()
+  call statusline#Colors()
 endif
 
  " Make sure ctrlp is installed and loaded
@@ -316,7 +308,7 @@ let g:ctrlp_status_func = {'main': 'StatusLine_CtrlP_Main', 'prog': 'StatusLine_
 
 " Arguments: focus, byfname, s:regexp, prv, item, nxt, marked
 "            a:1    a:2      a:3       a:4  a:5   a:6  a:7
-function! StatusLine_CtrlP_Main(...)
+function! StatusLine_CtrlP_Main(...) abort
   " let focus = '%#LineNr# '.a:1.' %*'
   " let byfname = '%#Character# '.a:2.' %*'
   " let regex = a:3 ? '%#LineNr# regex %*' : ''
@@ -325,24 +317,24 @@ function! StatusLine_CtrlP_Main(...)
   " let nxt = '=<'.a:6.'>'
   " let marked = ' '.a:7.' '
   " let dir = ' %=%<%#LineNr# '.getcwd().' %*'
-  let regex = a:3 ? ' regex ' : ''
-  let prv = ' ' . a:4 . ' ' . s:sep
-  let item = '%0* ' . a:5 . ' %*' . s:sep
-  let nxt = ' ' . a:6 . ' '
-  let marked = ' ' . a:7 . ' '
-  let mid = '%='
-  let focus = ' ' . a:1 . ' ' . s:sep
-  let byfname = ' ' . a:2 . ' ' . s:sep
-  let dir = '%<%0* ' . getcwd() . ' %*'
+  let l:regex = a:3 ? ' regex ' : ''
+  let l:prv = ' ' . a:4 . ' ' . s:sep
+  let l:item = '%0* ' . a:5 . ' %*' . s:sep
+  let l:nxt = ' ' . a:6 . ' '
+  let l:marked = ' ' . a:7 . ' '
+  let l:mid = '%='
+  let l:focus = ' ' . a:1 . ' ' . s:sep
+  let l:byfname = ' ' . a:2 . ' ' . s:sep
+  let l:dir = '%<%0* ' . getcwd() . ' %*'
   " Return the full statusline
-  return regex.prv.item.nxt.marked.mid.focus.byfname.dir
+  return l:regex . l:prv . l:item . l:nxt . l:marked . l:mid . l:focus . l:byfname . l:dir
 endfunction
 
 " Argument: len
 "           a:1
-function! StatusLine_CtrlP_Prog(...)
-  let len = '%0* ' . a:1 . ' '
-  let dir = '%=' . s:sep . '%<%0* ' . getcwd() . ' %*'
+function! StatusLine_CtrlP_Prog(...) abort
+  let l:len = '%0* ' . a:1 . ' '
+  let l:dir = '%=' . s:sep . '%<%0* ' . getcwd() . ' %*'
   " Return the full statusline
-  return len.dir
+  return l:len . l:dir
 endfunction

@@ -119,7 +119,7 @@ set shortmess=atI " Avoid hit-enter prompts caused by file messages
 
 " set matchpairs+=<:> " HTML brackets
 
-if v:version > 703 || v:version == 703 && has("patch541")
+if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j " Delete comment character when joining commented lines
 endif
 
@@ -219,7 +219,7 @@ set ruler " Always show current position
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-set statusline=%!statusline#StatusLine()
+set statusline=%!statusline#Build()
 
 set wildmenu " Invoke completion on <Tab> in command line mode
 
