@@ -306,8 +306,6 @@ if !has('vim_starting') " v:vim_did_enter
   call StatusLineColors()
 endif
 
-" let g:ctrlp_status_func = {'main': 'statusline#ctrlp#Main', 'prog': 'statusline#ctrlp#Prog'}
-
  " Make sure ctrlp is installed and loaded
 if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
   finish
@@ -316,6 +314,8 @@ endif
 " Both functions must be global and return a full statusline
 let g:ctrlp_status_func = {'main': 'StatusLine_CtrlP_Main', 'prog': 'StatusLine_CtrlP_Prog'}
 
+" Arguments: focus, byfname, s:regexp, prv, item, nxt, marked
+"            a:1    a:2      a:3       a:4  a:5   a:6  a:7
 function! StatusLine_CtrlP_Main(...)
   " let focus = '%#LineNr# '.a:1.' %*'
   " let byfname = '%#Character# '.a:2.' %*'
