@@ -300,5 +300,5 @@ endif
 
  " Enable customized CtrlP status line
 if get(g:, 'loaded_ctrlp', 0)
-  call statusline#ctrlp#enable()
+  call statusline#ctrlp#Enable()
 endif

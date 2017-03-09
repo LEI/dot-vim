@@ -5,14 +5,14 @@ if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
   finish
 endif
 
-function! statusline#ctrlp#enable() abort
+function! statusline#ctrlp#Enable() abort
   " Both functions must be global and return a full statusline
-  let g:ctrlp_status_func = {'main': 'statusline#ctrlp#main', 'prog': 'statusline#ctrlp#prog'}
+  let g:ctrlp_status_func = {'main': 'statusline#ctrlp#main', 'prog': 'statusline#ctrlp#Prog'}
 endfunction
 
 " Arguments: focus, byfname, s:regexp, prv, item, nxt, marked
 "            a:1    a:2      a:3       a:4  a:5   a:6  a:7
-function! statusline#ctrlp#main(...) abort
+function! statusline#ctrlp#Main(...) abort
   " let focus = '%#LineNr# '.a:1.' %*'
   " let byfname = '%#Character# '.a:2.' %*'
   " let regex = a:3 ? '%#LineNr# regex %*' : ''
@@ -35,7 +35,7 @@ endfunction
 
 " Argument: len
 "           a:1
-function! statusline#ctrlp#prog(...) abort
+function! statusline#ctrlp#Prog(...) abort
   let l:len = '%0* ' . a:1 . ' '
   let l:dir = '%=' . g:statusline_sep . '%<%0* ' . getcwd() . ' %*'
   return l:len . l:dir
