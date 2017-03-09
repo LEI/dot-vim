@@ -20,10 +20,6 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-unimpaired' " Mappings
 " Plug 'godlygeek/tabular' " Text aligning
 
-if !has('nvim')
-  Plug 'tpope/vim-sensible' " Sane defaults
-endif
-
 " Navigation:
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
