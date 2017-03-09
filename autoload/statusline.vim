@@ -4,6 +4,39 @@ function! statusline#StatusLine()
   return StatusLine()
 endfunction
 
+" Modes:
+" n       Normal
+" no      Operator-pending
+" v       Visual by character
+" V       Visual by line
+" CTRL-V  Visual blockwise
+" s       Select by character
+" S       Select by line
+" CTRL-S  Select blockwise
+" i       Insert
+" R       Replace |R|
+" Rv      Virtual Replace |gR|
+" c       Command-line
+" cv      Vim Ex mode |gQ|
+" ce      Normal Ex mode |Q|
+" r       Hit-enter prompt
+" rm      The -- more -- prompt
+" r?      A confirm query of some sort
+" !       Shell or external command is executing
+let g:statusline_modes = {
+  \   'n': 'NORMAL',
+  \   'i': 'INSERT',
+  \   'R': 'REPLACE',
+  \   'v': 'VISUAL',
+  \   'V': 'V-LINE',
+  \   'c': 'COMMAND',
+  \   '': 'V-BLOCK',
+  \   's': 'SELECT',
+  \   'S': 'S-LINE',
+  \   '': 'S-BLOCK',
+  \   't': 'TERMINAL',
+  \ }
+
 " Format Markers:
 " %< Where to truncate line if too long
 " %n Buffer number
@@ -248,39 +281,6 @@ function! StatusLineMode(...) abort
   return get(g:statusline_modes, l:mode, l:mode)
 endfunction
 
-" Modes:
-" n       Normal
-" no      Operator-pending
-" v       Visual by character
-" V       Visual by line
-" CTRL-V  Visual blockwise
-" s       Select by character
-" S       Select by line
-" CTRL-S  Select blockwise
-" i       Insert
-" R       Replace |R|
-" Rv      Virtual Replace |gR|
-" c       Command-line
-" cv      Vim Ex mode |gQ|
-" ce      Normal Ex mode |Q|
-" r       Hit-enter prompt
-" rm      The -- more -- prompt
-" r?      A confirm query of some sort
-" !       Shell or external command is executing
-let g:statusline_modes = {
-  \   'n': 'NORMAL',
-  \   'i': 'INSERT',
-  \   'R': 'REPLACE',
-  \   'v': 'VISUAL',
-  \   'V': 'V-LINE',
-  \   'c': 'COMMAND',
-  \   '': 'V-BLOCK',
-  \   's': 'SELECT',
-  \   'S': 'S-LINE',
-  \   '': 'S-BLOCK',
-  \   't': 'TERMINAL',
-  \ }
-
 " autocmd VimEnter * let &statusline = StatusLine()
 " set statusline=%!StatusLine()
 augroup StatusLine
@@ -303,5 +303,46 @@ augroup StatusLine
 augroup END
 
 if !has('vim_starting') " v:vim_did_enter
-  call StatusLineColors() 
+  call StatusLineColors()
 endif
+
+" let g:ctrlp_status_func = {'main': 'statusline#ctrlp#Main', 'prog': 'statusline#ctrlp#Prog'}
+
+ " Make sure ctrlp is installed and loaded
+if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
+  finish
+endif
+
+" Both functions must be global and return a full statusline
+let g:ctrlp_status_func = {'main': 'StatusLine_CtrlP_Main', 'prog': 'StatusLine_CtrlP_Prog'}
+
+function! StatusLine_CtrlP_Main(...)
+  " let focus = '%#LineNr# '.a:1.' %*'
+  " let byfname = '%#Character# '.a:2.' %*'
+  " let regex = a:3 ? '%#LineNr# regex %*' : ''
+  " let prv = ' <'.a:4.'>='
+  " let item = '{%#Character# '.a:5.' %*}'
+  " let nxt = '=<'.a:6.'>'
+  " let marked = ' '.a:7.' '
+  " let dir = ' %=%<%#LineNr# '.getcwd().' %*'
+  let regex = a:3 ? ' regex ' : ''
+  let prv = ' ' . a:4 . ' ' . s:sep
+  let item = '%0* ' . a:5 . ' %*' . s:sep
+  let nxt = ' ' . a:6 . ' '
+  let marked = ' ' . a:7 . ' '
+  let mid = '%='
+  let focus = ' ' . a:1 . ' ' . s:sep
+  let byfname = ' ' . a:2 . ' ' . s:sep
+  let dir = '%<%0* ' . getcwd() . ' %*'
+  " Return the full statusline
+  return regex.prv.item.nxt.marked.mid.focus.byfname.dir
+endfunction
+
+" Argument: len
+"           a:1
+function! StatusLine_CtrlP_Prog(...)
+  let len = '%0* ' . a:1 . ' '
+  let dir = '%=' . s:sep . '%<%0* ' . getcwd() . ' %*'
+  " Return the full statusline
+  return len.dir
+endfunction
