@@ -52,18 +52,18 @@ let g:statusline_modes = {
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
 
-let s:sep = '|'
+let g:statusline_sep = '|'
 if has('multi_byte') && &encoding ==# 'utf-8'
-  let s:sep = nr2char(0x2502)
+  let g:statusline_sep = nr2char(0x2502)
 endif
 
 function! statusline#Build(...) abort
   let l:name = a:0 ? a:1 : ''
   " Mode
   let l:paste = '%1*%( %{&paste ? "PASTE" : ""} %)%0*'
-  let l:mode = '%( %{winwidth(0) > 40 && &modifiable ? statusline#Mode() : ""} ' . s:sep . '%)'
+  let l:mode = '%( %{winwidth(0) > 40 && &modifiable ? statusline#Mode() : ""} ' . g:statusline_sep . '%)'
   " Git branch
-  let l:branch = '%( %{winwidth(0) > 80 ? statusline#Branch() : ""} ' . s:sep . '%)'
+  let l:branch = '%( %{winwidth(0) > 80 ? statusline#Branch() : ""} ' . g:statusline_sep . '%)'
   " Buffer name
   let l:buffer = ' ' . (len(l:name) > 0 ? l:name : '%f')
   " Flags [%W%H%R%M]
@@ -78,9 +78,9 @@ function! statusline#Build(...) abort
   let l:err.= '%( %{statusline#Errors()} %)'
   let l:err.= '%0*'
   " File type
-  let l:type = '%( %{winwidth(0) > 40 ? statusline#FileType() : ""} ' . s:sep . '%)'
+  let l:type = '%( %{winwidth(0) > 40 ? statusline#FileType() : ""} ' . g:statusline_sep . '%)'
   " File encoding
-  let l:info = '%( %{winwidth(0) > 80 ? statusline#FileInfo() : ""} ' . s:sep . '%)'
+  let l:info = '%( %{winwidth(0) > 80 ? statusline#FileInfo() : ""} ' . g:statusline_sep . '%)'
   " Default ruler
   let l:ruler = ' %-14.(%l,%c%V/%L%) %P '
 
@@ -283,8 +283,8 @@ augroup StatusLine
   autocmd InsertLeave * unlet g:statusline_insertmode | call statusline#Mode()
   " | redrawstatus
 
-  " Update whitespace warnings
-  autocmd BufWritePost,CursorHold,InsertLeave * unlet! b:statusline_indent | unlet! b:statusline_trailing
+  " Update whitespace warnings (add InsertLeave?)
+  autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
   autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = statusline#Build('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
@@ -298,43 +298,7 @@ if !has('vim_starting') " v:vim_did_enter
   call statusline#Colors()
 endif
 
- " Make sure ctrlp is installed and loaded
-if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
-  finish
+ " Enable customized CtrlP status line
+if get(g:, 'loaded_ctrlp', 0)
+  call statusline#ctrlp#enable()
 endif
-
-" Both functions must be global and return a full statusline
-let g:ctrlp_status_func = {'main': 'StatusLine_CtrlP_Main', 'prog': 'StatusLine_CtrlP_Prog'}
-
-" Arguments: focus, byfname, s:regexp, prv, item, nxt, marked
-"            a:1    a:2      a:3       a:4  a:5   a:6  a:7
-function! StatusLine_CtrlP_Main(...) abort
-  " let focus = '%#LineNr# '.a:1.' %*'
-  " let byfname = '%#Character# '.a:2.' %*'
-  " let regex = a:3 ? '%#LineNr# regex %*' : ''
-  " let prv = ' <'.a:4.'>='
-  " let item = '{%#Character# '.a:5.' %*}'
-  " let nxt = '=<'.a:6.'>'
-  " let marked = ' '.a:7.' '
-  " let dir = ' %=%<%#LineNr# '.getcwd().' %*'
-  let l:regex = a:3 ? ' regex ' : ''
-  let l:prv = ' ' . a:4 . ' ' . s:sep
-  let l:item = '%0* ' . a:5 . ' %*' . s:sep
-  let l:nxt = ' ' . a:6 . ' '
-  let l:marked = ' ' . a:7 . ' '
-  let l:mid = '%='
-  let l:focus = ' ' . a:1 . ' ' . s:sep
-  let l:byfname = ' ' . a:2 . ' ' . s:sep
-  let l:dir = '%<%0* ' . getcwd() . ' %*'
-  " Return the full statusline
-  return l:regex . l:prv . l:item . l:nxt . l:marked . l:mid . l:focus . l:byfname . l:dir
-endfunction
-
-" Argument: len
-"           a:1
-function! StatusLine_CtrlP_Prog(...) abort
-  let l:len = '%0* ' . a:1 . ' '
-  let l:dir = '%=' . s:sep . '%<%0* ' . getcwd() . ' %*'
-  " Return the full statusline
-  return l:len . l:dir
-endfunction
