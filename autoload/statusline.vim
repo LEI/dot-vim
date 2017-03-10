@@ -2,8 +2,8 @@
 
 " set statusline=%!statusline#Build()
 
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 " Variables {{{1
 
@@ -66,7 +66,7 @@ function! statusline#Build(...) abort
 
   let l:left = l:paste . l:mode . '%<' . l:branch . l:buffer . l:flags
   let l:right = l:warn . l:err . l:type . l:info . l:ruler
-  return l:left . ' %=' . l:right
+  return l:left . '%=' . l:right
 endfunction
 
 " Functions {{{1
@@ -342,7 +342,7 @@ if g:statusline#enable_at_startup
   call statusline#Enable()
 endif
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
 
 " vim: foldenable foldmethod=marker et sts=2 sw=2 ts=2
