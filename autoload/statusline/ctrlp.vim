@@ -5,6 +5,8 @@ if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
   finish
 endif
 
+let s:ep = get(g:, 'statusline#sep', '')
+
 function! statusline#ctrlp#Enable() abort
   " Both functions must be global and return a full statusline
   let g:ctrlp_status_func = {'main': 'statusline#ctrlp#main', 'prog': 'statusline#ctrlp#Prog'}
@@ -22,13 +24,13 @@ function! statusline#ctrlp#Main(...) abort
   " let marked = ' '.a:7.' '
   " let dir = ' %=%<%#LineNr# '.getcwd().' %*'
   let l:regex = a:3 ? ' regex ' : ''
-  let l:prv = ' ' . a:4 . ' ' . g:statusline_sep
-  let l:item = '%0* ' . a:5 . ' %*' . g:statusline_sep
+  let l:prv = ' ' . a:4 . ' ' . s:ep
+  let l:item = '%0* ' . a:5 . ' %*' . s:ep
   let l:nxt = ' ' . a:6 . ' '
   let l:marked = ' ' . a:7 . ' '
   let l:mid = '%='
-  let l:focus = ' ' . a:1 . ' ' . g:statusline_sep
-  let l:byfname = ' ' . a:2 . ' ' . g:statusline_sep
+  let l:focus = ' ' . a:1 . ' ' . s:ep
+  let l:byfname = ' ' . a:2 . ' ' . s:ep
   let l:dir = '%<%0* ' . getcwd() . ' %*'
   return l:regex . l:prv . l:item . l:nxt . l:marked . l:mid . l:focus . l:byfname . l:dir
 endfunction
@@ -37,6 +39,6 @@ endfunction
 "           a:1
 function! statusline#ctrlp#Prog(...) abort
   let l:len = '%0* ' . a:1 . ' '
-  let l:dir = '%=' . g:statusline_sep . '%<%0* ' . getcwd() . ' %*'
+  let l:dir = '%=' . s:ep . '%<%0* ' . getcwd() . ' %*'
   return l:len . l:dir
 endfunction
