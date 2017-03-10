@@ -9,10 +9,13 @@ if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
 
-" Use <C-j> to expand snippet or jump to next placeholder
-imap <C-j> <Plug>(neosnippet_expand_or_jump)
-smap <C-j> <Plug>(neosnippet_expand_or_jump)
-xmap <C-j> <Plug>(neosnippet_expand_target)
+" Use <C-j> to jump to next placeholder or <C-k> expand snippet
+imap <C-j> <Plug>(neosnippet_jump_or_expand)
+smap <C-j> <Plug>(neosnippet_jump_or_expand)
+xmap <C-j> <Plug>(neosnippet_jump_or_expand)
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
 
 " imap <expr> <Tab> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
 " imap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? <SID>pmenu_close() : "\<C-l>")

@@ -19,7 +19,6 @@ elseif has('lua')
 endif
 if g:has_completion && v:version >= 704
     Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
-    " Plug 'honza/vim-snippets'
     " let g:neosnippet#snippets_directory = $PLUGINS . '/vim-snippets/snippets'
 endif
 " if g:has_completion && (has('python') || has('python3'))
