@@ -9,7 +9,7 @@ let s:ep = get(g:, 'statusline#sep', '')
 
 function! statusline#ctrlp#Enable() abort
   " Both functions must be global and return a full statusline
-  let g:ctrlp_status_func = {'main': 'statusline#ctrlp#main', 'prog': 'statusline#ctrlp#Prog'}
+  let g:ctrlp_status_func = {'main': 'statusline#ctrlp#Main', 'prog': 'statusline#ctrlp#Prog'}
 endfunction
 
 " Arguments: focus, byfname, s:regexp, prv, item, nxt, marked

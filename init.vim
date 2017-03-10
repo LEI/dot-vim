@@ -54,7 +54,7 @@ if has('syntax') && !exists('g:syntax_on')
   syntax enable
 endif
 
-" Options {{{
+" Options {{{1
 
 if has('path_extra')
   setglobal tags-=./tags tags-=./tags; tags^=./tags;
@@ -203,7 +203,7 @@ set foldmethod=indent
 set foldnestmax=3
 set nofoldenable
 
-" Statusline {{{1
+" Status line {{{1
 
 set laststatus=2 " Always show statusline
 
