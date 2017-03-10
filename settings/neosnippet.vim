@@ -6,16 +6,16 @@ endif
 
 " Conceal snippet markers (FIXME: markdown)
 if has('conceal')
-  set conceallevel=2 " concealcursor=niv
+  set conceallevel=2 concealcursor=niv
 endif
+
+" Use <C-j> to expand snippet or jump to next placeholder
+imap <C-j> <Plug>(neosnippet_expand_or_jump)
+smap <C-j> <Plug>(neosnippet_expand_or_jump)
+xmap <C-j> <Plug>(neosnippet_expand_target)
 
 " imap <expr> <Tab> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
 " imap <expr> <C-l> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? <SID>pmenu_close() : "\<C-l>")
-
-" Use <C-j> to expand snippet or jump to next placeholder
-imap <expr> <C-j> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<C-j>"
-smap <expr> <C-j> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<C-j>"
-xmap <C-j> <Plug>(neosnippet_expand_target)
 
 " " Enter to close popup, or expand if a snippet is selected
 " imap <expr> <CR> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ? <SID>pmenu_accept() : <SID>cr_imap())

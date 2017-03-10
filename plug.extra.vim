@@ -3,7 +3,7 @@
 " let g:vim_completion = 1
 
 " Auto Completion:
-if get(g:, 'vim_completion', 0) > 0
+if get(g:, 'vim_completion', 0) == 0
   finish
 endif
 
@@ -19,6 +19,8 @@ elseif has('lua')
 endif
 if g:has_completion && v:version >= 704
     Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+    " Plug 'honza/vim-snippets'
+    " let g:neosnippet#snippets_directory = $PLUGINS . '/vim-snippets/snippets'
 endif
 " if g:has_completion && (has('python') || has('python3'))
 "   Plug 'SirVer/ultisnips', {'on': []} | Plug 'honza/vim-snippets'
