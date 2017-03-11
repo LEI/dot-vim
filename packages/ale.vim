@@ -1,10 +1,25 @@
 " ALE
 
-if !has('nvim') && v:version < 800
+" has('nvim') || v:version >= 800
+
+if !get(g:, 'enable_ale', 0)
   finish
 endif
 
-let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '']
+let g:ale_sign_error = '×'
+let g:ale_sign_warning = '!'
+
+" let g:ale_warn_about_trailing_whitespace = 1
+
+let g:ale_statusline_format = ['⨉ %d', '! %d', '']
+
+let g:ale_lint_on_save = 1
+" Check files on TextChanged event
+let g:ale_lint_on_text_changed = 0
+" Apply linters on BufEnter and BufRead
+let g:ale_lint_on_enter = 1
+
+"let g:ale_lint_delay = 200
 
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
@@ -18,12 +33,6 @@ let g:ale_open_list = 1
 "let g:ale_echo_msg_warning_str = 'W'
 "let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 0
-let g:ale_lint_on_enter = 0
-
-"let g:ale_lint_delay = 200
-
 " Disable default colors
 "highlight clear ALEErrorSign
 "highlight clear ALEWarningSign
@@ -34,7 +43,7 @@ Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
 augroup ALE
   autocmd!
-  autocmd VimEnter,BufReadPost * call ale#Lint()
+  " autocmd VimEnter,BufReadPost * call ale#Lint()
   " Automatically close corresponding loclist when quitting a window
   autocmd BufHidden,QuitPre * if &filetype != 'qf' | silent! lclose | endif
 augroup END

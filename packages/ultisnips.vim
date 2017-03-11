@@ -1,11 +1,12 @@
 " UltiSnips
 
-" Note: this should be loaded before UltiSnips
-
-if !get(g:, 'vim_completion', 0) || !exists('g:UltiSnipsSnippetDirectories')
+if !get(g:, 'enable_ultisnips', 0)
+" if !get(g:, 'vim_completion', 0) || !exists('g:UltiSnipsSnippetDirectories')
 " if !exists('g:did_plugin_ultisnips')
   finish
 endif
+
+Plug 'SirVer/ultisnips', {'on': []} | Plug 'honza/vim-snippets'
 
 " let g:UltiSnipsSnippetsDir = '~/.vim/snippets/'
 

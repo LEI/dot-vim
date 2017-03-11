@@ -1,12 +1,13 @@
 " Neomake
 
-if !has('nvim') || v:version < 704 || v:version == 704 && !has('patch503')
-  finish
-endif
-
 if !get(g:, 'enable_neomake', 0)
   finish
 endif
+
+Plug 'neomake/neomake'
+" Shell: bashate, shellcheck
+" VimL: vim-vint
+Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
 
 " let g:neomake_vim_enabled_makers = ['vimlint']
 " let g:neomake_vim_vimlint_exe = $PLUGINS . '/vim-vimlint/bin/vimlint.sh'

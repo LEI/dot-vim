@@ -14,7 +14,7 @@
 let g:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 let g:vim_plug_path = $HOME . '/.vim/autoload/plug.vim'
 let g:vim_plugins_path = $HOME . '/.vim/plugins'
-let g:vim_settings_path = $HOME . '/.vim/settings'
+let g:vim_packages_path = $HOME . '/.vim/packages'
 
 let $PLUGINS = g:vim_plugins_path
 
@@ -33,9 +33,12 @@ call plug#begin(g:vim_plugins_path)
 
 " Register plugins
 runtime plug.vim
-runtime plug.local.vim
-runtime plug.extra.vim
-for s:path in split(globpath(g:vim_settings_path, '*.vim'), '\n')
+for s:path in split(globpath(g:vim_packages_path, '*.vim'), '\n')
+  let s:name = fnamemodify(s:path, ':t:r')
+  " Skip explicitly disabled plugins
+  if exists('g:enable_' . s:name) && g:enable_{s:name} == 0
+    continue
+  endif
   execute 'source ' . s:path
 endfor
 
@@ -250,23 +253,7 @@ else
   " let &showbreak = '-> '
 endif
 
-" Colors {{{1
-
-try
-  set background=dark
-  colorscheme flattened_dark
-  if exists('*strftime')
-    let s:hour = strftime('%H')
-    if s:hour > 7 && s:hour < 20
-      set background=light
-      colorscheme flattened_light
-    endif
-  endif
-  " colorscheme solarized
-  " call togglebg#map('<F5>')
-catch /E185:/
-  " colorscheme default
-endtry
+" Term colors {{{1
 
 if &term =~# '256color'
   " Disable Background Color Erase (BCE) so that color schemes
@@ -415,6 +402,9 @@ endfunction
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
 " Autocommands {{{1
+
+" filetype plugin on
+" set omnifunc=syntaxcomplete#Complete
 
 " Enable omni completion
 augroup OmniFunc

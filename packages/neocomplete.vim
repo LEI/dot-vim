@@ -1,8 +1,6 @@
 " NeoComplete
 
-if !has('lua')
-  finish
-endif
+" has('lua')
 
 if !get(g:, 'enable_neocomplete', 0) " !get(g:, 'loaded_neocomplete', 0)
   finish

@@ -1,15 +1,12 @@
 " YouCompleteMe
 
+" has('python') || has('python3')
+
 if !get(g:, 'enable_ycm', 0)
   finish
 endif
 
-if g:has_completion && (has('python') || has('python3'))
-  finish
-endif
-
-" Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
-" Plug 'SirVer/ultisnips', {'on': []} | Plug 'honza/vim-snippets'
+Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
 
 " The variable a:info is a dictionary with 3 fields:
 " - name: name of the plugin

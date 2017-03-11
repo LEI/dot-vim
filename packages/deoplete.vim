@@ -1,8 +1,7 @@
 " Deoplete
 
-if !has('nvim') && has('python3')
-  finish
-endif
+" pip3 install --upgrade neovim
+" has('nvim') && has('python3')
 
 if !get(g:, 'enable_deoplete', 0) " !get(g:, 'loaded_deoplete', 0)
   finish

@@ -1,9 +1,8 @@
 " Vim Plug
 
-Plug 'LEI/flattened' " altercation/vim-colors-solarized
-" Plug 'LEI/vim-statusline'
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 " Plug 'editorconfig/editorconfig-vim'
+" Plug 'LEI/vim-statusline'
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
@@ -23,18 +22,12 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-d
 " Formatting: google/vim-codefmt
 
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
-let g:enable_ale = 1
-" let g:enable_neomake = 1
-" Shell: bashate, shellcheck
-" VimL: vim-vint
-" Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
+" let g:enable_neomake = has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+let g:enable_ale = has('nvim') || v:version >= 800
 
 " Auto Completion:
-" let g:enable_ycm = 1
-if has('nvim') && has('python3') " pip3 install --upgrade neovim
-  let g:enable_deoplete = 1
-  let g:enable_neosnippet = 1
-elseif has('lua')
-  let g:enable_neocomplete = 1
-  let g:enable_neosnippet = 1
-endif
+let g:enable_ycm = 0 " has('python') || has('python3')
+let g:enable_ultisnips = g:enable_ycm
+let g:enable_deoplete = has('nvim') && has('python3')
+let g:enable_neocomplete = !has('nvim') && has('lua')
+let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
