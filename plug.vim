@@ -14,9 +14,6 @@ Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectin
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
-" Languages:
-" Plug 'ternjs/tern_for_vim' " Tern-based JavaScript support
-
 " Text Objects: kana/vim-textobj-user
 
 " Formatting: google/vim-codefmt
@@ -28,6 +25,6 @@ let g:enable_ale = has('nvim') || v:version >= 800
 " Auto Completion:
 let g:enable_ycm = 0 " has('python') || has('python3')
 let g:enable_ultisnips = g:enable_ycm
-let g:enable_deoplete = has('nvim') && has('python3')
-let g:enable_neocomplete = !has('nvim') && has('lua')
-let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
+" let g:enable_deoplete = has('nvim') && has('python3')
+" let g:enable_neocomplete = !has('nvim') && has('lua')
+" let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete

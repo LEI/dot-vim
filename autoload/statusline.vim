@@ -17,9 +17,9 @@ let g:statusline_winnr = winnr()
 
 let g:statusline#enable_at_startup = get(g:, 'statusline#enable_at_startup', 1)
 
-let g:statusline#sep = '|'
+let g:statusline#sep = ' '
 if has('multi_byte') && &encoding ==# 'utf-8'
-  let g:statusline#sep = nr2char(0x2502)
+  let g:statusline#sep = ' ' .nr2char(0x2502) . ' '
 endif
 
 " Build {{{1
@@ -44,14 +44,12 @@ endif
 " %) End of item group
 
 function! statusline#Build(...) abort
-  let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
+  let l:bufname = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
   " Mode
-  let l:paste = '%1*%( %{&paste ? "PASTE" : ""} %)%*'
-  let l:mode = '%( %{winwidth(0) > 40 && &modifiable ? statusline#Mode() : ""} ' . g:statusline#sep . '%)'
+  let l:paste = '%1*%( %{&paste ? "PASTE" : ""} %)%*%< '
+  let l:mode = '%(%{winwidth(0) > 60 && &modifiable ? statusline#Mode() : ""}' . g:statusline#sep . '%)'
   " Git branch
-  let l:branch = '%( %{winwidth(0) > 80 ? statusline#Branch() : ""} ' . g:statusline#sep . '%)'
-  " Buffer name
-  let l:buffer = ' ' . l:name
+  let l:branch = '%(%{winwidth(0) > 90 ? statusline#Branch() : ""}' . g:statusline#sep . '%)'
   " Flags [%W%H%R%M]
   let l:flags = '%( [%{statusline#Flags()}]%)'
   " Warnings
@@ -67,15 +65,15 @@ function! statusline#Build(...) abort
   let l:err.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
   let l:err.= ' %)%*'
   " File type
-  let l:type = '%( %{winwidth(0) > 40 ? statusline#FileType() : ""} ' . g:statusline#sep . '%)'
+  let l:type = '%(%{winwidth(0) > 30 ? statusline#FileType() : ""}' . g:statusline#sep . '%)'
   " File encoding
-  let l:info = '%( %{winwidth(0) > 80 ? statusline#FileInfo() : ""} ' . g:statusline#sep . '%)'
+  let l:info = '%(%{winwidth(0) > 60 ? statusline#FileInfo() : ""}' . g:statusline#sep . '%)'
   " Default ruler
-  let l:ruler = ' %-14.(%l,%c%V/%L%) %P '
+  let l:ruler = '%-14.(%l,%c%V/%L%) %P '
 
-  let l:left = l:paste . l:mode . '%<' . l:branch . l:buffer . l:flags
-  let l:right = l:warn . l:err . l:type . l:info . l:ruler
-  return l:left . '%=' . l:right
+  let l:left = l:paste . l:mode . l:branch . l:bufname . l:flags
+  let l:right = l:warn . l:err . ' ' . l:type . l:info . l:ruler
+  return l:left . '%= ' . l:right
 endfunction
 
 " Functions {{{1
@@ -149,10 +147,6 @@ endfunction
 " Buffer flags {{{2
 
 function! statusline#Flags() abort
-  if &filetype ==# 'netrw' && get(b:, 'netrw_browser_active', 0) == 1
-    let l:netrw_direction = (g:netrw_sort_direction =~# 'n' ? '+' : '-')
-    return g:netrw_sort_by . l:netrw_direction
-  endif
   if &filetype =~# 'netrw\|vim-plug' || &buftype ==# 'quickfix'
     return ''
   endif
@@ -186,8 +180,12 @@ function! statusline#FileType() abort
     endif
     return ''
   endif
+  if &filetype ==# 'netrw' && get(b:, 'netrw_browser_active', 0) == 1
+    let l:netrw_direction = (g:netrw_sort_direction =~# 'n' ? '+' : '-')
+    return &filetype . '[' . g:netrw_sort_by . l:netrw_direction . ']'
+  endif
   " if &filetype ==# 'qf'
-  "   return &buftype
+  "   return &buftype " quickfix
   " endif
   return &filetype
 endfunction
@@ -324,21 +322,13 @@ augroup StatusLine
   autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = statusline#Build('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
 
-  autocmd FileType qf let &l:statusline = statusline#Build(s:quickfix_title())
-  autocmd FileType vim-plug let &l:statusline = statusline#Build('Plugins')
+  autocmd FileType qf let &l:statusline = statusline#Build('%f%( %{QuickFixTitle()}%)')
+  autocmd FileType vim-plug let &l:statusline = statusline#Build(' Plugins')
 augroup END
 
 " Quickfix or location list title
-function! s:quickfix_title() abort
-  let l:title = '%f'
-  " if get(g:, 'loaded_neomake', 0)
-  "   let l:title = 'Location List ' . g:statusline#sep
-  " endif
-  let l:qf = get(w:, 'quickfix_title', '')
-  if strlen(l:qf)
-    let l:title.= ' ' . l:qf
-  endif
-  return l:title
+function! QuickFixTitle() abort
+  return get(w:, 'quickfix_title', '')
 endfunction
 
 " }}}

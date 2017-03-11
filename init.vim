@@ -349,9 +349,10 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 cmap w!! w !sudo tee % >/dev/null
 
 " Next and previous completion Tab and Shift-Tab
-inoremap <expr> <Tab> pumvisible() && !CheckBackSpace() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <Tab> CheckBackSpace() ? "\<Tab>" : pumvisible() ? "\<C-n>" : "\<C-n>\<C-n>"
 " inoremap <S-Tab> <C-p> " Fix Shift-Tab? :exe 'set t_kB=' . nr2char(27) . '[Z'
-inoremap <expr> <S-Tab> pumvisible() && !CheckBackSpace() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <S-Tab> CheckBackSpace() ? "\<S-Tab>" : pumvisible() ? "\<C-p>" : "\<C-p>\<C-p>"
+" inoremap <expr> <S-Tab> DoComplete() ? "\<C-n>" : "\<S-Tab>"
 
 function! CheckBackSpace() abort
   let l:col = col('.') - 1
