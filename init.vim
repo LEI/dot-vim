@@ -339,17 +339,13 @@ noremap ; :normal n.<CR>
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
 
-" Use <Left> and <Right> keys to move the cursor
-" instead of selecting a different match:
-" cnoremap <Left> <Space><BS><Left>
-" cnoremap <Right> <Space><BS><Right>
+" Use <Left> and <Right> keys to move the cursor in ':' command mode
+" instead of selecting a different match, as <Tab> / <S-Tab> does
+cnoremap <expr> <Left> getcmdtype() == ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
+cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Left>"
 
 " Save as root with :w!!
-if exists(':SudoWrite') == 1
-  cnoremap w!! SudoWrite
-else
-  cnoremap w!! w !sudo tee % >/dev/null
-endif
+cnoremap <expr> w!! (exists(':SudoWrite') == 2 ? "SudoWrite" : "w !sudo tee % >/dev/null") . "\<CR>"
 
 function! OnlyWS() abort
   " let l:col = col('.') - 1
