@@ -1,10 +1,7 @@
 " Vim Plug
 
-" Theme
 Plug 'LEI/flattened' " altercation/vim-colors-solarized
 " Plug 'LEI/vim-statusline'
-
-" Improvments:
 " Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 " Plug 'editorconfig/editorconfig-vim'
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer
@@ -16,8 +13,6 @@ Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
-
-" Navigation:
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
 " Languages:
@@ -27,8 +22,7 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-d
 
 " Formatting: google/vim-codefmt
 
-" Syntax Checkers:
-" scrooloose/syntastic, maralla/validator.vim
+" Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
 let g:enable_ale = 1
 " let g:enable_neomake = 1
 " Shell: bashate, shellcheck
@@ -36,6 +30,7 @@ let g:enable_ale = 1
 " Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
 
 " Auto Completion:
+" let g:enable_ycm = 1
 if has('nvim') && has('python3') " pip3 install --upgrade neovim
   let g:enable_deoplete = 1
   let g:enable_neosnippet = 1
