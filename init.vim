@@ -296,10 +296,10 @@ iabbrev pyhton python
 " Key bindings {{{1
 
 " Yank from the cursor to the end of the line
-map Y y$
+noremap Y y$
 
 " Visually select the text that was last edited/pasted
-nmap gV `[v`]
+noremap gV `[v`]
 
 " Intuitive movement on wrapped lines
 nnoremap j gj
@@ -318,14 +318,14 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 " Bubble single or multiple lines
-nmap <C-Up> ddkP
-nmap <C-Down> ddp
-vmap <C-Up> xkP`[V`]
-vmap <C-Down> xp`[V`]
+noremap <C-Up> ddkP
+noremap <C-Down> ddp
+vnoremap <C-Up> xkP`[V`]
+vnoremap <C-Down> xp`[V`]
 
 " Paragraph reflow according to textwidth?
-" vmap Q gv
-" nmap Q gqap
+" vnoremap Q gv
+" noremap Q gqap
 
 " Clear highlighted search results (vim-sensible: Ctrl-L)
 nnoremap <Space> :nohlsearch<CR>
@@ -336,17 +336,20 @@ noremap <Tab> ;
 " Repeat last command on next match
 noremap ; :normal n.<CR>
 
-" Edit in the same directory as the current file
-" cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+" Edit in the same directory as the current file :e %%
+cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
 
 " Use <Left> and <Right> keys to move the cursor
 " instead of selecting a different match:
 " cnoremap <Left> <Space><BS><Left>
 " cnoremap <Right> <Space><BS><Right>
 
-" Save as root (or use :SudoWrite)
-cmap w!! w !sudo tee % >/dev/null
+" Save as root with :w!!
+if exists(':SudoWrite') == 1
+  cnoremap w!! SudoWrite
+else
+  cnoremap w!! w !sudo tee % >/dev/null
+endif
 
 function! OnlyWS() abort
   " let l:col = col('.') - 1

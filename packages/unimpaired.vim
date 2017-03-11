@@ -15,7 +15,7 @@ for s:c in map(range(65,90) + range(97,122),'nr2char(v:val)')
 endfor
 
 " Bubble single or multiple lines
-" nmap <C-Up> [e
-" nmap <C-Down> ]e
-" vmap <C-Up> [egv
-" vmap <C-Down> ]egv
+" noremap <C-Up> [e
+" noremap <C-Down> ]e
+" vnoremap <C-Up> [egv
+" vnoremap <C-Down> ]egv
