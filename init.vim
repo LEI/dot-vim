@@ -307,9 +307,9 @@ nnoremap k gk
 " nnoremap 0 g0
 " nnoremap $ g$ " Do not use with :set wrap
 
-" Restore visual selection after indent
-vnoremap < <gv
-vnoremap > >gv
+" Restore visual selection after indent (breaks '.' dot repeat)
+" vnoremap < <gv
+" vnoremap > >gv
 
 " Split navigation shortcuts
 nnoremap <C-h> <C-w>h
@@ -401,27 +401,14 @@ endfunction
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
-" Autocommands {{{1
+" 1}}}
 
-" filetype plugin on
 " set omnifunc=syntaxcomplete#Complete
-
-" Enable omni completion
-augroup OmniFunc
-  autocmd!
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup END
 
 " augroup VIMRC
 "   autocmd!
 "   autocmd ColorScheme * redraw | autocmd! VIMRC
 " augroup END
-
-" }}}
 
 if filereadable($HOME . '/.vimrc.local')
   source ~/.vimrc.local

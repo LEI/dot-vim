@@ -7,6 +7,8 @@ set cpoptions&vim
 
 " Variables {{{1
 
+let g:statusline_winnr = winnr()
+
 let g:statusline#enable_at_startup = get(g:, 'statusline#enable_at_startup', 1)
 
 let g:statusline#sep = '|'
@@ -94,18 +96,19 @@ endfunction
 " r?      A confirm query of some sort
 " !       Shell or external command is executing
 let g:statusline_modes = {
-  \   'n': 'NORMAL',
-  \   'i': 'INSERT',
-  \   'R': 'REPLACE',
-  \   'v': 'VISUAL',
-  \   'V': 'V-LINE',
-  \   'c': 'COMMAND',
-  \   '': 'V-BLOCK',
-  \   's': 'SELECT',
-  \   'S': 'S-LINE',
-  \   '': 'S-BLOCK',
-  \   't': 'TERMINAL',
-  \ }
+\   'nc': '------',
+\   'n': 'NORMAL',
+\   'i': 'INSERT',
+\   'R': 'REPLACE',
+\   'v': 'VISUAL',
+\   'V': 'V-LINE',
+\   'c': 'COMMAND',
+\   '': 'V-BLOCK',
+\   's': 'SELECT',
+\   'S': 'S-LINE',
+\   '': 'S-BLOCK',
+\   't': 'TERMINAL',
+\ }
 
 function! statusline#Mode(...) abort
   let l:mode =  a:0 ? a:1 :mode()
@@ -118,6 +121,9 @@ function! statusline#Mode(...) abort
   " elseif l:mode ==# 'v' || l:mode ==# 'V' || l:mode ==# '^V'
   "   highlight! link StatusLine StatusLineVisual
   " endif
+  if g:statusline_winnr != winnr()
+    let l:mode = 'nc'
+  endif
   return get(g:statusline_modes, l:mode, l:mode)
 endfunction
 
@@ -303,6 +309,8 @@ augroup StatusLine
   autocmd InsertEnter * call statusline#Highlight(v:insertmode)
   autocmd InsertChange * call statusline#Highlight(v:insertmode)
   autocmd InsertLeave * call statusline#Highlight()
+
+  autocmd BufAdd,BufEnter,WinEnter * let g:statusline_winnr = winnr()
 
   " Update whitespace warnings (add InsertLeave?)
   autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
