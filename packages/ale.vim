@@ -12,7 +12,7 @@ let g:ale_lint_on_text_changed = 0
 " Apply linters on BufEnter and BufRead
 let g:ale_lint_on_enter = 1
 
-let g:ale_lint_delay = 300
+" let g:ale_lint_delay = 300
 
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
@@ -41,21 +41,17 @@ let g:ale_statusline_format = [s:status_error . ' %d', '! %d', '']
 "let g:ale_echo_msg_warning_str = 'W'
 "let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
+Plug 'w0rp/ale', {'as': 'async-lint-engine'}
+
 " Disable default colors
 "highlight clear ALEErrorSign
 "highlight clear ALEWarningSign
 
 " command! -n=0 -bar ALEEnable :echo "Loading ALE..."
 
-Plug 'w0rp/ale', {'as': 'async-lint-engine'}
-
-function! s:has_errors(...) abort
-  return len(getqflist()) || len(getloclist(0))
-endfunction
-
 function! ALEOpenList(...) abort
   let l:winnr = a:0 ? a:1 : 0
-  let l:height = 5
+  let l:height = get(g:, 'ale_loclist_height', 5)
   let l:list = []
   if g:ale_set_quickfix
     let l:cmd = 'copen'

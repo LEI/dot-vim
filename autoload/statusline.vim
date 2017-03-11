@@ -2,6 +2,12 @@
 
 " set statusline=%!statusline#Build()
 
+if exists('g:loaded_statusline')
+  finish
+endif
+
+let g:loaded_statusline = 1
+
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
