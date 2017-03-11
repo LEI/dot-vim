@@ -348,17 +348,21 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " Save as root (or use :SudoWrite)
 cmap w!! w !sudo tee % >/dev/null
 
-" Next and previous completion Tab and Shift-Tab
-inoremap <expr> <Tab> CheckBackSpace() ? "\<Tab>" : pumvisible() ? "\<C-n>" : "\<C-n>\<C-n>"
-" inoremap <S-Tab> <C-p> " Fix Shift-Tab? :exe 'set t_kB=' . nr2char(27) . '[Z'
-inoremap <expr> <S-Tab> CheckBackSpace() ? "\<S-Tab>" : pumvisible() ? "\<C-p>" : "\<C-p>\<C-p>"
-" inoremap <expr> <S-Tab> DoComplete() ? "\<C-n>" : "\<S-Tab>"
-
 function! CheckBackSpace() abort
   let l:col = col('.') - 1
   " !col || getline('.')[col - 1] !~ '\k'
   return !l:col || getline('.')[l:col - 1] =~# '\s'
 endfunction
+
+function! Complete() abort
+  return "\<C-x>\<C-n>"
+endfunction
+
+" Next and previous completion Tab and Shift-Tab
+inoremap <expr> <Tab> CheckBackSpace() ? "\<Tab>" : pumvisible() ? "\<C-n>" : Complete()
+" inoremap <S-Tab> <C-p> " Fix Shift-Tab? :exe 'set t_kB=' . nr2char(27) . '[Z'
+inoremap <expr> <S-Tab> CheckBackSpace() ? "\<S-Tab>" : pumvisible() ? "\<C-p>" : Complete()
+" inoremap <expr> <S-Tab> DoComplete() ? "\<C-n>" : "\<S-Tab>"
 
 " " Select the completed word with Enter
 " inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
@@ -366,9 +370,9 @@ endfunction
 " " Close the popup menu (using <Esc> or <CR> breaks enter and arrow keys)
 " inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"
 
-" Use <C-L> to clear the highlighting of :set hlsearch
-if maparg('<C-L>', 'n') ==# ''
-  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+" Use <C-c> to stop the highlighting for the 'hlsearch' option
+if maparg('<C-c>', 'n') ==# ''
+  nnoremap <silent> <C-c> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 endif
 
 " Change leader
