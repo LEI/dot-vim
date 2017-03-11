@@ -21,18 +21,17 @@ let g:ale_lint_on_enter = 1
 "let g:ale_open_list = 1
 "let g:ale_keep_list_window_open = 1
 
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let s:sign_error = nr2char(0xD7)
-  let s:status_error = nr2char(0x2A09)
-else
-  let s:sign_error = 'x'
-  let s:status_error = 'x'
-endif
+let g:ale_warn_about_trailing_whitespace = 1
 
-let g:ale_sign_error = s:sign_error
+let g:ale_sign_error = 'x'
 let g:ale_sign_warning = '!'
+let s:status_error = 'x'
 
-" let g:ale_warn_about_trailing_whitespace = 1
+if has('multi_byte') && &encoding ==# 'utf-8'
+  let g:ale_sign_error =  nr2char(0xD7)
+  let g:ale_sign_warning = '!'
+  let s:status_error = nr2char(0x2A09)
+endif
 
 let g:ale_statusline_format = [s:status_error . ' %d', '! %d', '']
 
@@ -47,7 +46,13 @@ Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 "highlight clear ALEErrorSign
 "highlight clear ALEWarningSign
 
-" command! -n=0 -bar ALEEnable :echo "Loading ALE..."
+" Map movement through errors with wrapping
+"noremap <silent> <C-j> <Plug>(ale_previous_wrap)
+"noremap <silent> <C-k> <Plug>(ale_next_wrap)
+
+" Loop through errors with :Ln and :Lp
+command! -n=0 -bar Ln :ALENextWrap
+command! -n=0 -bar Lp :ALEPreviousWrap
 
 function! ALEOpenList(...) abort
   let l:winnr = a:0 ? a:1 : 0

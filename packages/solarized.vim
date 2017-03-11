@@ -1,20 +1,21 @@
 " Colorscheme
 
-Plug 'LEI/flattened' " altercation/vim-colors-solarized
+Plug 'LEI/flattened'
+" Plug 'altercation/vim-colors-solarized'
 
 function! s:colorscheme()
-  try
-    set background=dark
-    colorscheme flattened_dark
-    if exists('*strftime')
-      let s:hour = strftime('%H')
-      if s:hour > 7 && s:hour < 20
-        set background=light
-        colorscheme flattened_light
-      endif
+  " colorscheme solarized
+  " call togglebg#map('<F5>')
+  let l:bg = 'dark'
+  if exists('*strftime')
+    let s:hour = strftime('%H')
+    if s:hour > 7 && s:hour < 20
+      let l:bg = 'light'
     endif
-    " colorscheme solarized
-    " call togglebg#map('<F5>')
+  endif
+  try
+    let &background = l:bg
+    execute 'colorscheme flattened_' . l:bg
   catch /E185:/
     " colorscheme default
   endtry

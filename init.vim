@@ -348,21 +348,29 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " Save as root (or use :SudoWrite)
 cmap w!! w !sudo tee % >/dev/null
 
-function! CheckBackSpace() abort
-  let l:col = col('.') - 1
-  " !col || getline('.')[col - 1] !~ '\k'
-  return !l:col || getline('.')[l:col - 1] =~# '\s'
+function! OnlyWS() abort
+  " let l:col = col('.') - 1
+  " " !col || getline('.')[col - 1] !~ '\k'
+  " return !l:col || getline('.')[l:col - 1] =~# '\s'
+  return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
 endfunction
 
-function! Complete() abort
-  return "\<C-x>\<C-n>"
+function! NextComp() abort
+  " if !pumvisible()
+  "   return ''
+  " endif
+  " TODO omnifunc, ...
+  return "\<C-p>" " Nearest matching word
+endfunction
+
+function! PrevComp() abort
+  return "\<C-n>"
 endfunction
 
 " Next and previous completion Tab and Shift-Tab
-inoremap <expr> <Tab> CheckBackSpace() ? "\<Tab>" : pumvisible() ? "\<C-n>" : Complete()
+inoremap <expr> <Tab> OnlyWS() ? "\<Tab>" : NextComp()
 " inoremap <S-Tab> <C-p> " Fix Shift-Tab? :exe 'set t_kB=' . nr2char(27) . '[Z'
-inoremap <expr> <S-Tab> CheckBackSpace() ? "\<S-Tab>" : pumvisible() ? "\<C-p>" : Complete()
-" inoremap <expr> <S-Tab> DoComplete() ? "\<C-n>" : "\<S-Tab>"
+inoremap <expr> <S-Tab> OnlyWS() ? "\<S-Tab>" : PrevComp()
 
 " " Select the completed word with Enter
 " inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
