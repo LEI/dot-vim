@@ -53,9 +53,10 @@ function! statusline#Build(...) abort
   let l:warn.= ' %)%*'
   " Errors
   let l:err = '%#StatusLineError#%('
+  let l:err.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
   let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#QflistStatus("qf: ") : ""}%)'
   let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#LoclistStatus() : ""}%)'
-  let l:err.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
+  let l:err.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
   let l:err.= ' %)%*'
   " File type
   let l:type = '%( %{winwidth(0) > 40 ? statusline#FileType() : ""} ' . g:statusline#sep . '%)'

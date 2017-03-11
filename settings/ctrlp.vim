@@ -1,11 +1,14 @@
 " CtrlP
+
+Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
+
 " https://github.com/skwp/dotfiles/blob/master/vim/settings/ctrlp.vim
 " https://github.com/thoughtbot/dotfiles/blob/master/vimrc
 " https://github.com/ggreer/the_silver_searcher
 
-if !exists('g:loaded_ctrlp')
-  finish
-endif
+" if !exists('g:loaded_ctrlp')
+"   finish
+" endif
 
 "let g:ctrlp_map = '<leader>f'
 "let g:ctrlp_max_height = 30

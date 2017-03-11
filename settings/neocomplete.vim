@@ -1,8 +1,15 @@
 " NeoComplete
 
-if !exists('g:loaded_neocomplete')
+if !has('lua')
   finish
 endif
+
+if !get(g:, 'enable_neocomplete', 0) " !get(g:, 'loaded_neocomplete', 0)
+  finish
+endif
+
+Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+let g:neocomplete#enable_at_startup = 1
 
 " Should be set before
 " let g:neocomplete#enable_at_startup = 1

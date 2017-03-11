@@ -1,5 +1,7 @@
 " Tabluar
 
+" Plug 'godlygeek/tabular' " Text aligning
+
 " -> ~/.vim/after/plugin/tabular_extra.vim
 
 " AddTabularPipeline multiple_spaces / \{2,}/

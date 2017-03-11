@@ -1,6 +1,10 @@
 " Neomake
 
-if !exists('g:loaded_neomake')
+if !has('nvim') || v:version < 704 || v:version == 704 && !has('patch503')
+  finish
+endif
+
+if !get(g:, 'enable_neomake', 0)
   finish
 endif
 
@@ -32,12 +36,12 @@ let g:neomake_warning_sign = {'text': '!', 'texthl': 'WarningMsg'}
   " Run checkers on open and save in quickfix list
 function! Neomake()
   " 0verb Neomake!
-  let l:cmd = 'Neomake'
   if &filetype ==# 'go'
     " Use location list for `go vet`
-    let l:cmd.= '!'
+    Neomake!
+  else
+    Neomake
   endif
-  execute l:cmd
 endfunction
 
 augroup NeomakeConfig

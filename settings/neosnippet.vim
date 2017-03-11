@@ -1,13 +1,21 @@
 " Neosnippet
 
-if !exists('g:loaded_neosnippet')
+if v:version < 704
   finish
 endif
 
-" Conceal snippet markers (FIXME: markdown)
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
+if !get(g:, 'enable_neosnippet', 0) " !get(g:, 'loaded_neosnippet', 0)
+  finish
 endif
+
+Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+
+" let g:neosnippet#snippets_directory = $PLUGINS . '/vim-snippets/snippets'
+
+" Conceal snippet markers
+" if has('conceal')
+"   set conceallevel=2 concealcursor=niv
+" endif
 
 " Use <C-j> to jump to next placeholder or <C-k> expand snippet
 imap <C-j> <Plug>(neosnippet_jump_or_expand)

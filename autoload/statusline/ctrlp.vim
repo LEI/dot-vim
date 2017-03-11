@@ -1,7 +1,8 @@
 " CtrlP
 
 " Make sure ctrlp is installed and loaded
-if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
+" if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
+if !get(g:, 'loaded_ctrlp', 0)
   finish
 endif
 

@@ -35,6 +35,9 @@ call plug#begin(g:vim_plugins_path)
 runtime plug.vim
 runtime plug.local.vim
 runtime plug.extra.vim
+for s:path in split(globpath(g:vim_settings_path, '*.vim'), '\n')
+  execute 'source ' . s:path
+endfor
 
 " Add plugins to &runtimepath
 call plug#end()

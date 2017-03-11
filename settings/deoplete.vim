@@ -1,8 +1,15 @@
 " Deoplete
 
-if !exists('g:loaded_deoplete')
+if !has('nvim') && has('python3')
   finish
 endif
+
+if !get(g:, 'enable_deoplete', 0) " !get(g:, 'loaded_deoplete', 0)
+  finish
+endif
+
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+let g:deoplete#enable_at_startup = 1
 
 " Should be set before
 " let g:deoplete#enable_at_startup = 1
