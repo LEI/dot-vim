@@ -4,9 +4,9 @@ if v:version < 704
   finish
 endif
 
-if !get(g:, 'enable_neosnippet', 0) " !get(g:, 'loaded_neosnippet', 0)
-  finish
-endif
+" if !get(g:, 'loaded_neosnippet', 0)
+"   finish
+" endif
 
 Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 

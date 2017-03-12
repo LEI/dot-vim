@@ -2,10 +2,6 @@
 
 " has('python') || has('python3')
 
-if !get(g:, 'enable_ycm', 0)
-  finish
-endif
-
 " The variable a:info is a dictionary with 3 fields:
 " - name: name of the plugin
 " - status: 'installed', 'updated', or 'unchanged'

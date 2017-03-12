@@ -2,10 +2,6 @@
 
 " has('nvim') || v:version >= 800
 
-if !get(g:, 'enable_ale', 0)
-  finish
-endif
-
 Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
 let g:ale_lint_on_save = 1

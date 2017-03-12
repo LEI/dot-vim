@@ -45,13 +45,12 @@ function! package#Plug(...) abort
   let l:dir = a:0 ? a:1 : g:package#dir
   for l:path in split(globpath(l:dir, '*.vim'), '\n')
     let l:name = fnamemodify(l:path, ':t:r')
-    let l:pkg = {'name': l:name, 'path': l:path}
-    " To disable a package :let g:enable_{name} = 0
-    let l:pkg.enabled = !exists('g:enable_' . l:name) || g:enable_{l:name} == 1
+    " To disable a package file, :let g:package#{name}_enabled = 0
     " Skip explicitly disabled plugins
-    if !l:pkg.enabled
+    if exists('g:package#' . l:name . '_enabled') && g:package#{l:name}_enabled == 0
       continue
     endif
+    " let l:pkg = {'name': l:name, 'path': l:path}
     " Source configuration file
     execute 'source ' . l:path
   endfor

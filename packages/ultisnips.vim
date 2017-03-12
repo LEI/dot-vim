@@ -1,10 +1,8 @@
 " UltiSnips
 
-if !get(g:, 'enable_ultisnips', 0)
-" if !get(g:, 'vim_completion', 0) || !exists('g:UltiSnipsSnippetDirectories')
 " if !exists('g:did_plugin_ultisnips')
-  finish
-endif
+"   finish
+" endif
 
 Plug 'SirVer/ultisnips', {'on': []} | Plug 'honza/vim-snippets'
 

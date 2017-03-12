@@ -1,9 +1,5 @@
 " Neomake
 
-if !get(g:, 'enable_neomake', 0)
-  finish
-endif
-
 Plug 'neomake/neomake'
 " Shell: bashate, shellcheck
 " VimL: vim-vint

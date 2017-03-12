@@ -18,12 +18,14 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-d
 " Formatting: google/vim-codefmt
 
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
-" let g:enable_neomake = has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-let g:enable_ale = has('nvim') || v:version >= 800
+let g:package#neomake_enabled = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+let g:package#ale_enabled = has('nvim') || v:version >= 800
 
 " Auto Completion:
-let g:enable_ycm = 0 " has('python') || has('python3')
-let g:enable_ultisnips = g:enable_ycm
-" let g:enable_deoplete = has('nvim') && has('python3')
-" let g:enable_neocomplete = !has('nvim') && has('lua')
-" let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
+let g:package#youcompleteme_enabled = 0 " has('python') || has('python3')
+let g:package#ultisnips_enabled = g:package#youcompleteme_enabled
+let g:package#deoplete_enabled = 0 " has('nvim') && has('python3')
+let g:package#neocomplete_enabled = 0 " !has('nvim') && has('lua')
+let g:package#neosnippet_enabled = g:package#deoplete_enabled || g:package#neocomplete_enabled
+
+let g:package#tern_enabled = 0

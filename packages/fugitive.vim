@@ -7,5 +7,8 @@ Plug 'tpope/vim-fugitive' " Git wrapper
 "   finish
 " endif
 
-" Auto-clean git objects buffers
-autocmd BufReadPost fugitive://* set bufhidden=delete
+augroup VimFugitive
+  autocmd!
+  " Auto-clean git objects buffers
+  autocmd BufReadPost fugitive://* set bufhidden=delete
+augroup END
