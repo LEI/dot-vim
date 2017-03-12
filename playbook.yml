@@ -1,0 +1,26 @@
+---
+
+- name: Vim
+  hosts: all
+  # gather_facts: yes
+
+  tasks:
+
+    - name: "Group hosts by OS"
+      # MacOSX -> os_macosx
+      # CYGWIN_NT-6.1 -> os_cygwin
+      group_by: key=os_{{ ansible_distribution | lower | regex_replace('^([a-zA-Z]+)[\s|-|_](.*)$', '\\1') }}
+      tags: [always]
+
+    - name: "Group names"
+      debug:
+        msg:
+          groups: "{{ group_names }}"
+
+    # - name: "Homebrew tap Neovim"
+    #   hombrew_tap: neovim/nevim
+    # brew install neovim
+    # pip[3] install --user python neovim
+    # gem install neovim
+    # brew install --with-lua --with-luajit --with-override-system-vi --with-python --with-python3
+
