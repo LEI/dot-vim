@@ -2,6 +2,10 @@
 
 " has('python') || has('python3')
 
+if exists('g:loaded_youcompleteme')
+  finish
+endif
+
 function! YCMInstall(info)
   " The variable a:info is a dictionary with 3 fields:
   " - name: name of the plugin

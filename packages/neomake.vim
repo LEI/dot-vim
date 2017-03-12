@@ -1,5 +1,9 @@
 " Neomake
 
+if exists('g:loaded_neomake')
+  finish
+endif
+
 Plug 'neomake/neomake'
 " Shell: bashate, shellcheck
 " VimL: vim-vint

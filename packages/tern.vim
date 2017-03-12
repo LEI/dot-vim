@@ -1,6 +1,8 @@
 " Tern-based JavaScript support
 
-" if !has('npm')
+" has('python') || has('python3')
+
+" if !has('node') || !has('npm')
 "   finish
 " endif
 

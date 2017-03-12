@@ -1,8 +1,8 @@
 " UltiSnips
 
-" if !exists('g:did_plugin_ultisnips')
-"   finish
-" endif
+if exists('g:did_plugin_ultisnips')
+  finish
+endif
 
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 

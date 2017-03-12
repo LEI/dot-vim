@@ -3,9 +3,9 @@
 " pip3 install --upgrade neovim
 " has('nvim') && has('python3')
 
-" if !get(g:, 'loaded_deoplete', 0)
-"   finish
-" endif
+if exists('g:loaded_deoplete')
+  finish
+endif
 
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 let g:deoplete#enable_at_startup = 1

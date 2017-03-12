@@ -1,5 +1,9 @@
 " Tabluar
 
+if exists('g:loaded_tabular')
+  finish
+endif
+
 " Plug 'godlygeek/tabular' " Text aligning
 
 " -> ~/.vim/after/plugin/tabular_extra.vim

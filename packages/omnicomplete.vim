@@ -1,5 +1,11 @@
 " Omni completion
 
+if exists('g:loaded_omnicomplete')
+  finish
+endif
+
+let g:loaded_omnicomplete = 1
+
 set complete+=kspell " Autocompete with dictionnary words when spell check is on
 
 set completeopt+=longest,menuone " Only insert the longest common text for matches

@@ -1,5 +1,9 @@
 " CtrlP
 
+if exists('g:loaded_ctrlp')
+  finish
+endif
+
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 
 " https://github.com/skwp/dotfiles/blob/master/vim/settings/ctrlp.vim

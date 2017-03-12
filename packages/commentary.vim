@@ -1,5 +1,9 @@
 " Commentary
 
+if exists('g:loaded_commentary')
+  finish
+endif
+
 Plug 'tpope/vim-commentary'
 
 function! s:loaded()

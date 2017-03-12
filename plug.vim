@@ -3,7 +3,6 @@
 " Plug 'LEI/vim-statusline'
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " (alt: gundo)
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
-Plug 'sgur/vim-editorconfig' " (alt +python: editorconfig/editorconfig-vim)
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-endwise' " Automatic end keywords
 Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
@@ -16,7 +15,6 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-d
 " Text Objects: kana/vim-textobj-user
 
 " Formatting: google/vim-codefmt
-let g:package#splitjoin_enabled = 0
 
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
 let g:package#neomake_enabled = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')

@@ -4,6 +4,10 @@
 " colorscheme solarized
 " call togglebg#map('<F5>')
 
+if exists('g:loaded_solarized8')
+  finish
+endif
+
 Plug 'lifepillar/vim-solarized8'
 
 " Custom highlight groups

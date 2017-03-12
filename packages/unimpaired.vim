@@ -1,5 +1,9 @@
 " Unimpaired
 
+if exists('g:loaded_unimpaired')
+  finish
+endif
+
 Plug 'tpope/vim-unimpaired'
 
 " if !exists('g:loaded_unimpaired')
