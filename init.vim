@@ -255,10 +255,10 @@ endif
 
 " Term colors {{{1
 
+" Disable Background Color Erase (BCE) so that color schemes
+" work properly when Vim is used inside tmux and GNU screen.
+" See also http://snk.tuxfamily.org/log/vim-256color-bce.html
 if &term =~# '256color'
-  " Disable Background Color Erase (BCE) so that color schemes
-  " work properly when Vim is used inside tmux and GNU screen.
-  " See also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
 
@@ -266,6 +266,23 @@ endif
 if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
   set t_Co=16
 endif
+
+" Enable true colors in the terminal
+let g:true_color = has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
+let g:true_term = $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
+if get(g:, 'true_color', 0) && get(g:, 'true_term', 0) " Apple_Terminal
+  set termguicolors
+  " :h xterm-true-color
+  " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+  " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+  if !has('nvim') && $TERM ==# 'screen-256color'
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  endif
+endif
+
+" set t_AB=^[[48;5;%dm
+" set t_AF=^[[38;5;%dm
 
 " Columns {{{1
 
@@ -417,10 +434,13 @@ endfunction
 
 " set omnifunc=syntaxcomplete#Complete
 
-" augroup VIMRC
-"   autocmd!
-"   autocmd ColorScheme * redraw | autocmd! VIMRC
-" augroup END
+augroup VimInitGroup
+  autocmd!
+" Auto reload vimrc on save
+  autocmd BufWritePost $MYVIMRC nested source %
+  " Redraw status line on color scheme change (VimResized?)
+  autocmd ColorScheme * redraw
+augroup END
 
 if filereadable($HOME . '/.vimrc.local')
   source ~/.vimrc.local

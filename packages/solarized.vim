@@ -38,12 +38,25 @@ function! SetColorScheme(...) abort
   let l:colors_name = l:colors . (strlen(l:theme) ? '_' . l:theme : '')
   try
     execute 'colorscheme'  l:colors_name
+    " call Highlight(&background)
   catch /E185:/ " echoerr 'Colorscheme not found: ' . l:colors_name
     " colorscheme default
   endtry
 endfunction
 
+" Custom highlight groups
+function! Highlight(bg) abort
+  if a:bg ==# 'dark'
+    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
+    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
+  elseif a:bg ==# 'light'
+    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
+    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
+  endif
+endfunction
+
 augroup Colors
   autocmd!
   autocmd VimEnter * call SetColorScheme('solarized8_dark')
+  autocmd VimEnter,ColorScheme * call Highlight(&background)
 augroup END

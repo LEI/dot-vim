@@ -12,6 +12,8 @@ if &showtabline > 0
   set guioptions-=e " Use a non-GUI tab pages line
 endif
 
+set guicursor+=n-v-c:blinkon0 " Disable cursor blinking
+
 " set backupcopy=yes " Prevent Finder file labels from disappearing
 
 " set lines=
