@@ -1,9 +1,9 @@
 " Vim Plug
 
 " Plug 'LEI/vim-statusline'
-Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer (alt: gundo)
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " (alt: gundo)
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
-Plug 'sgur/vim-editorconfig' " (python alt: editorconfig/editorconfig-vim)
+Plug 'sgur/vim-editorconfig' " (alt +python: editorconfig/editorconfig-vim)
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-endwise' " Automatic end keywords
 Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
