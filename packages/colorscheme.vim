@@ -1,10 +1,21 @@
-" Colorscheme
+" Color Scheme
 
 " Plug 'altercation/vim-colors-solarized'
 " colorscheme solarized
 " call togglebg#map('<F5>')
 
 Plug 'lifepillar/vim-solarized8'
+
+" Custom highlight groups
+function! Highlight(bg) abort
+  if a:bg ==# 'dark'
+    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
+    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
+  elseif a:bg ==# 'light'
+    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
+    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
+  endif
+endfunction
 
 nnoremap <F5> :call ToggleBackground()<CR>
 nnoremap <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
@@ -42,17 +53,6 @@ function! SetColorScheme(...) abort
   catch /E185:/ " echoerr 'Colorscheme not found: ' . l:colors_name
     " colorscheme default
   endtry
-endfunction
-
-" Custom highlight groups
-function! Highlight(bg) abort
-  if a:bg ==# 'dark'
-    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
-    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
-  elseif a:bg ==# 'light'
-    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
-    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
-  endif
 endfunction
 
 augroup Colors

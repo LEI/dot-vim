@@ -6,6 +6,8 @@ if !get(g:, 'enable_ale', 0)
   finish
 endif
 
+Plug 'w0rp/ale', {'as': 'async-lint-engine'}
+
 let g:ale_lint_on_save = 1
 " Check files on TextChanged event
 let g:ale_lint_on_text_changed = 0
@@ -39,8 +41,6 @@ let g:ale_statusline_format = [s:status_error . ' %d', '! %d', '']
 "let g:ale_echo_msg_error_str = 'E'
 "let g:ale_echo_msg_warning_str = 'W'
 "let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-
-Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
 " Disable default colors
 "highlight clear ALEErrorSign

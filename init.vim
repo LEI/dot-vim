@@ -11,39 +11,14 @@
 
 " Plugins {{{1
 
-let g:vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-let g:vim_plug_path = $HOME . '/.vim/autoload/plug.vim'
-let g:vim_plugins_path = $HOME . '/.vim/plugins'
-let g:vim_packages_path = $HOME . '/.vim/packages'
-
-let $PLUGINS = g:vim_plugins_path
-
-" Auto download vim-plug and install plugins
-if empty(glob(g:vim_plug_path)) " !isdirectory(g:vim_plugins_path)
-  " echo 'Installing Vim-Plug...'
-  execute 'silent !curl -fLo ' . g:vim_plug_path . '  --create-dirs ' . g:vim_plug_url
-  augroup VimPlug
-    autocmd!
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-  augroup END
-endif
+let $PLUGINS = g:package#plugins_dir
 
 " Start Vim Plug
-call plug#begin(g:vim_plugins_path)
-
+call package#Begin()
 " Register plugins
-runtime plug.vim
-for s:path in split(globpath(g:vim_packages_path, '*.vim'), '\n')
-  let s:name = fnamemodify(s:path, ':t:r')
-  " Skip explicitly disabled plugins
-  if exists('g:enable_' . s:name) && g:enable_{s:name} == 0
-    continue
-  endif
-  execute 'source ' . s:path
-endfor
-
+call package#Plug()
 " Add plugins to &runtimepath
-call plug#end()
+call package#End()
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -360,7 +335,7 @@ cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
 " Use <Left> and <Right> keys to move the cursor in ':' command mode
 " instead of selecting a different match, as <Tab> / <S-Tab> does
 cnoremap <expr> <Left> getcmdtype() == ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
-cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Left>"
+cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
 
 " Save as root with :w!!
 cnoremap <expr> w!! (exists(':SudoWrite') == 2 ? "SudoWrite" : "w !sudo tee % >/dev/null") . "\<CR>"
@@ -435,12 +410,12 @@ endfunction
 
 " set omnifunc=syntaxcomplete#Complete
 
-augroup VimInitGroup
+augroup VimInit
   autocmd!
-" Auto reload vimrc on save
+  " autocmd VimEnter *
+  " Auto reload vimrc on save
   autocmd BufWritePost $MYVIMRC nested source %
-  " Redraw status line on color scheme change (VimResized?)
-  autocmd ColorScheme * redraw
+  " autocmd ColorScheme * redraw
 augroup END
 
 if filereadable($HOME . '/.vimrc.local')
