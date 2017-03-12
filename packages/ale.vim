@@ -10,7 +10,7 @@ let g:ale_lint_on_text_changed = 0
 " Apply linters on BufEnter and BufRead
 let g:ale_lint_on_enter = 1
 
-" let g:ale_lint_delay = 300
+let g:ale_lint_delay = 300
 
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
@@ -87,7 +87,7 @@ endfunction
 
 augroup ALE
   autocmd!
-  " autocmd VimEnter,BufEnter,BufReadPost * call ale#Lint()
+  " autocmd VimEnter,BufEnter * call ale#Lint()
   autocmd User ALELint call ALEOpenList()
   " Automatically close corresponding loclist when quitting a window
   autocmd BufHidden,QuitPre * call ALECloseList()
