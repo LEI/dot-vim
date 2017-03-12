@@ -58,6 +58,8 @@ set nrformats-=octal " Disable octal format for number processing using CTRL-A
 
 set backspace=indent,eol,start " Normal backspace in insert mode
 
+set complete-=i " Do not scan current and included files
+
 set nostartofline " Keep the cursor on the same column if possible
 
 set lazyredraw " Redraw only if necessary, faster macros
@@ -136,14 +138,6 @@ endif
 if has('mouse')
   set mouse+=a
 endif
-
-" Completion {{{1
-
-" set complete-=i " Do not scan current and included files
-
-set complete+=kspell " Autocompete with dictionnary words when spell check is on
-
-set completeopt+=longest,menuone " Only insert the longest common text for matches
 
 " Search {{{1
 
@@ -340,36 +334,6 @@ cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Right
 " Save as root with :w!!
 cnoremap <expr> w!! (exists(':SudoWrite') == 2 ? "SudoWrite" : "w !sudo tee % >/dev/null") . "\<CR>"
 
-function! OnlyWS() abort
-  " let l:col = col('.') - 1
-  " " !col || getline('.')[col - 1] !~ '\k'
-  " return !l:col || getline('.')[l:col - 1] =~# '\s'
-  return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
-endfunction
-
-function! NextComp() abort
-  " if !pumvisible()
-  "   return ''
-  " endif
-  " TODO omnifunc, ...
-  return "\<C-p>" " Nearest matching word
-endfunction
-
-function! PrevComp() abort
-  return "\<C-n>"
-endfunction
-
-" Next and previous completion Tab and Shift-Tab
-inoremap <expr> <Tab> OnlyWS() ? "\<Tab>" : NextComp()
-" inoremap <S-Tab> <C-p> " Fix Shift-Tab? :exe 'set t_kB=' . nr2char(27) . '[Z'
-inoremap <expr> <S-Tab> OnlyWS() ? "\<S-Tab>" : PrevComp()
-
-" " Select the completed word with Enter
-" inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
-" inoremap <CR> <C-r>=<SID>cr_close_popup()<CR>
-" " Close the popup menu (using <Esc> or <CR> breaks enter and arrow keys)
-" inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<CR>"
-
 " Use <C-c> to stop the highlighting for the 'hlsearch' option
 if maparg('<C-c>', 'n') ==# ''
   nnoremap <silent> <C-c> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
@@ -407,8 +371,6 @@ endfunction
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
 " 1}}}
-
-" set omnifunc=syntaxcomplete#Complete
 
 augroup VimInit
   autocmd!

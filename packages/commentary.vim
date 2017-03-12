@@ -5,9 +5,7 @@ Plug 'tpope/vim-commentary'
 function! s:loaded()
   augroup VimCommentary
     autocmd!
-    " INI
-    autocmd FileType inidos setlocal commentstring=#\ %s
-    " Xresources
+    autocmd FileType cfg,inidos setlocal commentstring=#\ %s
     autocmd FileType xdefaults setlocal commentstring=!\ %s
   augroup END
 endfunction
