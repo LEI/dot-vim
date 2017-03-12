@@ -1,6 +1,5 @@
 " Vim Plug
 
-" Plug 'AndrewRadev/splitjoin.vim' " Line/multiline transitions
 " Plug 'editorconfig/editorconfig-vim'
 " Plug 'LEI/vim-statusline'
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " Undo history visualizer

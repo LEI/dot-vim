@@ -269,7 +269,8 @@ endif
 
 " Enable true colors in the terminal
 let g:true_color = has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
-let g:true_term = $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
+let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
+  \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
 if get(g:, 'true_color', 0) && get(g:, 'true_term', 0) " Apple_Terminal
   set termguicolors
   " :h xterm-true-color
