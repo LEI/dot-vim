@@ -6,7 +6,7 @@ if !get(g:, 'loaded_ctrlp', 0)
   finish
 endif
 
-let s:ep = get(g:, 'statusline#sep', '')
+let s:ep = get(g:statusline.symbols, 'sep', '')
 
 function! statusline#ctrlp#Enable() abort
   " Both functions must be global and return a full statusline

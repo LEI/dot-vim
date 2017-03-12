@@ -41,13 +41,14 @@ function! package#Install(path) abort
 endfunction
 
 function! package#Plug(...) abort
-  runtime plug.vim
+  " Load configuration file: ~/.vim/packages.vim
+  runtime packages.vim
   let l:dir = a:0 ? a:1 : g:package#dir
   for l:path in split(globpath(l:dir, '*.vim'), '\n')
     let l:name = fnamemodify(l:path, ':t:r')
-    " To disable a package file, :let g:package#{name}_enabled = 0
-    " Skip explicitly disabled plugins
-    if exists('g:package#' . l:name . '_enabled') && g:package#{l:name}_enabled == 0
+    " To enable a package file, :let g:package#{l:name}_enabled = 1
+    " if exists('g:package#' . l:name . '_enabled') && g:package#{l:name}_enabled == 1
+    if get(g:, 'package#' . l:name . '_enabled', 0) != 1
       continue
     endif
     " let l:pkg = {'name': l:name, 'path': l:path}

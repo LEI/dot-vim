@@ -11,19 +11,6 @@ let g:loaded_statusline = 1
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-" Variables {{{1
-
-let g:statusline_winnr = winnr()
-
-let g:statusline#enable_at_startup = get(g:, 'statusline#enable_at_startup', 1)
-
-let g:statusline#sep = ' '
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let g:statusline#sep = ' ' .nr2char(0x2502) . ' '
-endif
-
-" Build {{{1
-
 " Format Markers:
 " %< Where to truncate line if too long
 " %n Buffer number
@@ -42,32 +29,34 @@ endif
 " %P Percentage through file of displayed window
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
+let g:statusline = get(g:, 'statusline', {})
+call extend(g:statusline, {'modes': {}, 'symbols': {}}, 'keep')
 
 function! statusline#Build(...) abort
   let l:bufname = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
   " Mode
   let l:paste = '%1*%( %{&paste ? "PASTE" : ""} %)%*%< '
-  let l:mode = '%(%{winwidth(0) > 60 && &modifiable ? statusline#Mode() : ""}' . g:statusline#sep . '%)'
+  let l:mode = '%(%{winwidth(0) > 60 && &modifiable ? statusline#f#Mode() : ""}' . g:statusline.symbols.sep . '%)'
   " Git branch
-  let l:branch = '%(%{winwidth(0) > 90 ? statusline#Branch() : ""}' . g:statusline#sep . '%)'
+  let l:branch = '%(%{winwidth(0) > 90 ? statusline#f#Branch() : ""}' . g:statusline.symbols.sep . '%)'
   " Flags [%W%H%R%M]
-  let l:flags = '%( [%{statusline#Flags()}]%)'
+  let l:flags = '%( [%{statusline#f#Flags()}]%)'
   " Warnings
   let l:warn = '%#StatusLineWarn#%('
-  let l:warn.= '%( %{statusline#Indent()}%)' " &bt nofile, nowrite
-  let l:warn.= '%( %{empty(&bt) ? statusline#Trailing() : ""}%)'
+  let l:warn.= '%( %{statusline#f#Indent()}%)' " &bt nofile, nowrite
+  let l:warn.= '%( %{empty(&bt) ? statusline#f#Trailing() : ""}%)'
   let l:warn.= ' %)%*'
   " Errors
   let l:err = '%#StatusLineError#%('
   let l:err.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
-  let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#QflistStatus("qf: ") : ""}%)'
-  let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#LoclistStatus() : ""}%)'
+  let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#f#QflistStatus("qf: ") : ""}%)'
+  let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#f#LoclistStatus() : ""}%)'
   let l:err.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
   let l:err.= ' %)%*'
   " File type
-  let l:type = '%(%{winwidth(0) > 30 ? statusline#FileType() : ""}' . g:statusline#sep . '%)'
+  let l:type = '%(%{winwidth(0) > 30 ? statusline#f#FileType() : ""}' . g:statusline.symbols.sep . '%)'
   " File encoding
-  let l:info = '%(%{winwidth(0) > 60 ? statusline#FileInfo() : ""}' . g:statusline#sep . '%)'
+  let l:info = '%(%{winwidth(0) > 60 ? statusline#f#FileInfo() : ""}' . g:statusline.symbols.sep . '%)'
   " Default ruler
   let l:ruler = '%-14.(%l,%c%V/%L%) %P '
 
@@ -75,10 +64,6 @@ function! statusline#Build(...) abort
   let l:right = l:warn . l:err . ' ' . l:type . l:info . l:ruler
   return l:left . '%= ' . l:right
 endfunction
-
-" Functions {{{1
-
-" Get the current mode and update SatusLine highlight group {{{2
 
 " Modes:
 " n       Normal
@@ -99,164 +84,30 @@ endfunction
 " rm      The -- more -- prompt
 " r?      A confirm query of some sort
 " !       Shell or external command is executing
-let g:statusline_modes = {
-\   'nc': '------',
-\   'n': 'NORMAL',
-\   'i': 'INSERT',
-\   'R': 'REPLACE',
-\   'v': 'VISUAL',
-\   'V': 'V-LINE',
-\   'c': 'COMMAND',
-\   '': 'V-BLOCK',
-\   's': 'SELECT',
-\   'S': 'S-LINE',
-\   '': 'S-BLOCK',
-\   't': 'TERMINAL',
-\ }
+call extend(g:statusline.modes, {
+      \   'nc': '------',
+      \   'n': 'NORMAL',
+      \   'i': 'INSERT',
+      \   'R': 'REPLACE',
+      \   'v': 'VISUAL',
+      \   'V': 'V-LINE',
+      \   'c': 'COMMAND',
+      \   '': 'V-BLOCK',
+      \   's': 'SELECT',
+      \   'S': 'S-LINE',
+      \   '': 'S-BLOCK',
+      \   't': 'TERMINAL',
+      \ }, 'keep')
 
-function! statusline#Mode(...) abort
-  let l:mode =  a:0 ? a:1 :mode()
-  " if l:mode ==# 'n'
-  "   highlight! link StatusLine StatusLineNormal
-  " elseif l:mode ==# 'i'
-  "   highlight! link StatusLine StatusLineInsert
-  " elseif l:mode ==# 'R'
-  "   highlight! link StatusLine StatusLineReplace
-  " elseif l:mode ==# 'v' || l:mode ==# 'V' || l:mode ==# '^V'
-  "   highlight! link StatusLine StatusLineVisual
-  " endif
-  if g:statusline_winnr != winnr()
-    let l:mode = 'nc'
-  endif
-  return get(g:statusline_modes, l:mode, l:mode)
-endfunction
-
-" Display the branch of the cwd if applicable {{{2
-
-function! statusline#Branch() abort
-  " &bt !~ 'nofile\|quickfix'
-  if !exists('*fugitive#head') || &buftype ==# 'quickfix'
-    return ''
-  endif
-  if exists('b:branch_hidden') && b:branch_hidden == 1
-    return ''
-  endif
-  return fugitive#head(7)
-endfunction
-
-" Buffer flags {{{2
-
-function! statusline#Flags() abort
-  if &filetype =~# 'netrw\|vim-plug' || &buftype ==# 'quickfix'
-    return ''
-  endif
-  if &filetype ==# '' && &buftype ==# 'nofile'
-    return '' " NetrwMessage
-  endif
-  if &buftype ==# 'help'
-    return 'H'
-  endif
-  let l:flags = []
-  if &previewwindow
-    call add(l:flags, 'PRV')
-  endif
-  if &readonly
-    call add(l:flags, 'RO')
-  endif
-  if &modified
-    call add(l:flags, '+')
-  elseif !&modifiable
-    call add(l:flags, '-')
-  endif
-  return join(l:flags, ',')
-endfunction
-
-" File or buffer type {{{2
-
-function! statusline#FileType() abort
-  if &filetype ==# ''
-    if &buftype !=# 'nofile'
-      return &buftype
-    endif
-    return ''
-  endif
-  if &filetype ==# 'netrw' && get(b:, 'netrw_browser_active', 0) == 1
-    let l:netrw_direction = (g:netrw_sort_direction =~# 'n' ? '+' : '-')
-    return &filetype . '[' . g:netrw_sort_by . l:netrw_direction . ']'
-  endif
-  " if &filetype ==# 'qf'
-  "   return &buftype " quickfix
-  " endif
-  return &filetype
-endfunction
-
-" File encoding and format {{{2
-
-function! statusline#FileInfo() abort
-  if &filetype ==# '' && &buftype !=# 'nofile'
-    return ''
-  endif
-  if &filetype =~# 'netrw' || &buftype =~# 'help\|quickfix'
-    return ''
-  endif
-  if strlen(&fileencoding) > 0
-    let l:enc = &fileencoding
-  else
-    let l:enc = &encoding
-  endif
-  if exists('+bomb') && &bomb
-    let l:enc.= ',B'
-  endif
-  if l:enc ==# 'utf-8'
-    return ''
-  endif
-  if &fileformat !=# 'unix'
-    let l:enc.= '[' . &fileformat . ']'
-  endif
-  return l:enc
-endfunction
-
-" Whitespace warnings {{{2
-
-function! statusline#Indent() abort
-  if !exists('b:statusline_indent')
-    let b:statusline_indent = ''
-    if !&modifiable
-      return b:statusline_indent
-    endif
-    " Find spaces that arent used as alignment in the first indent column
-    let l:spaces = search('^ \{' . &tabstop . ',}[^\t]', 'nw')
-    let l:tabs = search('^\t', 'nw')
-    if l:tabs != 0 && l:spaces != 0
-      " Spaces and tabs are used to indent
-      let b:statusline_indent = 'mixed-'
-      if !&expandtab
-        let b:statusline_indent.= 'spaces:' . l:spaces
-      else
-        let b:statusline_indent.= 'tabs:' . l:tabs
-      endif
-    elseif l:spaces != 0 && !&expandtab
-      let b:statusline_indent = 'spaces:' . l:spaces
-    elseif l:tabs != 0 && &expandtab
-      let b:statusline_indent = 'tabs:' .l:tabs
-    endif
-  endif
-  return b:statusline_indent
-endfunction
-
-function! statusline#Trailing() abort
-  if !exists('b:statusline_trailing')
-    let l:msg = ''
-    let l:match = search('\s\+$', 'nw')
-    if l:match != 0
-      let l:msg = 'trailing:' . l:match " '\s$'
-    endif
-    let b:statusline_trailing = l:msg
-  endif
-  return b:statusline_trailing
-endfunction
-
-" Colors {{{1
+" Symbols: (key: 0x1F511)
+let s:c = has('multi_byte') && &encoding ==# 'utf-8'
+call extend(g:statusline.symbols, {
+      \   'key': s:c ? nr2char(0x1F511) : '$',
+      \   'sep': s:c ? ' ' . nr2char(0x2502) . ' ' : ' ',
+      \   'lock': s:c ? nr2char(0x1F512) : '@',
+      \   'nl': s:c ? nr2char(0x2424) : '\n',
+      \   'ws': s:c ? nr2char(0x39E) : '\s',
+      \ }, 'keep')
 
 function! Statusline_dark() abort
     highlight User1 term=reverse ctermfg=14 ctermbg=0
@@ -305,34 +156,6 @@ function! statusline#Highlight(...) abort
   endif
 endfunction
 
-" Autocommands {{{1
-
-augroup StatusLine
-  autocmd!
-  autocmd ColorScheme * call statusline#Colors() | redrawstatus
-  autocmd InsertEnter * call statusline#Highlight(v:insertmode)
-  autocmd InsertChange * call statusline#Highlight(v:insertmode)
-  autocmd InsertLeave * call statusline#Highlight()
-
-  autocmd BufAdd,BufEnter,WinEnter * let g:statusline_winnr = winnr()
-
-  " Update whitespace warnings (add InsertLeave?)
-  autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
-
-  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = statusline#Build('Command Line')
-  " autocmd CmdWinLeave * unlet b:is_command_window
-
-  autocmd FileType qf let &l:statusline = statusline#Build('%f%( %{QuickFixTitle()}%)')
-  autocmd FileType vim-plug let &l:statusline = statusline#Build(' Plugins')
-augroup END
-
-" Quickfix or location list title
-function! QuickFixTitle() abort
-  return get(w:, 'quickfix_title', '')
-endfunction
-
-" }}}
-
 function! statusline#Enable() abort
   " Apply colors
   call statusline#Colors()
@@ -343,9 +166,35 @@ function! statusline#Enable() abort
 endfunction
 
 " v:vim_did_enter |!has('vim_starting')
-if g:statusline#enable_at_startup
+let s:enable = get(g:, 'statusline#enable_at_startup', 1)
+if s:enable
   call statusline#Enable()
 endif
+
+" Initialize active window number
+let g:statusline.winnr = winnr()
+
+augroup StatusLine
+  autocmd!
+  autocmd ColorScheme * call statusline#Colors() | redrawstatus
+  autocmd InsertEnter * call statusline#Highlight(v:insertmode)
+  autocmd InsertChange * call statusline#Highlight(v:insertmode)
+  autocmd InsertLeave * call statusline#Highlight()
+
+  autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
+
+  " Update whitespace warnings (add InsertLeave?)
+  autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
+
+  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = statusline#Build('Command Line')
+  " autocmd CmdWinLeave * unlet b:is_command_window
+
+  autocmd FileType qf let &l:statusline = statusline#Build('%f%( %{statusline#f#QuickFixTitle()}%)')
+  autocmd FileType vim-plug let &l:statusline = statusline#Build(' Plugins')
+augroup END
+
+" %<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
+command! -nargs=* -bar CursorStl let &g:statusline = statusline#Build('%f %([%b 0x%B]%)')
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

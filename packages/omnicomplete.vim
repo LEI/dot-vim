@@ -26,9 +26,9 @@ function! EndComp() abort
   return "\<C-e>"
 endfunction
 
-" function! CheckBackSpace() abort
-"   return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
-" endfunction
+function! CheckBackSpace() abort
+  return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
+endfunction
 
 " function! OnlyWS() abort
 "   " let l:col = col('.') - 1
@@ -38,6 +38,7 @@ endfunction
 " endfunction
 
 function! OpenPopupMenu() abort
+  " Return early if the popup menu is visible
   if pumvisible()
     return ''
   endif
@@ -53,27 +54,26 @@ function! OpenPopupMenu() abort
   " CTRL-D definitions or macros
   " CTRL-V vim commands
   " CTRL-U user defined completon
-  let l:has_period = match(l:substr, '\.') != -1 " position of period
-  let l:has_slash = match(l:substr, '\/') != -1 " position of slash
-  if !l:has_period && !l:has_slash
-    return "\<C-x>\<C-p>" " existing text matching (keywords in current file)
-  elseif l:has_slash
-    return "\<C-x>\<C-f>" " file names matching
-  elseif exists('&omnifunc') && &omnifunc !=# ''
-    " TODO: fallback to generic completion C-p
-    " when catch /Pattern not found/ " E486
-    return "\<C-x>\<C-o>" " omni completion
+  " let l:has_period = match(l:substr, '\.') != -1 " position of period
+  " let l:has_slash = match(l:substr, '\/') != -1 " position of slash
+  " if !l:has_period && !l:has_slash
+  "   return "\<C-x>\<C-p>" " existing text matching (keywords in current file)
+  " elseif l:has_slash
+  "   return "\<C-x>\<C-f>" " file names matching
+  " elseif exists('&omnifunc') && &omnifunc !=# ''
+  "   " TODO: fallback to generic completion C-p
+  "   " when catch /Pattern not found/ " E486
+  "   return "\<C-x>\<C-o>" " omni completion
   " elseif &dictionary !=# ''
   "   return "\<C-x>\<C-k>"
   " elseif has('spell') && (check_spell)
   "   return "\<C-x>\<C-s>" " spelling suggestions
-  endif
+  " endif
   " echom 'No completion type found for: ' . l:substr
-  return ''
+  return "\<C-x>\<C-p>"
 endfunction
 
 function! Complete(input, fname) abort
-  " Return early if the popup menu is visible
   let l:open = OpenPopupMenu()
   if l:open ==# '0'
     " Line should not be completed, send original input
@@ -87,6 +87,7 @@ endfunction
 
 " Next and previous completion Tab and Shift-Tab
 inoremap <expr> <Tab> Complete("\<Tab>", 'NextComp')
+" (pumvisible() ? "\<C-p>" : "\<Tab>")
 " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
 inoremap <expr> <S-Tab> Complete("\<S-Tab>", 'PrevComp')
 

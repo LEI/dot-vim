@@ -180,25 +180,24 @@ set nofoldenable
 
 " Status line {{{1
 
-set laststatus=2 " Always show statusline
-
 set display+=lastline " Display as much as possible of the last line
-
-set noshowmode " Do not display current mode
-
-set showcmd " Display incomplete commands
-
+set laststatus=2 " Always show statusline
 set ruler " Always show current position
-
 " set rulerformat=%l,%c%V%=%P
+set showcmd " Display incomplete commands
+" set showmode " Display current mode in command line
+set wildmenu " Invoke completion on <Tab> in command line mode
+set wildmode=longest,full " Complete longest common string, then each full match
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-
-set statusline=%!statusline#Build()
-
-set wildmenu " Invoke completion on <Tab> in command line mode
-
-set wildmode=longest,full " Complete longest common string, then each full match
+if &statusline ==# ''
+  function! ShowFi() abort " Show file info (encoding and format)
+    let l:ft = &filetype
+    let l:bt = &buftype
+    return strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help'
+  endfunction
+  set statusline=%<%f\ %m%r%w\ %=%{ShowFi()?(&fenc?&fenc:&enc.'['.&ff.']'):''}%([%{strlen(&ft)?&ft:&bt}]%)\ %-14.(%l,%c%V/%L%)\ %P
+endif
 
 " Characters {{{1
 
@@ -214,13 +213,15 @@ if has('multi_byte') && &encoding ==# 'utf-8'
         \ . ',precedes:' . nr2char(0x276E)
         \ . ',nbsp:' . nr2char(0x005F)
         \ . ',eol:' . nr2char(0x00AC)
-  " Show line breaks (arrows: 0x21AA or 0x08627)
-  let &showbreak = nr2char(0x2026) " Ellipsis
-else
+else " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
-  " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
-  " let &showbreak = '-> '
 endif
+
+" " let &showbreak = '-> '
+" if has('multi_byte') && &encoding ==# 'utf-8'
+"   " Show line breaks (arrows: 0x21AA or 0x08627)
+"   let &showbreak = nr2char(0x2026) " Ellipsis
+" endif
 
 " Term colors {{{1
 
