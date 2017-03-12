@@ -4,11 +4,10 @@
 "   finish
 " endif
 
-Plug 'SirVer/ultisnips', {'on': []} | Plug 'honza/vim-snippets'
-
-" let g:UltiSnipsSnippetsDir = '~/.vim/snippets/'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " Snippet search path
+" let g:UltiSnipsSnippetsDir = '~/.vim/snippets/'
 " let g:UltiSnipsSnippetDirectories = ['UltiSnips'] " 'snippets', 'neosnippets']
 
 " Use <C-j> to expand selected snippet, <Tab> conflicts with YouCompleteMe
@@ -27,4 +26,4 @@ inoremap <C-x><C-k> <C-x><C-k>
 " Open :UltiSnipsEdit in a split
 let g:UltiSnipsEditSplit = 'vertical'
 
-call plug#load('ultisnips')
+" call plug#load('ultisnips')

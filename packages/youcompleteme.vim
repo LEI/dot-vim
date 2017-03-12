@@ -18,7 +18,36 @@ function! YCMInstall(info)
   endif
 endfunction
 
+" !exists('g:loaded_youcompleteme') :call plug#load('YouCompleteMe') :call youcompleteme#Enable()
+
+function! YCMEnable() abort
+  if has('vim_starting')
+    echom 'Vim is still starting, skipping YCM'
+    return
+  endif
+  if !exists('g:loaded_youcompleteme')
+    call plug#load('YouCompleteMe')
+  else
+    echom 'YCM is already loaded'
+  endif
+  if exists('g:loaded_youcompleteme')
+    call youcompleteme#Enable()
+  else
+    echom 'YCM was not loaded'
+  endif
+endfunction
+
 Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
 
-" autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
-" !exists('g:loaded_youcompleteme') :call plug#load('YouCompleteMe') :call youcompleteme#Enable()
+function! s:loaded() abort
+  augroup YCM
+    autocmd!
+    " Defer loading until vim is ready and idle
+    " autocmd User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+    " autocmd CursorHold, CursorHoldI * :packadd YouCompleteMe | autocmd! YCM
+    " autocmd CursorHold,CursorHoldI * call YCMEnable() | autocmd! YCM
+    autocmd CursorHold,CursorHoldI * call plug#load('YouCompleteMe') | call youcompleteme#Enable() | autocmd! YCM
+  augroup END
+endfunction
+
+call package#Add({'name': 'youcompleteme', 'on': {'plug_end': function('s:loaded')}})
