@@ -8,14 +8,14 @@
 " E488: Trailing characters
 function! s:Preserve(command)
   " Save last search and cursor position
-  let _s=@/
-  let l = line(".")
-  let c = col(".")
+  let l:_s=@/
+  let l:l = line('.')
+  let l:c = col('.')
   " Do the business
   execute a:command
   " Clean up: restore previous search history and cursor position
-  let @/=_s
-  call cursor(l, c)
+  let @/=l:_s
+  call cursor(l:l, l:c)
 endfunction
 
 nmap _$ :call s:Preserve("%s/\\s\\+$//e")<CR>

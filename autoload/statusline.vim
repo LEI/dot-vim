@@ -133,7 +133,8 @@ function! statusline#Colors() abort
   " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
   " highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
   highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#cb4b16
-  highlight StatusLineWarn cterm=reverse ctermfg=9 gui=reverse guifg=#dc322f
+  " highlight StatusLineWarn cterm=reverse ctermfg=9 gui=reverse guifg=#dc322f
+  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#dc322f
   let l:f = 'Statusline_' . &background
   if exists('*' . l:f)
     call {l:f}()

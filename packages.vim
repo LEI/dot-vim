@@ -12,7 +12,7 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
 let g:package#colorscheme_enabled = 1
-let g:package#statusline_enabled = 1
+" let g:package#statusline_enabled = 1
 
 " Improvements:
 let g:package#commentary_enabled = 1
@@ -20,15 +20,14 @@ let g:package#fugitive_enabled = 1
 let g:package#splitjoin_enabled = 1
 let g:package#tabular_enabled = 0
 let g:package#unimpaired_enabled = 1
-
-" Languages:
-let g:package#polyglot_enabled = 1
-" let g:package#tern_enabled = 1
+let g:package#textobjuser_enabled = 1
 
 " Search:
 let g:package#ctrlp_enabled = 1
 
-" Text Objects: kana/vim-textobj-user
+" Languages:
+let g:package#polyglot_enabled = 1
+let g:package#tern_enabled = executable('node') && executable('npm')
 
 " Formatting: google/vim-codefmt
 " let g:package#editorconfig_enabled = 1 " Breaks &et
