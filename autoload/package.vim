@@ -11,6 +11,17 @@ let g:loaded_package = 1
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+command! -nargs=0 -bar Install PlugInstall --sync | source $MYVIMRC
+command! -nargs=0 -bar Update PlugUpdate --sync | source $MYVIMRC
+command! -nargs=0 -bar Upgrade PlugUpdate! --sync | PlugUpgrade | source $MYVIMRC
+" command! -nargs=* -bar -bang -complete=customlist,s:names PlugInstall call s:install(<bang>0, [<f-args>])
+" command! -nargs=* -bar -bang -complete=customlist,s:names PlugUpdate  call s:update(<bang>0, [<f-args>])
+" command! -nargs=0 -bar -bang PlugClean call s:clean(<bang>0)
+" command! -nargs=0 -bar PlugUpgrade if s:upgrade() | execute 'source' s:esc(s:me) | endif
+" command! -nargs=0 -bar PlugStatus  call s:status()
+" command! -nargs=0 -bar PlugDiff    call s:diff()
+" command! -nargs=? -bar -bang -complete=file PlugSnapshot call s:snapshot(<bang>0, <f-args>)
+
 let s:packages = []
 let s:vim_dir = $HOME . '/.vim'
 
@@ -18,6 +29,10 @@ let g:package#plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/ma
 let g:package#plug_path = s:vim_dir . '/autoload/plug.vim' " Vim Plug
 let g:package#plugins_dir = s:vim_dir . '/plugins' " Plugin directory
 let g:package#dir = s:vim_dir . '/packages' " Plugin configuration
+
+function! package#List(...) abort
+  return s:packages
+endfunc
 
 function! package#Begin(...) abort
   let l:path = a:0 ? a:1 : g:package#plugins_dir
@@ -65,8 +80,8 @@ function! package#Add(pkg) abort
   for l:pkg in s:packages
     if l:pkg.name == a:pkg.name
       " echoerr 'Package already exists with that name: ' . l:pkg.name
-      let l:pkg = a:pkg
-      return 1
+      let l:pkg = extend(l:pkg, a:pkg, 'force')
+      return 0
     endif
   endfor
   call add(s:packages, a:pkg)
@@ -77,6 +92,7 @@ function! package#End() abort
   for s:pkg in s:packages
     if has_key(s:pkg, 'on')
       if has_key(s:pkg.on, 'plug_end') " exists('*s:pkg.on.plug_end')
+        " echom 'ON END: ' . s:pkg.name
         call s:pkg.on.plug_end()
       endif
     endif
@@ -84,8 +100,7 @@ function! package#End() abort
   if g:package#did_install
     augroup PlugInstall
       autocmd!
-      autocmd VimEnter * PlugInstall --sync
-      " | source $MYVIMRC
+      autocmd VimEnter * Install
     augroup END
   endif
 endfunction

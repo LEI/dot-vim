@@ -4,24 +4,32 @@
 " colorscheme solarized
 " call togglebg#map('<F5>')
 
-" if exists('g:loaded_solarized8')
-"   finish
-" endif
-
 Plug 'lifepillar/vim-solarized8'
 
 nnoremap <F5> :call ToggleBackground()<CR>
 nnoremap <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
 nnoremap <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 
-augroup Colors
-  autocmd!
-  autocmd VimEnter * call SetColorScheme('solarized8_dark')
-  autocmd VimEnter,ColorScheme * call Highlight(&background)
-augroup END
+" Defaults:
+let s:colors = 'solarized8'
+let s:background = 'dark'
+let s:theme = ''
+
+" augroup Colors
+"   autocmd!
+"   autocmd VimEnter * call SetColorScheme(s:colors, s:background, s:theme)
+"   autocmd VimEnter,ColorScheme * call SetHighlight(&background)
+" augroup END
+
+function! s:loaded() abort
+  call SetColorScheme(s:colors, s:background, s:theme)
+  call SetHighlight(s:background)
+endfunction
+
+call package#Add({'name': 'solarized', 'on': {'plug_end': function('s:loaded')}})
 
 " Custom highlight groups
-function! Highlight(bg) abort
+function! SetHighlight(bg) abort
   if a:bg ==# 'dark'
     " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
     highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
@@ -46,20 +54,20 @@ function! Solarized8Contrast(delta) abort
 endfunction
 
 function! SetColorScheme(...) abort
-  let l:colors = a:0 ? a:1 : 'default'
-  let l:theme = a:0 > 1 ? a:2 : ''
-  let l:background = 'dark'
+  let l:colors = a:0 ? a:1 : s:colors
+  let l:bg = a:0 > 1 ? a:2 : s:background
+  let l:theme = a:0 > 2 ? a:3 : s:theme
   if exists('*strftime')
     let s:hour = strftime('%H')
     if s:hour > 7 && s:hour < 20
-      let l:background = 'light'
+      let l:bg = 'light'
     endif
   endif
-  let &background = l:background
-  let l:colors_name = l:colors . (strlen(l:theme) ? '_' . l:theme : '')
+  let &background = l:bg
+  let l:colors_name = l:colors . (strlen(l:bg) ? '_' . l:bg : '') . (strlen(l:theme) ? '_' . l:theme : '')
   try
     execute 'colorscheme'  l:colors_name
-    " call Highlight(&background)
+    " call SetHighlight(&background)
   catch /E185:/ " echoerr 'Colorscheme not found: ' . l:colors_name
     " colorscheme default
   endtry
