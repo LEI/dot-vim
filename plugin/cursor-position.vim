@@ -11,7 +11,14 @@ function! RestoreCursorPosition()
   endif
 endfunction
 
+" augroup RestoreCursorPosition
+"   autocmd!
+"   autocmd BufReadPost * call RestoreCursorPosition()
+" augroup END
+
 augroup RestoreCursorPosition
   autocmd!
-  autocmd BufReadPost * call RestoreCursorPosition()
+  " Make vim save view (state) (folds, cursor, etc)
+  autocmd BufWinLeave * mkview
+  autocmd BufWinEnter * silent! loadview
 augroup END
