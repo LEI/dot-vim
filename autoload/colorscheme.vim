@@ -1,9 +1,6 @@
 " Color Scheme
 
 " Defaults:
-let s:colors = 'default'
-let s:background = 'dark'
-let s:theme = ''
 
 function! s:bg() abort
   let l:bg = 'dark'
@@ -17,13 +14,12 @@ function! s:bg() abort
 endfunction
 
 function! colorscheme#Set(...) abort
-  let l:colors = a:0 ? a:1 : s:colors
+  let l:colors = a:0 ? a:1 : 'default'
   let l:bg = a:0 > 1 ? a:2 : s:bg()
-  let l:theme = a:0 > 2 ? a:3 : s:theme
+  let l:theme = a:0 > 2 ? a:3 : ''
   let l:colors_name = l:colors
         \ . (strlen(l:bg) ? '_' . l:bg : '')
         \ . (strlen(l:theme) ? '_' . l:theme : '')
-  echom 'USING: ' . l:colors_name
   let &background = l:bg
   execute 'colorscheme'  l:colors_name
   " try

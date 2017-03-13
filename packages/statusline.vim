@@ -9,5 +9,5 @@ set noshowmode
 
 " Default Statusline:
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-
-set statusline=%!statusline#Build()
+" set statusline=%!statusline#Build()
+let &g:statusline = statusline#Build()

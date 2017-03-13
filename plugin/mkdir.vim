@@ -9,10 +9,11 @@ let g:mkdir_loaded = 1
 
 function s:Mkdir()
   let l:dir = expand('%:p:h')
-
   if !isdirectory(l:dir)
-    call mkdir(l:dir, 'p')
-    echo 'Created non-existing directory: '.l:dir
+    if confirm("Directory '" . l:dir . "' doestn't exists.", '&Create it?') == 1
+      call mkdir(l:dir, 'p')
+      echo 'Created non-existing directory: ' . l:dir
+    endif
   endif
 endfunction
 
