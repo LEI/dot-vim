@@ -204,6 +204,13 @@ if &statusline ==# '' " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
   set statusline=%<%f\ %m%r%w\ %=%{ShowFi()?(&fenc?&fenc:&enc.'['.&ff.']'):''}%([%{strlen(&ft)?&ft:&bt}]%)\ %-14.(%l,%c%V/%L%)\ %P
 endif
 
+" Hide mode in command line
+set noshowmode
+
+" Default Statusline:
+" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+" set statusline=%!statusline#Build()
+
 " Characters {{{1
 
 " Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
@@ -367,7 +374,7 @@ augroup VimInit
   autocmd!
 
   " Change cursor color
-  autocmd VimEnter * call colorscheme#Set('solarized8')
+  autocmd VimEnter * call colorscheme#Set('solarized8') | let &g:statusline = statusline#Build()
   autocmd VimEnter,ColorScheme * call s:highlight(&background)
 
   " Auto reload vimrc on save
