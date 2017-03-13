@@ -37,3 +37,8 @@ function! colorscheme#ToggleBackground(...) abort
   endif
   execute 'colorscheme' l:c
 endfunction
+
+function! colorscheme#Solarized8Contrast(delta) abort
+  let l:schemes = map(['_low', '_flat', '', '_high'], "'solarized8_'.(&background).v:val")
+  exe 'colorscheme' l:schemes[((a:delta+index(l:schemes, g:colors_name)) % 4 + 4) % 4]
+endfunction

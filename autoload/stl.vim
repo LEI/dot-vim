@@ -1,6 +1,6 @@
 " Status line
 
-" set statusline=%!statusline#Build()
+" set statusline=%!stl#Build()
 
 if exists('g:loaded_statusline')
   finish
@@ -32,37 +32,44 @@ set cpoptions&vim
 let g:statusline = get(g:, 'statusline', {})
 call extend(g:statusline, {'modes': {}, 'symbols': {}}, 'keep')
 
-function! statusline#Build(...) abort
+function! stl#Build(...) abort
   let l:bufname = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
+  let l:s = ''
   " Mode
-  let l:paste = '%1*%( %{&paste ? "PASTE" : ""} %)%*%< '
-  let l:mode = '%(%{winwidth(0) > 60 && &modifiable ? statusline#f#Mode() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%1*%( %{&paste ? "PASTE" : ""} %)%*'
+  let l:s.= '%< '
+  let l:s.= '%(%{winwidth(0) > 60 && &modifiable ? stl#f#Mode() : ""}' . g:statusline.symbols.sep . '%)'
   " Git branch
-  let l:branch = '%(%{winwidth(0) > 90 ? statusline#f#Branch() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 90 ? stl#f#Branch() : ""}' . g:statusline.symbols.sep . '%)'
+  " Buffer name
+  let l:s.= l:bufname
   " Flags [%W%H%R%M]
-  let l:flags = '%( [%{statusline#f#Flags()}]%)'
+  let l:s.= '%( [%{stl#f#Flags()}]%)'
+  " Break
+  let l:s.= ' %='
   " Warnings
-  let l:warn = '%#StatusLineWarn#%('
-  let l:warn.= '%( %{statusline#f#Indent()}%)' " &bt nofile, nowrite
-  let l:warn.= '%( %{empty(&bt) ? statusline#f#Trailing() : ""}%)'
-  let l:warn.= ' %)%*'
+  let l:s.= '%#StatusLineWarn#%('
+  let l:s.= '%( %{stl#f#Indent()}%)' " &bt nofile, nowrite
+  let l:s.= '%( %{empty(&bt) ? stl#f#Trailing() : ""}%)'
+  let l:s.= ' %)%*'
   " Errors
-  let l:err = '%#StatusLineError#%('
-  let l:err.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
-  let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#f#QflistStatus("qf: ") : ""}%)'
-  let l:err.= '%( %{exists("*neomake#Make") ? neomake#statusline#f#LoclistStatus() : ""}%)'
-  let l:err.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
-  let l:err.= ' %)%*'
+  let l:s.= '%#StatusLineError#%('
+  let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#stl#f#QflistStatus("qf: ") : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#stl#f#LoclistStatus() : ""}%)'
+  let l:s.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
+  let l:s.= ' %)%*'
+  " Plugins
+  let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
+  " Space
+  let l:s.= ' '
   " File type
-  let l:type = '%(%{winwidth(0) > 30 ? statusline#f#FileType() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 30 ? stl#f#FileType() : ""}' . g:statusline.symbols.sep . '%)'
   " File encoding
-  let l:info = '%(%{winwidth(0) > 60 ? statusline#f#FileInfo() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 60 ? stl#f#FileInfo() : ""}' . g:statusline.symbols.sep . '%)'
   " Default ruler
-  let l:ruler = '%-14.(%l,%c%V/%L%) %P '
-
-  let l:left = l:paste . l:mode . l:branch . l:bufname . l:flags
-  let l:right = l:warn . l:err . ' ' . l:type . l:info . l:ruler
-  return l:left . '%= ' . l:right
+  let l:s.= '%-14.(%l,%c%V/%L%) %P '
+  return l:s
 endfunction
 
 " Modes:
@@ -127,7 +134,7 @@ function! Statusline_light() abort
   highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
 endfunction
 
-function! statusline#Colors() abort
+function! stl#Colors() abort
   " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
   " highlight link StatusLineBranch StatusLine
   " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
@@ -141,7 +148,7 @@ function! statusline#Colors() abort
   endif
 endfunction
 
-function! statusline#Highlight(...) abort
+function! stl#Highlight(...) abort
   let l:im = a:0 ? a:1 : ''
   " let l:im = a:0 ? a:1 : v:insertmode
   if l:im ==# 'i' " Insert mode
@@ -157,19 +164,19 @@ function! statusline#Highlight(...) abort
   endif
 endfunction
 
-function! statusline#Enable() abort
+function! stl#Enable() abort
   " Apply colors
-  call statusline#Colors()
+  call stl#Colors()
   " Enable customized CtrlP status line
   if get(g:, 'loaded_ctrlp', 0)
-    call statusline#ctrlp#Enable()
+    call stl#ctrlp#Enable()
   endif
 endfunction
 
 " v:vim_did_enter |!has('vim_starting')
-let s:enable = get(g:, 'statusline#enable_at_startup', 1)
+let s:enable = get(g:, 'stl#enable_at_startup', 1)
 if s:enable
-  call statusline#Enable()
+  call stl#Enable()
 endif
 
 " Initialize active window number
@@ -177,25 +184,25 @@ let g:statusline.winnr = winnr()
 
 augroup StatusLine
   autocmd!
-  autocmd ColorScheme * call statusline#Colors() | redrawstatus
-  autocmd InsertEnter * call statusline#Highlight(v:insertmode)
-  autocmd InsertChange * call statusline#Highlight(v:insertmode)
-  autocmd InsertLeave * call statusline#Highlight()
+  autocmd ColorScheme * call stl#Colors() | redrawstatus
+  autocmd InsertEnter * call stl#Highlight(v:insertmode)
+  autocmd InsertChange * call stl#Highlight(v:insertmode)
+  autocmd InsertLeave * call stl#Highlight()
 
   autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
 
   " Update whitespace warnings (add InsertLeave?)
   autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
-  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = statusline#Build('Command Line')
+  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = stl#Build('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
 
-  autocmd FileType qf let &l:statusline = statusline#Build('%f%( %{statusline#f#QuickFixTitle()}%)')
-  autocmd FileType vim-plug let &l:statusline = statusline#Build(' Plugins')
+  autocmd FileType qf let &l:statusline = stl#Build('%f%( %{stl#f#QuickFixTitle()}%)')
+  autocmd FileType vim-plug let &l:statusline = stl#Build(' Plugins')
 augroup END
 
 " %<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-command! -nargs=* -bar CursorStl let &g:statusline = statusline#Build('%f %([%b 0x%B]%)')
+command! -nargs=* -bar CursorStl let &g:statusline = stl#Build('%f %([%b 0x%B]%)')
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

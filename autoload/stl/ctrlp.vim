@@ -8,14 +8,14 @@ endif
 
 let s:ep = get(g:statusline.symbols, 'sep', '')
 
-function! statusline#ctrlp#Enable() abort
+function! stl#ctrlp#Enable() abort
   " Both functions must be global and return a full statusline
-  let g:ctrlp_status_func = {'main': 'statusline#ctrlp#Main', 'prog': 'statusline#ctrlp#Prog'}
+  let g:ctrlp_status_func = {'main': 'stl#ctrlp#Main', 'prog': 'stl#ctrlp#Prog'}
 endfunction
 
 " Arguments: focus, byfname, s:regexp, prv, item, nxt, marked
 "            a:1    a:2      a:3       a:4  a:5   a:6  a:7
-function! statusline#ctrlp#Main(...) abort
+function! stl#ctrlp#Main(...) abort
   " let focus = '%#LineNr# '.a:1.' %*'
   " let byfname = '%#Character# '.a:2.' %*'
   " let regex = a:3 ? '%#LineNr# regex %*' : ''
@@ -37,7 +37,7 @@ endfunction
 
 " Argument: len
 "           a:1
-function! statusline#ctrlp#Prog(...) abort
+function! stl#ctrlp#Prog(...) abort
   let l:len = ' ' . a:1
   let l:dir = getcwd() . ' '
   return l:len . '%=' . s:ep . '%<' . l:dir

@@ -1,7 +1,7 @@
 " Functions
 
 " Get the current mode and update SatusLine highlight group
-function! statusline#f#Mode(...) abort
+function! stl#f#Mode(...) abort
   let l:mode =  a:0 ? a:1 :mode()
   " if l:mode ==# 'n'
   "   highlight! link StatusLine StatusLineNormal
@@ -19,7 +19,7 @@ function! statusline#f#Mode(...) abort
 endfunction
 
 " Display the branch of the cwd if applicable
-function! statusline#f#Branch() abort
+function! stl#f#Branch() abort
   " &bt !~ 'nofile\|quickfix'
   if !exists('*fugitive#head') || &buftype ==# 'quickfix'
     return ''
@@ -31,7 +31,7 @@ function! statusline#f#Branch() abort
 endfunction
 
 " Buffer flags
-function! statusline#f#Flags() abort
+function! stl#f#Flags() abort
   if &filetype =~# 'netrw\|vim-plug' || &buftype ==# 'quickfix'
     return ''
   endif
@@ -57,7 +57,7 @@ function! statusline#f#Flags() abort
 endfunction
 
 " File or buffer type
-function! statusline#f#FileType() abort
+function! stl#f#FileType() abort
   if &filetype ==# ''
     if &buftype !=# 'nofile'
       return &buftype
@@ -75,7 +75,7 @@ function! statusline#f#FileType() abort
 endfunction
 
 " File encoding and format
-function! statusline#f#FileInfo() abort
+function! stl#f#FileInfo() abort
   if &filetype ==# '' && &buftype !=# 'nofile'
     return ''
   endif
@@ -100,7 +100,7 @@ function! statusline#f#FileInfo() abort
 endfunction
 
 " Whitespace warnings
-function! statusline#f#Indent() abort
+function! stl#f#Indent() abort
   if !exists('b:statusline_indent')
     let b:statusline_indent = ''
     if !&modifiable
@@ -126,7 +126,7 @@ function! statusline#f#Indent() abort
   return b:statusline_indent
 endfunction
 
-function! statusline#f#Trailing() abort
+function! stl#f#Trailing() abort
   if !exists('b:statusline_trailing')
     let l:msg = ''
     let l:match = search('\s\+$', 'nw')
@@ -139,6 +139,6 @@ function! statusline#f#Trailing() abort
 endfunction
 
 " Quickfix or location list title
-function! statusline#f#QuickFixTitle() abort
+function! stl#f#QuickFixTitle() abort
   return get(w:, 'quickfix_title', '')
 endfunction

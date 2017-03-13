@@ -9,14 +9,68 @@
 
 " runtime before.vim
 
-" Plugins {{{1
+" Variables {{{1
+"
+let g:utf8 = has('multi_byte') && &encoding ==# 'utf-8'
 
 let $PLUGINS = g:package#plugins_dir
 
+" Plugins {{{1
+
 " Start Vim Plug
 call package#Begin()
+
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " (alt: gundo)
+" Plug 'metakirby5/codi.vim' " Interactive scratchpad
+" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+Plug 'tpope/vim-endwise' " Automatic end keywords
+Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
+" Plug 'tpope/vim-obsession' " Continuously updated session files
+Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
+Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
+Plug 'tpope/vim-surround' " Quoting/parenthesizing
+Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
+
+" Plug 'altercation/vim-colors-solarized'
+" colorscheme solarized
+" call togglebg#map('<F5>')
+Plug 'lifepillar/vim-solarized8'
+
+" Improvements:
+let g:package#commentary_enabled = 1
+let g:package#fugitive_enabled = 1
+let g:package#splitjoin_enabled = 1
+let g:package#tabular_enabled = 0
+let g:package#unimpaired_enabled = 1
+let g:package#textobjuser_enabled = 1
+
+" Search:
+" Plug 'vim-scripts/taglist.vim'
+let g:package#ctrlp_enabled = 1
+
+" Languages:
+let g:package#polyglot_enabled = 1
+let g:package#tern_enabled = executable('node') && executable('npm')
+
+" Formatting: google/vim-codefmt
+" let g:package#editorconfig_enabled = 1 " Breaks &et
+
+" Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
+let g:package#neomake_enabled = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+let g:package#ale_enabled = has('nvim') || v:version >= 800
+
+" Auto Completion:
+let g:package#youcompleteme_enabled = 0 " has('python') || has('python3')
+let g:package#ultisnips_enabled = g:package#youcompleteme_enabled
+let g:package#deoplete_enabled = 0 " has('nvim') && has('python3')
+let g:package#neocomplete_enabled = 0 " !has('nvim') && has('lua')
+let g:package#neosnippet_enabled = g:package#deoplete_enabled || g:package#neocomplete_enabled
+
+" runtime packages.vim
+
 " Register plugins
 call package#Plug()
+
 " Add plugins to &runtimepath
 call package#End()
 
@@ -25,11 +79,10 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) =
   runtime! macros/matchit.vim
 endif
 
-" Options {{{1
+" General options {{{1
 
-if has('autocmd')
-  filetype plugin indent on
-endif
+" has('autocmd')
+filetype plugin indent on
 
 if has('syntax') && !exists('g:syntax_on')
   syntax enable
@@ -52,11 +105,23 @@ if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 
+if &history < 1000
+  set history=1000
+endif
+
+if &tabpagemax < 50
+  set tabpagemax=50
+endif
+
+if !empty(&viminfo)
+  set viminfo^=!
+endif
+
+set sessionoptions-=options
+
 set nrformats-=octal " Disable octal format for number processing using CTRL-A
 
 set backspace=indent,eol,start " Normal backspace in insert mode
-
-set complete-=i " Do not scan current and included files
 
 set nostartofline " Keep the cursor on the same column if possible
 
@@ -74,8 +139,6 @@ set modelines=2 " Number of lines checked for set commands
 
 " set fileformats=unix,dos,mac " Use Unix as the standard file type
 
-set clipboard=unnamed " Use system clipboard
-
 set synmaxcol=420 " Limit syntax highlighting for long lines
 
 set report=0 " Always report changed lines (default threshold: 2)
@@ -85,12 +148,6 @@ set autoread " Reload unmodified files when changes are detected outside
 " set autowrite " Automatically :write before running commands
 
 set hidden " Allow modified buffers in the background
-
-set splitbelow " Split windows below the current window
-
-set splitright " Split windows right of the current window
-
-set diffopt+=vertical " Always use vertical diffs
 
 set shortmess=atI " Avoid hit-enter prompts caused by file messages
 "
@@ -108,21 +165,20 @@ set nojoinspaces " Insert only one space after punctuation
 
 set nowrap " Do not wrap by default
 
-if &history < 1000
-  set history=1000
+set clipboard=unnamed " Use system clipboard
+
+" Mouse {{{1
+
+" n  Normal mode
+" v  Visual mode
+" i  Insert mode
+" c  Command-line mode
+" h  all previous modes when editing a help file
+" a  all previous modes
+" r  for |hit-enter| and |more-prompt| prompt
+if has('mouse')
+  set mouse=a
 endif
-
-if &tabpagemax < 50
-  set tabpagemax=50
-endif
-
-if !empty(&viminfo)
-  set viminfo^=!
-endif
-
-set sessionoptions-=options
-
-" Mouse support {{{1
 
 if !has('nvim')
   " Fix mouse inside screen and tmux
@@ -133,24 +189,139 @@ if !has('nvim')
   set ttyfast
 endif
 
-if has('mouse')
-  set mouse+=a
+" Bells {{{1
+
+set noerrorbells " Disable audible bell for error messages
+set visualbell " Use visual bell instead of beeping
+set t_vb= " Disable audible and visual bells
+
+" Views {{{1
+
+" Options:
+" cursor: cursor position in file and in window
+" folds: manually created folds, opened/closed folds and local fold options
+" options: options and mappings local to a window or buffer (not global values for local options)
+" localoptions: same as 'options'
+" slash,unix: useful on Windows when sharing view files
+
+" set viewdir=$HOME/.vim/view " Customize location of saved views
+set viewoptions-=options " folds,options,cursor
+
+" Return true if the current buffer state should be saved or restored
+function! s:is_file() abort
+  if &buftype !=# ''
+    return 0
+  endif
+  if &filetype !=# '' && &filetype =~# 'help\|netrw\|qf'
+    return 0
+  endif
+  return 1
+endfunction
+
+augroup ViewGroup
+  autocmd!
+  autocmd VimEnter,BufWinEnter * if s:is_file() | silent! loadview | endif
+  autocmd BufWinLeave * if s:is_file() | mkview | endif
+augroup END
+
+" Characters {{{1
+
+" Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
+" let &fillchars='stl: ,stlnc: '
+
+set list " Show invisible characters
+
+if has('multi_byte') && &encoding ==# 'utf-8'
+  let &listchars = 'tab:' . nr2char(0x25B8) . ' '
+        \ . ',trail:' . nr2char(0x00B7)
+        \ . ',extends:' . nr2char(0x276F)
+        \ . ',precedes:' . nr2char(0x276E)
+        \ . ',nbsp:' . nr2char(0x005F)
+        \ . ',eol:' . nr2char(0x00AC)
+else " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
 endif
+
+" " let &showbreak = '-> '
+" if has('multi_byte') && &encoding ==# 'utf-8'
+"   " Show line breaks (arrows: 0x21AA or 0x08627)
+"   let &showbreak = nr2char(0x2026) " Ellipsis
+" endif
+
+" Terminal {{{1
+
+" Disable Background Color Erase (BCE) so that color schemes
+" work properly when Vim is used inside tmux and GNU screen.
+" See also http://snk.tuxfamily.org/log/vim-256color-bce.html
+if &term =~# '256color'
+  set t_ut=
+endif
+
+" Allow color schemes to do bright colors without forcing bold
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+  set t_Co=16
+endif
+
+" Enable true colors if supported
+let g:vim_true_color = has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
+let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
+  \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
+
+if get(g:, 'vim_true_color', 0) && get(g:, 'term_true_color', 0) " Apple_Terminal
+  set termguicolors
+  " :h xterm-true-color
+  " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+  " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+  " Needed for vim inside tmux
+  if !has('nvim') && $TERM ==# 'screen-256color'
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  endif
+endif
+
+" set t_AB=^[[48;5;%dm
+" set t_AF=^[[38;5;%dm
+
+" Cursor {{{1
+
+" try
+" catch " /E355:/
+" endtry
+if has('nvim')
+  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+elseif empty($TMUX)
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  if v:version >= 800
+    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+  endif
+else
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+  if v:version >= 800
+    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+  endif
+endif
+
+" Override cursor highlight groups
+function! HighlightCursor() abort
+  if &background ==# 'dark'
+    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
+    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
+  elseif &background ==# 'light'
+    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
+    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
+  endif
+endfunction
 
 " Search {{{1
 
-set incsearch
-
-set hlsearch " Keep matches highlighted
-
+" set gdefault " Reverse global flag (always apply to all, except if /g)
+set hlsearch " Keep all matches highlighted when there is a previous search
 set ignorecase " Ignore case in search patterns
-
-set smartcase " Do not ignore when the pattern containes upper case characters
-
+set incsearch " Show the pattern matches while typing
 " set magic " Changes the special characters that can be used in search patterns
-
-" set gdefault " Reverse global flag: always apply to all, except if /g
-
+set smartcase " Case sensitive when the search contains upper case characters
 
 " Indentation {{{1
 
@@ -178,102 +349,97 @@ set nofoldenable
 
 " Columns {{{1
 
-if exists('+colorcolumn')
-  set colorcolumn=+1 " Color column relative to textwidth
-endif
+" exists('+colorcolumn')
+set colorcolumn=+1 " Color column relative to textwidth
 set number " Print the line number in front of each line
 " set numberwidth=4 " Minimal number of columns to use for the line number
 set relativenumber " Show the line number relative to the line with the cursor
+
+" Splits {{{1
+
+set splitbelow " Split windows below the current window
+set splitright " Split windows right of the current window
+set diffopt+=vertical " Always use vertical diffs
 
 " Status line {{{1
 
 set display+=lastline " Display as much as possible of the last line
 set laststatus=2 " Always show statusline
 set ruler " Always show current position
-" set rulerformat=%l,%c%V%=%P
+set rulerformat=%l,%c%V%=%P
 set showcmd " Display incomplete commands
-" set showmode " Display current mode in command line
+set noshowmode " Hide current mode in command line
 set wildmenu " Invoke completion on <Tab> in command line mode
 set wildmode=longest,full " Complete longest common string, then each full match
-if &statusline ==# '' " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-  function! ShowFi() abort " Show file info (encoding and format)
-    let l:ft = &filetype
-    let l:bt = &buftype
-    return strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help'
-  endfunction
-  set statusline=%<%f\ %m%r%w\ %=%{ShowFi()?(&fenc?&fenc:&enc.'['.&ff.']'):''}%([%{strlen(&ft)?&ft:&bt}]%)\ %-14.(%l,%c%V/%L%)\ %P
-endif
 
-" Hide mode in command line
-set noshowmode
-
-" Default Statusline:
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" set statusline=%!statusline#Build()
 
-" Characters {{{1
+" function! ShowFi() abort
+"   let l:ft = &filetype
+"   let l:bt = &buftype
+"   return strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help'
+" endfunction
+" set statusline=%<%f\ %m%r%w\ %=%{ShowFi()?(&fenc?&fenc:&enc.'['.&ff.']'):''}%{strlen(&ft)?&ft:&bt}\ %-14.(%l,%c%V/%L%)\ %P
 
-" Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
-" let &fillchars='stl: ,stlnc: '
+" Completion {{{1
 
-set list " Show invisible characters
+set complete-=i " Do not scan current and included files
+set complete+=kspell " Autocompete with dictionnary words when spell check is on
+set completeopt+=longest,menuone " Only insert the longest common text for matches
 
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let &listchars = 'tab:' . nr2char(0x25B8) . ' '
-        \ . ',trail:' . nr2char(0x00B7)
-        \ . ',extends:' . nr2char(0x276F)
-        \ . ',precedes:' . nr2char(0x276E)
-        \ . ',nbsp:' . nr2char(0x005F)
-        \ . ',eol:' . nr2char(0x00AC)
-else " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
+if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
+  " Next and previous completion Tab and Shift-Tab
+  inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
+  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
+  inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
 endif
 
-" " let &showbreak = '-> '
-" if has('multi_byte') && &encoding ==# 'utf-8'
-"   " Show line breaks (arrows: 0x21AA or 0x08627)
-"   let &showbreak = nr2char(0x2026) " Ellipsis
-" endif
+" Close the popup menu (fix at your own risk)
+" inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
+" inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
 
-" Term colors {{{1
+" autocmd CompleteDone -> expand snippet?
 
-" Disable Background Color Erase (BCE) so that color schemes
-" work properly when Vim is used inside tmux and GNU screen.
-" See also http://snk.tuxfamily.org/log/vim-256color-bce.html
-if &term =~# '256color'
-  set t_ut=
-endif
-
-" Allow color schemes to do bright colors without forcing bold
-if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-  set t_Co=16
-endif
-
-" Enable true colors in the terminal
-let g:vim_true_color = has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
-let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
-  \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
-
-if get(g:, 'vim_true_color', 0) && get(g:, 'term_true_color', 0) " Apple_Terminal
-  set termguicolors
-  " :h xterm-true-color
-  " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
-  " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
-  " Needed for vim inside tmux
-  if !has('nvim') && $TERM ==# 'screen-256color'
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+function! InsertTabWrapper(input, fname) abort
+  if pumvisible()
+    return {a:fname}()
   endif
-endif
+  " return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
+  let l:col = col('.') - 1
+  if !l:col || getline('.')[l:col - 1] !~# '\k'
+    return a:input
+  else
+    return StartComp()
+  endif
+endfunction
 
-" set t_AB=^[[48;5;%dm
-" set t_AF=^[[38;5;%dm
+" C-p == nearest matching word
 
-" Bells {{{1
+function! StartComp() abort
+  return "\<C-x>\<C-p>" " \<C-n>
+endfunction
 
-set noerrorbells " Disable audible bell for error messages
-set visualbell " Use visual bell instead of beeping
-set t_vb= " Disable audible and visual bells
+function! NextComp() abort
+  return "\<C-n>" " Nearest matching word
+endfunction
+
+function! PrevComp() abort
+  return "\<C-p>"
+endfunction
+
+function! AcceptComp() abort
+  return "\<C-y>"
+endfunction
+
+function! EndComp() abort
+  return "\<C-e>"
+endfunction
+
+" if exists("+omnifunc")
+augroup OmniCompletion
+  autocmd!
+  autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+augroup END
 
 " Abbreviations {{{1
 
@@ -332,8 +498,8 @@ endif
 
 " Background and theme switcher (requires solarized8)
 nnoremap <F5> :call colorscheme#ToggleBackground()<CR>
-nnoremap <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
-nnoremap <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
+nnoremap <F4> :<C-u>call colorscheme#Solarized8Contrast(-v:count1)<CR>
+nnoremap <F6> :<C-u>call colorscheme#Solarized8Contrast(+v:count1)<CR>
 
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
@@ -352,30 +518,31 @@ cnoremap w!! w !sudo tee % > /dev/null
 
 " Change leader
 let g:mapleader = "\<Space>"
-
 " Sort selection
 noremap <Leader>s :sort<CR>
-
 " Quicker quit
 noremap <Leader>q :q<CR>
-
 " Save a file
 noremap <Leader>w :w<CR>
-
 " Write as root
 noremap <Leader>W :w!!<CR>
 
-" }}}
+" Commands {{{1
 
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
+" }}}
+
+call colorscheme#Set('solarized8')
+" set statusline=%!stl#Build()
+
 augroup VimInit
   autocmd!
-
-  " Change cursor color
-  autocmd VimEnter * call colorscheme#Set('solarized8') | let &g:statusline = statusline#Build()
-  autocmd VimEnter,ColorScheme * call s:highlight(&background)
+  " Load status line at startup (after colorscheme and CtrlP)
+  autocmd VimEnter * let &g:statusline = stl#Build()
+  " Override highlight groups when color scheme changes
+  autocmd VimEnter,ColorScheme * call HighlightCursor()
 
   " Auto reload vimrc on save
   autocmd BufWritePost $MYVIMRC nested source %
@@ -392,22 +559,8 @@ augroup VimInit
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
 augroup END
 
-function! Solarized8Contrast(delta) abort
-  let l:schemes = map(['_low', '_flat', '', '_high'], "'solarized8_'.(&background).v:val")
-  exe 'colorscheme' l:schemes[((a:delta+index(l:schemes, g:colors_name)) % 4 + 4) % 4]
-endfunction
-
-" Set custom highlight groups
-function! s:highlight(bg) abort
-  if a:bg ==# 'dark' " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
-    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
-  elseif a:bg ==# 'light' " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
-    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
-  endif
-endfunction
-
 if filereadable($HOME . '/.vimrc.local')
   source ~/.vimrc.local
 endif
 
-" vim: foldenable foldmethod=marker et sts=2 sw=2 ts=2
+" vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker

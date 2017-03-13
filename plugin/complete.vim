@@ -1,26 +1,8 @@
 " Completion
 
-" TODO: check YCM, deoplete & neocomplete
 " if exists('g:loaded_complete')
 "   finish
 " endif
-
-set complete+=kspell " Autocompete with dictionnary words when spell check is on
-
-set completeopt+=longest,menuone " Only insert the longest common text for matches
-
-if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
-  " Next and previous completion Tab and Shift-Tab
-  inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
-  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
-  inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
-endif
-
-" Close the popup menu (fix at your own risk)
-" inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
-" inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
-
-" autocmd CompleteDone -> expand snippet?
 
 " inoremap <expr> <Tab> Complete("\<Tab>", 'NextComp')
 " inoremap <expr> <S-Tab> Complete("\<S-Tab>", 'PrevComp')
@@ -31,38 +13,6 @@ endif
 " inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 " imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 " \<PageDown>\<C-p>\<C-n>
-
-" if exists("+omnifunc")
-augroup OmniCompletion
-  autocmd!
-  autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-augroup END
-
-function! InsertTabWrapper(input, fname) abort
-  " return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
-  let l:col = col('.') - 1
-  if !l:col || getline('.')[l:col - 1] !~# '\k'
-    return a:input
-  else
-    return {a:fname}()
-  endif
-endfunction
-
-function! NextComp() abort
-  return "\<C-p>" " Nearest matching word
-endfunction
-
-function! PrevComp() abort
-  return "\<C-n>"
-endfunction
-
-function! AcceptComp() abort
-  return "\<C-y>"
-endfunction
-
-function! EndComp() abort
-  return "\<C-e>"
-endfunction
 
 " function! OnlyWS() abort
 "   " let l:col = col('.') - 1

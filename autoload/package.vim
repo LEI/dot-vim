@@ -27,8 +27,8 @@ let s:vim_dir = $HOME . '/.vim'
 
 let g:package#plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 let g:package#plug_path = s:vim_dir . '/autoload/plug.vim' " Vim Plug
-let g:package#plugins_dir = s:vim_dir . '/plugins' " Plugin directory
-let g:package#dir = s:vim_dir . '/packages' " Plugin configuration
+let g:package#plugins_dir = s:vim_dir . '/plugins' " Plugins directory
+let g:package#dir = s:vim_dir . '/packages' " Plugins configuration
 
 function! package#List(...) abort
   return s:packages
@@ -56,8 +56,6 @@ function! package#Install(path) abort
 endfunction
 
 function! package#Plug(...) abort
-  " Load configuration file: ~/.vim/packages.vim
-  runtime packages.vim
   let l:dir = a:0 ? a:1 : g:package#dir
   for l:path in split(globpath(l:dir, '*.vim'), '\n')
     let l:name = fnamemodify(l:path, ':t:r')
