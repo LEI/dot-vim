@@ -1,8 +1,8 @@
 " Fugitive
 
-if exists('g:loaded_fugitive')
-  finish
-endif
+" if exists('g:loaded_fugitive')
+"   finish
+" endif
 
 Plug 'tpope/vim-fugitive' " Git wrapper
 " Plug 'shumphrey/fugitive-gitlab.vim' " Add Gitlab support

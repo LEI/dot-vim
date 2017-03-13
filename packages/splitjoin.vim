@@ -1,8 +1,8 @@
 " Line/multiline transitions
 
-if exists('g:loaded_splitjoin')
-  finish
-endif
+" if exists('g:loaded_splitjoin')
+"   finish
+" endif
 
 Plug 'AndrewRadev/splitjoin.vim'
 

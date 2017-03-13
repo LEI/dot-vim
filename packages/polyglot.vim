@@ -1,8 +1,8 @@
 " Polyglot language pack
 
-if exists('g:loaded_polyglot')
-  finish
-endif
+" if exists('g:loaded_polyglot')
+"   finish
+" endif
 
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 

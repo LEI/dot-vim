@@ -1,8 +1,8 @@
 " Unimpaired
 
-if exists('g:loaded_unimpaired')
-  finish
-endif
+" if exists('g:loaded_unimpaired')
+"   finish
+" endif
 
 Plug 'tpope/vim-unimpaired'
 

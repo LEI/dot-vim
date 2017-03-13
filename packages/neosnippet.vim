@@ -4,9 +4,9 @@ if v:version < 704
   finish
 endif
 
-if exists('g:loaded_neosnippet')
-  finish
-endif
+" if exists('g:loaded_neosnippet')
+"   finish
+" endif
 
 Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
 

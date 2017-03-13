@@ -2,9 +2,9 @@
 
 " has('lua')
 
-if exists('g:loaded_neocomplete')
-  finish
-endif
+" if exists('g:loaded_neocomplete')
+"   finish
+" endif
 
 Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 let g:neocomplete#enable_at_startup = 1

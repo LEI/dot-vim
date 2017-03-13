@@ -64,7 +64,8 @@ function! package#Add(pkg) abort
   endif
   for l:pkg in s:packages
     if l:pkg.name == a:pkg.name
-      echoerr 'Package already exists with that name: ' . l:pkg.name
+      " echoerr 'Package already exists with that name: ' . l:pkg.name
+      let l:pkg = a:pkg
       return 1
     endif
   endfor

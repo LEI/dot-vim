@@ -2,9 +2,9 @@
 
 " has('nvim') || v:version >= 800
 
-if exists('g:loaded_ale')
-  finish
-endif
+" if exists('g:loaded_ale')
+"   finish
+" endif
 
 Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 

@@ -4,11 +4,21 @@
 " colorscheme solarized
 " call togglebg#map('<F5>')
 
-if exists('g:loaded_solarized8')
-  finish
-endif
+" if exists('g:loaded_solarized8')
+"   finish
+" endif
 
 Plug 'lifepillar/vim-solarized8'
+
+nnoremap <F5> :call ToggleBackground()<CR>
+nnoremap <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
+nnoremap <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
+
+augroup Colors
+  autocmd!
+  autocmd VimEnter * call SetColorScheme('solarized8_dark')
+  autocmd VimEnter,ColorScheme * call Highlight(&background)
+augroup END
 
 " Custom highlight groups
 function! Highlight(bg) abort
@@ -20,10 +30,6 @@ function! Highlight(bg) abort
     highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
   endif
 endfunction
-
-nnoremap <F5> :call ToggleBackground()<CR>
-nnoremap <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
-nnoremap <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 
 function! ToggleBackground(...) abort
   if g:colors_name =~# 'dark'
@@ -58,9 +64,3 @@ function! SetColorScheme(...) abort
     " colorscheme default
   endtry
 endfunction
-
-augroup Colors
-  autocmd!
-  autocmd VimEnter * call SetColorScheme('solarized8_dark')
-  autocmd VimEnter,ColorScheme * call Highlight(&background)
-augroup END

@@ -1,8 +1,8 @@
 " Status line
 
-if exists('g:loaded_statusline')
-  finish
-endif
+" if exists('g:loaded_statusline')
+"   finish
+" endif
 
 " Hide mode in command line
 set noshowmode

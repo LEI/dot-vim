@@ -1,8 +1,8 @@
 " Commentary
 
-if exists('g:loaded_commentary')
-  finish
-endif
+" if exists('g:loaded_commentary')
+"   finish
+" endif
 
 Plug 'tpope/vim-commentary'
 

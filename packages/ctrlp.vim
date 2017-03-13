@@ -1,8 +1,8 @@
 " CtrlP
 
-if exists('g:loaded_ctrlp')
-  finish
-endif
+" if exists('g:loaded_ctrlp')
+"   finish
+" endif
 
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 

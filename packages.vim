@@ -18,7 +18,7 @@ let g:package#statusline_enabled = 1
 let g:package#commentary_enabled = 1
 let g:package#fugitive_enabled = 1
 let g:package#splitjoin_enabled = 1
-" let g:package#tabular_enabled = 1
+let g:package#tabular_enabled = 0
 let g:package#unimpaired_enabled = 1
 
 " Languages:
