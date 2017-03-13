@@ -15,15 +15,13 @@ let s:colors = 'solarized8'
 let s:background = 'dark'
 let s:theme = ''
 
-" augroup Colors
-"   autocmd!
-"   autocmd VimEnter * call SetColorScheme(s:colors, s:background, s:theme)
-"   autocmd VimEnter,ColorScheme * call SetHighlight(&background)
-" augroup END
-
 function! s:loaded() abort
   call SetColorScheme(s:colors, s:background, s:theme)
-  call SetHighlight(s:background)
+  augroup Colors
+    autocmd!
+    " autocmd VimEnter * call SetColorScheme(s:colors, s:background, s:theme)
+    autocmd VimEnter,ColorScheme * call SetHighlight(&background)
+  augroup END
 endfunction
 
 call package#Add({'name': 'solarized', 'on': {'plug_end': function('s:loaded')}})

@@ -5,6 +5,9 @@ try
 catch /E596:/
 endtry
 
+" set columns=
+" set lines=
+
 set guioptions+=c " Use console dialogs
 set guioptions-=T " Make the toolbar stay hidden after a restart
 set guioptions-=r " Disable right-hand scrollbar
@@ -15,9 +18,6 @@ endif
 set guicursor+=n-v-c:blinkon0 " Disable cursor blinking
 
 " set backupcopy=yes " Prevent Finder file labels from disappearing
-
-" set lines=
-" set columns=
 
 if has('gui_macvim')
   " set macmeta " Use option (alt) as meta key
