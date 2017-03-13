@@ -12,7 +12,7 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
 let g:package#colorscheme_enabled = 1
-" let g:package#statusline_enabled = 1
+let g:package#statusline_enabled = 1
 
 " Improvements:
 let g:package#commentary_enabled = 1

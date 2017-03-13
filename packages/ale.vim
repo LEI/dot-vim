@@ -8,6 +8,10 @@
 
 Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
+" Disable 'eslint' and 'standard'
+let s:js_linters = ['flow', 'jscs', 'jshint', 'xo']
+let g:ale_linters = {'javascript': s:js_linters}
+
 let g:ale_lint_on_save = 1
 " Check files on TextChanged event
 let g:ale_lint_on_text_changed = 0
@@ -16,26 +20,24 @@ let g:ale_lint_on_enter = 1
 
 let g:ale_lint_delay = 300
 
+" Use quickfix list instead of loclist
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
 
 " Show loclist or quickfix when a file contains warnigns or errors
-"let g:ale_open_list = 1
+let g:ale_open_list = 0
 "let g:ale_keep_list_window_open = 1
 
 let g:ale_warn_about_trailing_whitespace = 1
 
-let g:ale_sign_error = 'x'
-let g:ale_sign_warning = '!'
-let s:status_error = 'x'
-
+let g:ale_sign_error = 'x' " >>
+let g:ale_sign_warning = '!' " --
+let g:ale_statusline_format = ['x %d', '! %d', '']
 if has('multi_byte') && &encoding ==# 'utf-8'
   let g:ale_sign_error =  nr2char(0xD7)
   let g:ale_sign_warning = '!'
-  let s:status_error = nr2char(0x2A09)
+  let g:ale_statusline_format = [nr2char(0x2A09) . ' %d', '! %d', '']
 endif
-
-let g:ale_statusline_format = [s:status_error . ' %d', '! %d', '']
 
 " Change the format for echo messages
 "let g:ale_echo_msg_error_str = 'E'
@@ -46,7 +48,7 @@ let g:ale_statusline_format = [s:status_error . ' %d', '! %d', '']
 "highlight clear ALEErrorSign
 "highlight clear ALEWarningSign
 
-" Map movement through errors with wrapping
+" Cycle through errors
 "noremap <silent> <C-j> <Plug>(ale_previous_wrap)
 "noremap <silent> <C-k> <Plug>(ale_next_wrap)
 
