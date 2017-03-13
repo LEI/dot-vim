@@ -38,7 +38,6 @@ let g:package#neomake_enabled = 0 " has('nvim') || v:version > 704 || v:version 
 let g:package#ale_enabled = has('nvim') || v:version >= 800
 
 " Auto Completion:
-let g:package#omnicomplete_enabled = 1 " Custom <Tab> remap
 let g:package#youcompleteme_enabled = 0 " has('python') || has('python3')
 let g:package#ultisnips_enabled = g:package#youcompleteme_enabled
 let g:package#deoplete_enabled = 0 " has('nvim') && has('python3')
