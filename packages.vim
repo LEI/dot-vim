@@ -11,7 +11,11 @@ Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectin
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
-let g:package#colorscheme_enabled = 1
+" Plug 'altercation/vim-colors-solarized'
+" colorscheme solarized
+" call togglebg#map('<F5>')
+Plug 'lifepillar/vim-solarized8'
+
 let g:package#statusline_enabled = 1
 
 " Improvements:

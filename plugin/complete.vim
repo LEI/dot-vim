@@ -9,16 +9,28 @@ set complete+=kspell " Autocompete with dictionnary words when spell check is on
 
 set completeopt+=longest,menuone " Only insert the longest common text for matches
 
-" Next and previous completion Tab and Shift-Tab
-inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
-" <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
-inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
+if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
+  " Next and previous completion Tab and Shift-Tab
+  inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
+  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
+  inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
+endif
 
 " Close the popup menu (fix at your own risk)
 " inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
 " inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
 
 " autocmd CompleteDone -> expand snippet?
+
+" inoremap <expr> <Tab> Complete("\<Tab>", 'NextComp')
+" inoremap <expr> <S-Tab> Complete("\<S-Tab>", 'PrevComp')
+
+"let s:save_cr = maparg('<CR>', 'i')
+"(s:save_cr !=# '' ? s:save_cr : "\<CR>")
+
+" inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
+" imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+" \<PageDown>\<C-p>\<C-n>
 
 " if exists("+omnifunc")
 augroup OmniCompletion
@@ -109,13 +121,3 @@ function! Complete(input, fname) abort
   endif
   return l:open
 endfunction
-
-" inoremap <expr> <Tab> Complete("\<Tab>", 'NextComp')
-" inoremap <expr> <S-Tab> Complete("\<S-Tab>", 'PrevComp')
-
-"let s:save_cr = maparg('<CR>', 'i')
-"(s:save_cr !=# '' ? s:save_cr : "\<CR>")
-
-" inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
-" imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
-" \<PageDown>\<C-p>\<C-n>

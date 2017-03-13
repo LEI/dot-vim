@@ -199,5 +199,3 @@ command! -nargs=* -bar CursorStl let &g:statusline = statusline#Build('%f %([%b 
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
-
-" vim: foldenable foldmethod=marker et sts=2 sw=2 ts=2

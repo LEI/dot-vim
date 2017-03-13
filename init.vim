@@ -25,7 +25,7 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) =
   runtime! macros/matchit.vim
 endif
 
-" General {{{1
+" Options {{{1
 
 if has('autocmd')
   filetype plugin indent on
@@ -34,8 +34,6 @@ endif
 if has('syntax') && !exists('g:syntax_on')
   syntax enable
 endif
-
-" Options {{{1
 
 if has('path_extra')
   setglobal tags-=./tags tags-=./tags; tags^=./tags;
@@ -124,7 +122,7 @@ endif
 
 set sessionoptions-=options
 
-" Mouse {{{1
+" Mouse support {{{1
 
 if !has('nvim')
   " Fix mouse inside screen and tmux
@@ -188,9 +186,7 @@ set showcmd " Display incomplete commands
 " set showmode " Display current mode in command line
 set wildmenu " Invoke completion on <Tab> in command line mode
 set wildmode=longest,full " Complete longest common string, then each full match
-
-" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-if &statusline ==# ''
+if &statusline ==# '' " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
   function! ShowFi() abort " Show file info (encoding and format)
     let l:ft = &filetype
     let l:bt = &buftype
@@ -228,14 +224,14 @@ endif
 " Disable Background Color Erase (BCE) so that color schemes
 " work properly when Vim is used inside tmux and GNU screen.
 " See also http://snk.tuxfamily.org/log/vim-256color-bce.html
-if &term =~# '256color'
-  set t_ut=
-endif
+" if &term =~# '256color'
+"   set t_ut=
+" endif
 
-" Allow color schemes to do bright colors without forcing bold
-if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-  set t_Co=16
-endif
+" " Allow color schemes to do bright colors without forcing bold
+" if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+"   set t_Co=16
+" endif
 
 " Enable true colors in the terminal
 let g:vim_true_color = has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
@@ -258,16 +254,12 @@ endif
 
 " Columns {{{1
 
-set number " Print the line number in front of each line
-
-" set numberwidth=4 " Minimal number of columns to use for the line number
-
-set relativenumber " Show the line number relative to the line with the cursor
-
-" Relative to textwidth
 if exists('+colorcolumn')
-  set colorcolumn=+1
+  set colorcolumn=+1 " Color column relative to textwidth
 endif
+set number " Print the line number in front of each line
+" set numberwidth=4 " Minimal number of columns to use for the line number
+set relativenumber " Show the line number relative to the line with the cursor
 
 " Bells {{{1
 
@@ -334,11 +326,13 @@ cnoremap <expr> <Left> getcmdtype() == ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
 cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
 
 " Save as root with :w!!
-cnoremap <expr> w!! (exists(':SudoWrite') == 2 ? "SudoWrite" : "w !sudo tee % >/dev/null") . "\<CR>"
+"cnoremap <expr> w!! (exists(':SudoWrite') == 2 ? "SudoWrite" : "w !sudo tee % >/dev/null") . "\<CR>"
+cnoremap w!! w !sudo tee % > /dev/null
+" command W w !sudo tee % > /dev/null
 
 " Use <C-c> to stop the highlighting for the 'hlsearch' option
 if maparg('<C-c>', 'n') ==# ''
-  nnoremap <silent> <C-c> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+  nnoremap <silent> <C-c> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-c>
 endif
 
 " Change leader
@@ -356,31 +350,54 @@ noremap <Leader>w :w<CR>
 " Write as root
 noremap <Leader>W :w!!<CR>
 
-" Commands {{{1
+" Background and theme switcher (requires solarized8)
+nnoremap <F5> :call colorscheme#ToggleBackground()<CR>
+nnoremap <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
+nnoremap <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 
-" Quick spell lang switch
-command! En setlocal spelllang=en
-command! Fr setlocal spelllang=fr
-
-" Use 'Spell <lang>' to enable spell checking in the current buffer
-command! -nargs=1 -complete=custom,ListLangs Spell setlocal spell spelllang=<args>
-function! ListLangs(ArgLead, CmdLine, CursorPos) abort
-  let l:list = ['en', 'fr']
-  return join(l:list, "\n")
+function! Solarized8Contrast(delta) abort
+  let l:schemes = map(['_low', '_flat', '', '_high'], "'solarized8_'.(&background).v:val")
+  exe 'colorscheme' l:schemes[((a:delta+index(l:schemes, g:colors_name)) % 4 + 4) % 4]
 endfunction
+
+" Auto commands {{{1
+
+augroup VimInit
+  autocmd!
+  autocmd VimEnter * call colorscheme#Set('solarized8')
+  autocmd VimEnter,ColorScheme * call s:highlight(&background)
+  " Auto reload vimrc on save
+  autocmd BufWritePost $MYVIMRC nested source %
+  " autocmd ColorScheme * redraw
+
+  " Fix Neovim Redraw: https://github.com/neovim/neovim/issues/4884
+  autocmd FocusLost * redraw
+  " autocmd FocusGained * set lazyredraw
+  " autocmd VimResized * redrawstatus
+
+  " autocmd BufReadPost,FileReadPost *.py :silent %!PythonTidy.py
+  " autocmd BufReadPost,FileReadPost *.p[lm] :silent %!perltidy -q
+  " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
+  " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
+augroup END
+
+" Set custom highlight groups
+function! s:highlight(bg) abort
+  if a:bg ==# 'dark'
+    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
+    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
+  elseif a:bg ==# 'light'
+    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
+    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
+  endif
+endfunction
+
+" Commands {{{1
 
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
-" 1}}}
-
-augroup VimInit
-  autocmd!
-  " autocmd VimEnter *
-  " Auto reload vimrc on save
-  autocmd BufWritePost $MYVIMRC nested source %
-  " autocmd ColorScheme * redraw
-augroup END
+" }}}
 
 if filereadable($HOME . '/.vimrc.local')
   source ~/.vimrc.local
