@@ -414,9 +414,8 @@ function! InsertTabWrapper(input, fname) abort
 endfunction
 
 function! StartComp() abort
-  " <C-p> nearest matching word
+  " (<C-x>)<C-p> nearest matching word
   return "\<C-n>"
-  " return "\<C-x>\<C-p>"
 endfunction
 
 function! NextComp() abort
@@ -534,7 +533,7 @@ noremap <Leader>W :w!!<CR>
 
 " }}}
 
-call colorscheme#Set('solarized8')
+" call colorscheme#Set('solarized8')
 " set statusline=%!stl#Build()
 let &g:statusline = stl#Build()
 
@@ -558,8 +557,10 @@ endfunction
 
 augroup VimInit
   autocmd!
+  " Set color scheme once Vim is ready
+  autocmd VimEnter * call colorscheme#Set('solarized8')
   " Load status line at startup (after CtrlP)
-  " autocmd VimEnter * | let &g:statusline = stl#Build()
+  "autocmd VimEnter * | let &g:statusline = stl#Build()
   " Override highlight groups when color scheme changes
   autocmd VimEnter,ColorScheme * call HighlightCursor() | call HighlightStatusLine()
 
@@ -567,10 +568,9 @@ augroup VimInit
   autocmd BufWritePost $MYVIMRC nested source %
 
   " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
-  " autocmd FocusLost,FocusGained * redraw
   " autocmd FocusLost * set nolazyredraw
-  " autocmd FocusGained * set lazyredraw
-  autocmd VimResized * redrawstatus
+  autocmd FocusGained * redrawstatus
+  " autocmd VimResized * redrawstatus
 
   " autocmd BufReadPost,FileReadPost *.py :silent %!PythonTidy.py
   " autocmd BufReadPost,FileReadPost *.p[lm] :silent %!perltidy -q
