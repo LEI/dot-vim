@@ -493,7 +493,7 @@ nnoremap <Space> :nohlsearch<CR>
 
 " Use <C-c> to stop the highlighting for the 'hlsearch' option
 if maparg('<C-c>', 'n') ==# ''
-  nnoremap <silent> <C-c> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-c>
+  nnoremap <silent> <C-c> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
 endif
 
 " Background and theme switcher (requires solarized8)
