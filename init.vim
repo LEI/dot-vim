@@ -458,6 +458,8 @@ set complete-=i " Do not scan current and included files
 set complete+=kspell " Autocompete with dictionnary words when spell check is on
 set completeopt+=longest,menuone " Only insert the longest common text for matches
 
+" https://github.com/vim-scripts/AutoComplPop
+
 if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
   " Next and previous completion Tab and Shift-Tab
   inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
@@ -601,11 +603,15 @@ function! <SID>Preserve(command)
   let l:_s=@/
   let l:l = line('.')
   let l:c = col('.')
+  " let save_cursor = getpos(".")
+  " let old_query = getreg('/')
   " Do the business
   execute a:command
   " Clean up: restore previous search history and cursor position
   let @/=l:_s
   call cursor(l:l, l:c)
+  " call setpos('.', save_cursor)
+  " call setreg('/', old_query)
 endfunction
 
 " Remove trailing spaces
