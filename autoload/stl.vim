@@ -2,9 +2,9 @@
 
 " set statusline=%!stl#Build()
 
-if exists('g:loaded_statusline')
-  finish
-endif
+" if exists('g:loaded_statusline')
+"   finish
+" endif
 
 let g:loaded_statusline = 1
 
@@ -170,8 +170,19 @@ augroup StatusLine
   " autocmd CmdWinLeave * unlet b:is_command_window
 
   autocmd FileType qf let &l:statusline = stl#Build('%f%( %{stl#f#QuickFixTitle()}%)')
-  autocmd FileType vim-plug let &l:statusline = stl#Build(' Plugins')
+  autocmd FileType vim-plug let &l:statusline = stl#Build('Plugins')
+  autocmd FileType taglist let &l:statusline = stl#Build(s:Replace_(expand('%')))
 augroup END
+
+function! s:Replace_(string) abort
+  let l:str = a:string
+  if matchstr(l:str, '__.*__') ==# ''
+    return l:str
+  endif
+  let l:str = substitute(l:str, '__', '', 'g')
+  let l:str = substitute(l:str, '_', ' ', 'g')
+  return l:str
+endfunction
 
 " %<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
 command! -nargs=* -bar CursorStl let &g:statusline = stl#Build('%f %([%b 0x%B]%)')

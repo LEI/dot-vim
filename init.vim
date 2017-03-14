@@ -30,6 +30,7 @@ Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
+Plug 'vim-scripts/taglist.vim' " Tags
 
 " Plug 'altercation/vim-colors-solarized'
 " colorscheme solarized
@@ -45,7 +46,6 @@ let g:package#unimpaired_enabled = 1
 let g:package#textobjuser_enabled = 1
 
 " Search:
-" Plug 'vim-scripts/taglist.vim'
 let g:package#ctrlp_enabled = 1
 
 " Languages:
@@ -73,6 +73,9 @@ call package#Plug()
 
 " Add plugins to &runtimepath
 call package#End()
+
+" Set color scheme
+call colorscheme#Set('solarized8')
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -642,9 +645,6 @@ noremap <Leader>W :w!!<CR>
 
 augroup VimInit
   autocmd!
-  " Set color scheme once Vim is ready
-  autocmd VimEnter * :call colorscheme#Set('solarized8')
-
   " Load status line at startup (after CtrlP)
   "autocmd VimEnter * :let &g:statusline = stl#Build()
 
