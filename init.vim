@@ -413,14 +413,14 @@ function! InsertTabWrapper(input, fname) abort
   endif
 endfunction
 
-" C-p == nearest matching word
-
 function! StartComp() abort
-  return "\<C-x>\<C-p>" " \<C-n>
+  " <C-p> nearest matching word
+  return "\<C-n>"
+  " return "\<C-x>\<C-p>"
 endfunction
 
 function! NextComp() abort
-  return "\<C-n>" " Nearest matching word
+  return "\<C-n>"
 endfunction
 
 function! PrevComp() abort
@@ -536,13 +536,32 @@ noremap <Leader>W :w!!<CR>
 
 call colorscheme#Set('solarized8')
 " set statusline=%!stl#Build()
+let &g:statusline = stl#Build()
+
+function! HighlightStatusLine() abort
+  if &background ==# 'dark'
+    highlight User1 term=reverse ctermfg=14 ctermbg=0
+    " highlight StatusLineNormal ctermfg=0 ctermbg=4
+    "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
+    highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
+    highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
+    highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
+  elseif &background ==# 'light'
+    highlight User1 term=reverse ctermfg=10 ctermbg=7
+    " highlight StatusLineNormal ctermfg=7 ctermbg=4
+    "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
+    highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
+    highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+    highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
+  endif
+endfunction
 
 augroup VimInit
   autocmd!
-  " Load status line at startup (after colorscheme and CtrlP)
-  autocmd VimEnter * let &g:statusline = stl#Build()
+  " Load status line at startup (after CtrlP)
+  " autocmd VimEnter * | let &g:statusline = stl#Build()
   " Override highlight groups when color scheme changes
-  autocmd VimEnter,ColorScheme * call HighlightCursor()
+  autocmd VimEnter,ColorScheme * call HighlightCursor() | call HighlightStatusLine()
 
   " Auto reload vimrc on save
   autocmd BufWritePost $MYVIMRC nested source %
@@ -551,7 +570,7 @@ augroup VimInit
   " autocmd FocusLost,FocusGained * redraw
   " autocmd FocusLost * set nolazyredraw
   " autocmd FocusGained * set lazyredraw
-  " autocmd VimResized * redrawstatus
+  autocmd VimResized * redrawstatus
 
   " autocmd BufReadPost,FileReadPost *.py :silent %!PythonTidy.py
   " autocmd BufReadPost,FileReadPost *.p[lm] :silent %!perltidy -q

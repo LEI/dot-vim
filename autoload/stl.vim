@@ -116,37 +116,18 @@ call extend(g:statusline.symbols, {
       \   'ws': s:c ? nr2char(0x39E) : '\s',
       \ }, 'keep')
 
-function! Statusline_dark() abort
-  highlight User1 term=reverse ctermfg=14 ctermbg=0
-  " highlight StatusLineNormal ctermfg=0 ctermbg=4
-  "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
-  highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
-  highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
-  highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
-endfunction
+highlight link User1 StatusLine
+highlight link StatusLineInsert StatusLine
+highlight link StatusLineReplace StatusLine
+highlight link StatusLineVisual StatusLine
 
-function! Statusline_light() abort
-  highlight User1 term=reverse ctermfg=10 ctermbg=7
-  " highlight StatusLineNormal ctermfg=7 ctermbg=4
-  "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
-  highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
-  highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-  highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
-endfunction
-
-function! stl#Colors() abort
-  " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
-  " highlight link StatusLineBranch StatusLine
-  " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-  " highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
-  highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#cb4b16
-  " highlight StatusLineWarn cterm=reverse ctermfg=9 gui=reverse guifg=#dc322f
-  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#dc322f
-  let l:f = 'Statusline_' . &background
-  if exists('*' . l:f)
-    call {l:f}()
-  endif
-endfunction
+" Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
+" highlight link StatusLineBranch StatusLine
+" highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+" highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
+highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#cb4b16
+" highlight StatusLineWarn cterm=reverse ctermfg=9 gui=reverse guifg=#dc322f
+highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#dc322f
 
 function! stl#Highlight(...) abort
   let l:im = a:0 ? a:1 : ''
@@ -164,19 +145,10 @@ function! stl#Highlight(...) abort
   endif
 endfunction
 
-function! stl#Enable() abort
-  " Apply colors
-  call stl#Colors()
-  " Enable customized CtrlP status line
-  if get(g:, 'loaded_ctrlp', 0)
-    call stl#ctrlp#Enable()
-  endif
-endfunction
-
 " v:vim_did_enter |!has('vim_starting')
 let s:enable = get(g:, 'stl#enable_at_startup', 1)
 if s:enable
-  call stl#Enable()
+  call stl#ctrlp#Enable()
 endif
 
 " Initialize active window number
@@ -184,7 +156,7 @@ let g:statusline.winnr = winnr()
 
 augroup StatusLine
   autocmd!
-  autocmd ColorScheme * call stl#Colors() | redrawstatus
+  " autocmd ColorScheme * call stl#Colors() | redrawstatus
   autocmd InsertEnter * call stl#Highlight(v:insertmode)
   autocmd InsertChange * call stl#Highlight(v:insertmode)
   autocmd InsertLeave * call stl#Highlight()

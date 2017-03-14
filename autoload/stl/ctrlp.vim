@@ -2,11 +2,9 @@
 
 " Make sure ctrlp is installed and loaded
 " if !exists('g:loaded_ctrlp') || (exists('g:loaded_ctrlp') && !g:loaded_ctrlp)
-if !get(g:, 'loaded_ctrlp', 0)
-  finish
-endif
-
-let s:ep = get(g:statusline.symbols, 'sep', '')
+" if !get(g:, 'loaded_ctrlp', 0)
+"   finish
+" endif
 
 function! stl#ctrlp#Enable() abort
   " Both functions must be global and return a full statusline
@@ -29,8 +27,8 @@ function! stl#ctrlp#Main(...) abort
   let l:item = '%1* ' . a:5 . ' %* '
   let l:nxt = a:6 . ' '
   let l:marked = a:7 . ' '
-  let l:focus = a:1 . s:ep
-  let l:byfname = a:2 . s:ep
+  let l:focus = a:1 . g:statusline.symbols.sep
+  let l:byfname = a:2 . g:statusline.symbols.sep
   let l:dir = getcwd() . ' '
   return l:regex . l:prv . l:item . l:nxt . l:marked . '%=' . '%<' . l:focus . l:byfname . l:dir
 endfunction
@@ -40,5 +38,5 @@ endfunction
 function! stl#ctrlp#Prog(...) abort
   let l:len = ' ' . a:1
   let l:dir = getcwd() . ' '
-  return l:len . '%=' . s:ep . '%<' . l:dir
+  return l:len . '%=' . g:statusline.symbols.sep . '%<' . l:dir
 endfunction
