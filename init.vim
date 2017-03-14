@@ -224,6 +224,22 @@ augroup ViewGroup
   autocmd BufWinLeave * if s:is_file() | mkview | endif
 augroup END
 
+" Undo history {{{1
+
+" Keep undo history across sessions
+if has('persistent_undo')
+  " Disable swapfiles and backups
+  set noswapfile
+  set nobackup
+  set nowritebackup
+  let g:vim_undodir = expand(get(g:, 'vim_undodir', '~/.vim/backups'))
+  if exists('*mkdir') && !isdirectory(g:vim_undodir)
+    call mkdir(g:vim_undodir)
+  endif
+  let &undodir = g:vim_undodir
+  set undofile
+endif
+
 " Characters {{{1
 
 " Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
@@ -510,11 +526,11 @@ noremap Y y$
 " Visually select the text that was last edited/pasted
 noremap gV `[v`]
 
-" Intuitive movement on wrapped lines
-nnoremap j gj
-nnoremap k gk
+" Move on wrapped lines unless a count is specified
+nnoremap <expr> j v:count ? 'j' : 'gj'
+nnoremap <expr> k v:count ? 'k' : 'gk'
 " nnoremap 0 g0
-" nnoremap $ g$ " Do not use with :set wrap
+" nnoremap $ g$ " FIXME :set wrap
 
 " Restore visual selection after indent (breaks '.' dot repeat)
 " vnoremap < <gv
@@ -532,15 +548,18 @@ noremap <C-Down> ddp
 vnoremap <C-Up> xkP`[V`]
 vnoremap <C-Down> xp`[V`]
 
-" Paragraph reflow according to textwidth?
-" vnoremap Q gv
-" noremap Q gqap
-
 " Repeat latest f, t, F or T [count] times
 noremap <Tab> ;
 
 " Repeat last command on next match
 noremap ; :normal n.<CR>
+
+" Make 'dot' work as expected in visual mode
+" vnoremap . :norm.<CR>
+
+" Paragraph reflow according to textwidth?
+" vnoremap Q gv
+" noremap Q gqap
 
 " Clear highlighted search results (vim-sensible: Ctrl-L)
 nnoremap <Space> :nohlsearch<CR>
@@ -613,7 +632,7 @@ noremap <Leader>W :w!!<CR>
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
-" }}}
+" Autocommands {{{1
 
 augroup VimInit
   autocmd!
@@ -642,6 +661,8 @@ augroup VimInit
   autocmd BufWritePost $MYVIMRC nested source %
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
 augroup END
+
+" }}}
 
 if filereadable($HOME . '/.vimrc.local')
   source ~/.vimrc.local
