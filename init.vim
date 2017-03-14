@@ -263,11 +263,14 @@ if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
 endif
 
 " Enable true colors if supported
-let g:vim_true_color = has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
+" http://sunaku.github.io/tmux-24bit-color.html#usage
 let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
   \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
-
-if get(g:, 'vim_true_color', 0) && get(g:, 'term_true_color', 0) " Apple_Terminal
+" has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
+if has('nvim')
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  set termguicolors
+elseif has('patch-7.4.1778') && get(g:, 'term_true_color', 0) " Apple_Terminal
   set termguicolors
   " :h xterm-true-color
   " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
@@ -284,9 +287,6 @@ endif
 
 " Cursor {{{1
 
-" try
-" catch " /E355:/
-" endtry
 if has('nvim')
   let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 elseif empty($TMUX)
@@ -304,7 +304,7 @@ else
 endif
 
 " Override cursor highlight groups
-function! HighlightCursor() abort
+function! <SID>HighlightCursor() abort
   if &background ==# 'dark'
     " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
     highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
@@ -314,7 +314,31 @@ function! HighlightCursor() abort
   endif
 endfunction
 
-" Search {{{1
+" Show cursor line on active window only (or use InsertLeave/InsertEnter)
+augroup ToggleCursorLine
+  autocmd!
+  autocmd WinEnter * set cursorline
+  autocmd WinLeave * set nocursorline
+augroup END
+
+" Restore cursor position and toggle cursor line
+" Not needed with mkview/loadview
+" https://github.com/farmergreg/vim-lastplace
+" function! RestoreCursorPosition()
+"   if &filetype ==# 'gitcommit'
+"     return 0
+"   endif
+"   if line("'\"") > 0 && line("'\"") <= line('$')
+"     normal! g`"
+"     return 1
+"   endif
+" endfunction
+" augroup RestoreCursorPosition
+"   autocmd!
+"   autocmd BufReadPost * call RestoreCursorPosition()
+" augroup END
+
+" Searching {{{1
 
 " set gdefault " Reverse global flag (always apply to all, except if /g)
 set hlsearch " Keep all matches highlighted when there is a previous search
@@ -342,10 +366,11 @@ set sidescrolloff=5 " Lines to the left and right if 'nowrap' is set
 
 " Folding {{{1
 
+set nofoldenable
 " set foldcolumn=1
+" set foldlevelstart=10
 set foldmethod=indent
 set foldnestmax=3
-set nofoldenable
 
 " Columns {{{1
 
@@ -361,16 +386,19 @@ set splitbelow " Split windows below the current window
 set splitright " Split windows right of the current window
 set diffopt+=vertical " Always use vertical diffs
 
+" Command line {{{1
+
+set showcmd " Display incomplete commands
+set noshowmode " Hide current mode in command line
+set wildmenu " Invoke completion on <Tab> in command line mode
+set wildmode=longest,full " Complete longest common string, then each full match
+
 " Status line {{{1
 
 set display+=lastline " Display as much as possible of the last line
 set laststatus=2 " Always show statusline
 set ruler " Always show current position
 set rulerformat=%l,%c%V%=%P
-set showcmd " Display incomplete commands
-set noshowmode " Hide current mode in command line
-set wildmenu " Invoke completion on <Tab> in command line mode
-set wildmode=longest,full " Complete longest common string, then each full match
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
@@ -380,6 +408,33 @@ set wildmode=longest,full " Complete longest common string, then each full match
 "   return strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help'
 " endfunction
 " set statusline=%<%f\ %m%r%w\ %=%{ShowFi()?(&fenc?&fenc:&enc.'['.&ff.']'):''}%{strlen(&ft)?&ft:&bt}\ %-14.(%l,%c%V/%L%)\ %P
+
+" set statusline=%!stl#Build()
+let &g:statusline = stl#Build()
+
+function! <SID>HighlightStatusLine() abort
+  if &background ==# 'dark'
+    highlight User1 term=reverse ctermfg=14 ctermbg=0
+    " highlight StatusLineNormal ctermfg=0 ctermbg=4
+    "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
+    highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
+    highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
+    highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
+  elseif &background ==# 'light'
+    highlight User1 term=reverse ctermfg=10 ctermbg=7
+    " highlight StatusLineNormal ctermfg=7 ctermbg=4
+    "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
+    highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
+    highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+    highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
+  endif
+endfunction
+
+" Tab line {{{1
+
+" Plug 'webdevel/tabulous'
+
+set showtabline=1
 
 " Completion {{{1
 
@@ -513,6 +568,33 @@ cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Right
 cnoremap w!! w !sudo tee % > /dev/null
 " command W w !sudo tee % > /dev/null
 
+" http://vimcasts.org/episodes/tidying-whitespace/
+" https://github.com/bronson/vim-trailing-whitespace
+" https://github.com/csexton/trailertrash.vim
+function! <SID>StripTrailingWhitespaces()
+  call <SID>Preserve("%s/\\s\\+$//e")
+endfunction
+
+" Error detected while processing BufWritePre Auto commands for "*.js":
+" E488: Trailing characters
+function! <SID>Preserve(command)
+  " Save last search and cursor position
+  let l:_s=@/
+  let l:l = line('.')
+  let l:c = col('.')
+  " Do the business
+  execute a:command
+  " Clean up: restore previous search history and cursor position
+  let @/=l:_s
+  call cursor(l:l, l:c)
+endfunction
+
+" Remove trailing spaces
+noremap _$ :call <SID>StripTrailingWhitespaces()
+
+" Indent the whole file
+noremap _= :call <SID>Preserve("normal gg=G")<CR>
+
 " Leader mappings {{{1
 
 " Change leader
@@ -533,49 +615,32 @@ noremap <Leader>W :w!!<CR>
 
 " }}}
 
-" call colorscheme#Set('solarized8')
-" set statusline=%!stl#Build()
-let &g:statusline = stl#Build()
-
-function! HighlightStatusLine() abort
-  if &background ==# 'dark'
-    highlight User1 term=reverse ctermfg=14 ctermbg=0
-    " highlight StatusLineNormal ctermfg=0 ctermbg=4
-    "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
-    highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
-    highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
-    highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
-  elseif &background ==# 'light'
-    highlight User1 term=reverse ctermfg=10 ctermbg=7
-    " highlight StatusLineNormal ctermfg=7 ctermbg=4
-    "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
-    highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
-    highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-    highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
-  endif
-endfunction
-
 augroup VimInit
   autocmd!
   " Set color scheme once Vim is ready
-  autocmd VimEnter * call colorscheme#Set('solarized8')
-  " Load status line at startup (after CtrlP)
-  "autocmd VimEnter * | let &g:statusline = stl#Build()
-  " Override highlight groups when color scheme changes
-  autocmd VimEnter,ColorScheme * call HighlightCursor() | call HighlightStatusLine()
+  autocmd VimEnter * :call colorscheme#Set('solarized8')
 
-  " Auto reload vimrc on save
-  autocmd BufWritePost $MYVIMRC nested source %
+  " Load status line at startup (after CtrlP)
+  "autocmd VimEnter * :let &g:statusline = stl#Build()
+
+  " Override highlight groups when color scheme changes
+  autocmd VimEnter,ColorScheme * :call <SID>HighlightCursor() | :call <SID>HighlightStatusLine()
 
   " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
-  " autocmd FocusLost * set nolazyredraw
-  autocmd FocusGained * redrawstatus
-  " autocmd VimResized * redrawstatus
+  " autocmd FocusLost * :set nolazyredraw
+  autocmd FocusGained * :redrawstatus
+  " autocmd VimResized * :redrawstatus
 
   " autocmd BufReadPost,FileReadPost *.py :silent %!PythonTidy.py
   " autocmd BufReadPost,FileReadPost *.p[lm] :silent %!perltidy -q
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
+
+  autocmd BufWritePre *.js,*.php,*.py :call <SID>StripTrailingWhitespaces()
+
+  " Auto reload vimrc on save
+  autocmd BufWritePost $MYVIMRC nested source %
+  " autocmd BufEnter *.vim.local :setlocal filetype=vim
 augroup END
 
 if filereadable($HOME . '/.vimrc.local')

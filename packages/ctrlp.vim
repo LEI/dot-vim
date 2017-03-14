@@ -14,10 +14,9 @@ Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 "   finish
 " endif
 
-"let g:ctrlp_map = '<leader>f'
-"let g:ctrlp_max_height = 30
-"let g:ctrlp_working_path_mode = 0
-"let g:ctrlp_match_window_reversed = 0
+" let g:ctrlp_map = '<leader>f'
+" let g:ctrlp_match_window = 'bottom,order:ttb'
+" let g:ctrlp_working_path_mode = ''
 
 if executable('ag')
   " Use The Silver Searcher in CtrlP for listing files
