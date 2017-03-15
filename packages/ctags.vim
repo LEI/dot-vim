@@ -1,4 +1,11 @@
 " Ctags
+
+if !executable('ctags')
+  finish
+endif
+
+Plug 'vim-scripts/taglist.vim'
+
 " https://github.com/thoughtbot/dotfiles/blob/master/vim/plugin/ctags.vim
 
 " Exclude Javascript files in :Rtags via rails.vim due to warnings when parsing
@@ -7,12 +14,12 @@
 " Index ctags from any project, including those outside Rails
 function! ReindexCtags()
   let l:ctags_hook = '$(git rev-parse --show-toplevel)/.git/hooks/ctags'
-
   if exists(l:ctags_hook)
-    exec '!'. l:ctags_hook
+    let l:cmd = '!'. l:ctags_hook
   else
-    exec '!ctags -R .'
+    let l:cmd = '!ctags -R .'
   endif
+  execute l:cmd
 endfunction
 
 nmap <Leader>ct :call ReindexCtags()<CR>

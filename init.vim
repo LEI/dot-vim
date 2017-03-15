@@ -31,7 +31,6 @@ Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
-Plug 'vim-scripts/taglist.vim' " Tags
 
 " Plug 'altercation/vim-colors-solarized'
 " colorscheme solarized
