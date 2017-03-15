@@ -60,11 +60,11 @@ let g:package#tern_enabled = executable('node') && executable('npm')
 let g:package#neomake_enabled = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
 let g:package#ale_enabled = has('nvim') || v:version >= 800
 
-" Auto Completion:
+" Auto Completion: ervandew/supertab, vim-scripts/AutoComplPop
 let g:package#youcompleteme_enabled = 0 " has('python') || has('python3')
 let g:package#ultisnips_enabled = g:package#youcompleteme_enabled
-let g:package#deoplete_enabled = 0 " has('nvim') && has('python3')
-let g:package#neocomplete_enabled = 0 " !has('nvim') && has('lua')
+let g:package#deoplete_enabled = has('nvim') && has('python3')
+let g:package#neocomplete_enabled = !has('nvim') && has('lua')
 let g:package#neosnippet_enabled = g:package#deoplete_enabled || g:package#neocomplete_enabled
 
 " runtime packages.vim
@@ -461,10 +461,8 @@ set complete-=i " Do not scan current and included files
 set complete+=kspell " Autocompete with dictionnary words when spell check is on
 set completeopt+=longest,menuone " Only insert the longest common text for matches
 
-" https://github.com/vim-scripts/AutoComplPop
-
+" Next and previous completion Tab and Shift-Tab
 if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
-  " Next and previous completion Tab and Shift-Tab
   inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
   " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
   inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
@@ -518,7 +516,7 @@ augroup END
 
 " Abbreviations {{{1
 
-func Eatchar(pat)
+function! Eatchar(pat)
   let l:c = nr2char(getchar(0))
   return (l:c =~ a:pat) ? '' : l:c
 endfunc

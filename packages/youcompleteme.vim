@@ -6,6 +6,12 @@
 "   finish
 " endif
 
+" Automatically hide preview window
+" let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+" autocmd CompleteDone * pclose
+
 function! YCMInstall(info)
   " The variable a:info is a dictionary with 3 fields:
   " - name: name of the plugin

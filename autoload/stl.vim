@@ -2,9 +2,9 @@
 
 " set statusline=%!stl#Build()
 
-" if exists('g:loaded_statusline')
-"   finish
-" endif
+if exists('g:loaded_statusline')
+  finish
+endif
 
 let g:loaded_statusline = 1
 
@@ -37,8 +37,9 @@ function! stl#Build(...) abort
   let l:s = ''
   " Mode
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
-  let l:s.= '%< '
+  let l:s.= ' '
   let l:s.= '%(%{winwidth(0) > 60 && &modifiable ? stl#f#Mode() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%<'
   " Git branch
   let l:s.= '%(%{winwidth(0) > 90 ? stl#f#Branch() : ""}' . g:statusline.symbols.sep . '%)'
   " Buffer name
@@ -121,13 +122,15 @@ highlight link StatusLineInsert StatusLine
 highlight link StatusLineReplace StatusLine
 highlight link StatusLineVisual StatusLine
 
-" Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
-" highlight link StatusLineBranch StatusLine
-" highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-" highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
-highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#cb4b16
-" highlight StatusLineWarn cterm=reverse ctermfg=9 gui=reverse guifg=#dc322f
-highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#dc322f
+function! stl#Colors() abort
+  " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
+  " highlight link StatusLineBranch StatusLine
+  " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+  " highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
+  highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#cb4b16
+  " highlight StatusLineWarn cterm=reverse ctermfg=9 gui=reverse guifg=#dc322f
+  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#dc322f
+endfunction
 
 function! stl#Highlight(...) abort
   let l:im = a:0 ? a:1 : ''
@@ -156,7 +159,7 @@ let g:statusline.winnr = winnr()
 
 augroup StatusLine
   autocmd!
-  " autocmd ColorScheme * call stl#Colors() | redrawstatus
+  autocmd ColorScheme * call stl#Colors() | redrawstatus
   autocmd InsertEnter * call stl#Highlight(v:insertmode)
   autocmd InsertChange * call stl#Highlight(v:insertmode)
   autocmd InsertLeave * call stl#Highlight()

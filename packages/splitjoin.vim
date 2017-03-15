@@ -6,8 +6,8 @@
 
 Plug 'AndrewRadev/splitjoin.vim'
 
-" let g:splitjoin_split_mapping = ''
-" let g:splitjoin_join_mapping = ''
+" let g:splitjoin_split_mapping = '' " gS
+" let g:splitjoin_join_mapping = '' " gJ
 
 " noremap sj :SplitjoinSplit<CR>
 " noremap sk :SplitjoinJoin<CR>
