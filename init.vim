@@ -23,6 +23,7 @@ call package#Begin()
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " (alt: gundo)
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+Plug 'tpope/vim-commentary' " Comments
 Plug 'tpope/vim-endwise' " Automatic end keywords
 Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'tpope/vim-obsession' " Continuously updated session files
@@ -662,6 +663,10 @@ augroup VimInit
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
 
   autocmd BufWritePre *.js,*.php,*.py :call <SID>StripTrailingWhitespaces()
+
+  # Vim commentary
+  autocmd FileType cfg,inidos setlocal commentstring=#\ %s
+  autocmd FileType xdefaults setlocal commentstring=!\ %s
 
   " Auto reload vimrc on save
   autocmd BufWritePost $MYVIMRC nested source %

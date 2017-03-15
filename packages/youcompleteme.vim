@@ -24,6 +24,8 @@ endfunction
 
 Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
 
+" call package#Add({'name': '', 'on': {'plug_end': function('s:loaded')}})
+
 augroup YCM
   autocmd!
   " autocmd User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
