@@ -664,7 +664,7 @@ augroup VimInit
 
   autocmd BufWritePre *.js,*.php,*.py :call <SID>StripTrailingWhitespaces()
 
-  # Vim commentary
+  " Commentary
   autocmd FileType cfg,inidos setlocal commentstring=#\ %s
   autocmd FileType xdefaults setlocal commentstring=!\ %s
 
