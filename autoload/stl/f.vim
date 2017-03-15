@@ -32,7 +32,7 @@ endfunction
 
 " Buffer flags
 function! stl#f#Flags() abort
-  if &filetype =~# 'netrw\|vim-plug' || &buftype ==# 'quickfix'
+  if &filetype =~# 'netrw\|taglist\|qf\|vim-plug'
     return ''
   endif
   if &filetype ==# '' && &buftype ==# 'nofile'
