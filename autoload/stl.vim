@@ -36,7 +36,7 @@ function! stl#Build(...) abort
   let l:bufname = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
   let l:s = ''
   " Mode
-  let l:s.= '%1*%( %{&paste ? "PASTE" : ""} %)%*'
+  let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
   let l:s.= '%< '
   let l:s.= '%(%{winwidth(0) > 60 && &modifiable ? stl#f#Mode() : ""}' . g:statusline.symbols.sep . '%)'
   " Git branch
@@ -116,7 +116,7 @@ call extend(g:statusline.symbols, {
       \   'ws': s:c ? nr2char(0x39E) : '\s',
       \ }, 'keep')
 
-highlight link User1 StatusLine
+highlight link StatusLineReverse StatusLine
 highlight link StatusLineInsert StatusLine
 highlight link StatusLineReplace StatusLine
 highlight link StatusLineVisual StatusLine

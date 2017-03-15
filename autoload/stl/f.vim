@@ -101,11 +101,11 @@ endfunction
 
 " Whitespace warnings
 function! stl#f#Indent() abort
+  if !&modifiable || &paste " Ignore warnings in paste mode
+    return ''
+  endif
   if !exists('b:statusline_indent')
     let b:statusline_indent = ''
-    if !&modifiable
-      return b:statusline_indent
-    endif
     " Find spaces that arent used as alignment in the first indent column
     let l:spaces = search('^ \{' . &tabstop . ',}[^\t]', 'nw')
     let l:tabs = search('^\t', 'nw')

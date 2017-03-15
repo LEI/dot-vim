@@ -282,7 +282,7 @@ if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
   set t_Co=16
 endif
 
-" Enable true colors if supported
+" Enable true colors if supported (:h xterm-true-color)
 " http://sunaku.github.io/tmux-24bit-color.html#usage
 let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
   \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
@@ -292,7 +292,6 @@ if has('nvim')
   set termguicolors
 elseif has('patch-7.4.1778') && get(g:, 'term_true_color', 0) " Apple_Terminal
   set termguicolors
-  " :h xterm-true-color
   " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
   " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
   " Needed for vim inside tmux
@@ -434,14 +433,14 @@ let &g:statusline = stl#Build()
 
 function! <SID>HighlightStatusLine() abort
   if &background ==# 'dark'
-    highlight User1 term=reverse ctermfg=14 ctermbg=0
+    highlight StatusLineReverse term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
     "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
     highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
     highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
     highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
   elseif &background ==# 'light'
-    highlight User1 term=reverse ctermfg=10 ctermbg=7
+    highlight StatusLineReverse term=reverse ctermfg=10 ctermbg=7
     " highlight StatusLineNormal ctermfg=7 ctermbg=4
     "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
     highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
@@ -519,8 +518,10 @@ augroup END
 
 " Abbreviations {{{1
 
-iabbrev cl! console.log( )<Left><Left>
-iabbrev vd! var_dump( )<Left><Left>
+func Eatchar(pat)
+  let l:c = nr2char(getchar(0))
+  return (l:c =~ a:pat) ? '' : l:c
+endfunc
 
 iabbrev pyhton python
 
@@ -641,6 +642,7 @@ noremap <Leader>W :w!!<CR>
 
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
+" command! -nargs=* CursorHi call <SID>HighlightCursor()
 
 " Autocommands {{{1
 
