@@ -151,6 +151,7 @@ endfunction
 " v:vim_did_enter |!has('vim_starting')
 let s:enable = get(g:, 'stl#enable_at_startup', 1)
 if s:enable
+  " call stl#Colors()
   call stl#ctrlp#Enable()
 endif
 

@@ -614,7 +614,7 @@ function! <SID>Preserve(command)
 endfunction
 
 " Remove trailing spaces
-noremap _$ :call <SID>StripTrailingWhitespaces()
+noremap _$ :call <SID>StripTrailingWhitespaces()<CR>
 
 " Indent the whole file
 noremap _= :call <SID>Preserve("normal gg=G")<CR>
@@ -643,10 +643,10 @@ noremap <Leader>W :w!!<CR>
 augroup VimInit
   autocmd!
   " Load status line at startup (after CtrlP)
-  autocmd VimEnter * :call colorscheme#Set('solarized8')
+  autocmd VimEnter * :call colorscheme#Set('solarized8') | :call stl#Colors()
   "autocmd VimEnter * :let &g:statusline = stl#Build()
   " Reset colors persisting in terminal
-  autocmd VimLeave * :echo -ne "\033[0m"
+  " autocmd VimLeave * :!echo -ne "\033[0m"
 
   " Override highlight groups when color scheme changes
   autocmd VimEnter,ColorScheme * :call <SID>HighlightCursor() | :call <SID>HighlightStatusLine()

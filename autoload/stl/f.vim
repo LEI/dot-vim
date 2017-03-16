@@ -76,7 +76,7 @@ endfunction
 
 " File encoding and format
 function! stl#f#FileInfo() abort
-  if &filetype ==# '' && &buftype !=# 'nofile'
+  if &filetype ==# '' && &buftype !=# '' && &buftype !=# 'nofile'
     return ''
   endif
   if &filetype =~# 'netrw' || &buftype =~# 'help\|quickfix'
@@ -91,7 +91,7 @@ function! stl#f#FileInfo() abort
     let l:enc.= ',B'
   endif
   if l:enc ==# 'utf-8'
-    return ''
+    let l:enc = ''
   endif
   if &fileformat !=# 'unix'
     let l:enc.= '[' . &fileformat . ']'
