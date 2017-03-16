@@ -74,9 +74,6 @@ call package#Plug()
 " Add plugins to &runtimepath
 call package#End()
 
-" Set color scheme
-call colorscheme#Set('solarized8')
-
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
@@ -646,7 +643,10 @@ noremap <Leader>W :w!!<CR>
 augroup VimInit
   autocmd!
   " Load status line at startup (after CtrlP)
+  autocmd VimEnter * :call colorscheme#Set('solarized8')
   "autocmd VimEnter * :let &g:statusline = stl#Build()
+  " Reset colors persisting in terminal
+  autocmd VimLeave * :echo -ne "\033[0m"
 
   " Override highlight groups when color scheme changes
   autocmd VimEnter,ColorScheme * :call <SID>HighlightCursor() | :call <SID>HighlightStatusLine()
