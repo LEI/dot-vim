@@ -266,14 +266,14 @@ endif
 
 " Terminal {{{1
 
-" Disable Background Color Erase (BCE) so that color schemes
-" work properly when Vim is used inside tmux and GNU screen.
-" See also http://snk.tuxfamily.org/log/vim-256color-bce.html
 if &term =~# '256color'
+  " Disable Background Color Erase (BCE) so that color schemes
+  " work properly when Vim is used inside tmux and GNU screen
+  " See also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
 
-" Allow color schemes to do bright colors without forcing bold
+" Allow color schemes to use bright colors without forcing bold
 if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
   set t_Co=16
 endif
@@ -370,7 +370,7 @@ set autoindent
 set expandtab " Use spaces instead of tabs
 set shiftround " >> indents to net multiple of 'shiftwidth'
 set shiftwidth=4 " >> indents by 4 spaces
-set softtabstop=-1 " Use 'shiftwidth' value for editing operations
+set softtabstop=4 " Number of spaces that a tab counts for while editing
 set tabstop=4 " Spaces used to represent a tab (default: 8)
 
 " Scrolling {{{1
