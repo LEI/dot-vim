@@ -455,10 +455,11 @@ set showtabline=1
 
 set complete-=i " Do not scan current and included files
 set complete+=kspell " Autocompete with dictionnary words when spell check is on
-set completeopt+=longest,menuone " Only insert the longest common text for matches
+set completeopt+=longest " Only insert the longest common text of the matches
+" set completeopt+=longest,menuone " Only insert the longest common text for matches
 
 " Next and previous completion Tab and Shift-Tab
-if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
+if !g:package#youcompleteme_enabled && maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
   inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
   " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
   inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
@@ -637,6 +638,9 @@ noremap <Leader>W :w!!<CR>
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 " command! -nargs=* CursorHi call <SID>HighlightCursor()
+
+" command! -nargs=0 HexDump :%!xxd
+" command! -nargs=0 HexRestore :%!xxd -r
 
 " Autocommands {{{1
 
