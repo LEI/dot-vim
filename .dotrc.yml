@@ -1,9 +1,9 @@
 dir: ".vim"
 link: "[^.]*:.vim"
 lines:
-  - path: ".vim/vimrc"
+  - path: ".vimrc"
     line: "source ~/.vim/init.vim"
     # if filereadable(expand('~/.vim/init.vim')) | source ~/.vim/init.vim | endif
-  - path: ".vim/gvimrc"
+  - path: ".gvimrc"
     line: "source ~/.vim/ginit.vim"
     # if filereadable(expand('~/.vim/init.vim')) | source ~/.vim/init.vim | endif
