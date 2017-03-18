@@ -1,5 +1,8 @@
 " Vim
 
+" https://github.com/gfontenot/dotfiles/tree/master/tag-vim
+" https://github.com/thoughtbot/dotfiles
+
 " zi Folding on/off
 " zR Open all
 " zM Close all

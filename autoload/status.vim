@@ -52,12 +52,12 @@ function! status#Line(...) abort
   " Extra markers
   let l:s.= l:info
   " Warnings
-  let l:s.= '%#StatusLineWarn#%('
+  let l:s.= '%#StatusLineWarn#%(' " WarningMsg
   let l:s.= '%( %{status#line#Indent()}%)' " &bt nofile, nowrite
   let l:s.= '%( %{empty(&bt) ? status#line#Trailing() : ""}%)'
   let l:s.= ' %)%*'
   " Errors
-  let l:s.= '%#StatusLineError#%('
+  let l:s.= '%#StatusLineError#%(' " ErrorMsg
   let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
   let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#QflistStatus("qf: ") : ""}%)'
   let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#LoclistStatus() : ""}%)'
@@ -124,15 +124,16 @@ highlight link StatusLineReverse StatusLine
 highlight link StatusLineInsert StatusLine
 highlight link StatusLineReplace StatusLine
 highlight link StatusLineVisual StatusLine
+" highlight link StatusLineBranch StatusLine
+" highlight link StatusLineError ErrorMsg
+" highlight link StatusLineWarn WarningMsg
 
+" Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
 function! status#Colors() abort
-  " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
-  " highlight link StatusLineBranch StatusLine
-  " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-  " highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
-  highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#cb4b16
-  " highlight StatusLineWarn cterm=reverse ctermfg=9 gui=reverse guifg=#dc322f
-  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#dc322f
+" highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+  highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#dc322f
+" highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
+  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#cb4b16
 endfunction
 
 function! status#Highlight(...) abort
@@ -163,7 +164,7 @@ let g:statusline.winnr = winnr()
 
 augroup StatusLine
   autocmd!
-  autocmd ColorScheme * call status#Colors()
+  autocmd VimEnter,ColorScheme * call status#Colors()
   autocmd InsertEnter * call status#Highlight(v:insertmode)
   autocmd InsertChange * call status#Highlight(v:insertmode)
   autocmd InsertLeave * call status#Highlight()
