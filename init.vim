@@ -26,11 +26,11 @@ function! Source(path)
 endfunction
 
 function! SourceIf(path, func)
-  " if !exists('*' . a:func)
-  "   echoerr 'Unknown function:' a:func
-  "   return 0
-  " endif
-  if {a:func}()
+  if !exists('*' . a:func)
+    echoerr 'Unknown function:' a:func
+    return 0
+  endif
+  if {a:func}(a:path)
     call Source(a:path)
   endif
 endfunction
@@ -39,7 +39,15 @@ function! IsEnabled(path)
   let l:name = fnamemodify(a:path, ':t:r')
   " Enable Package: let g:enable_{l:name} = 1
   " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
-  return get(g:, 'enable_' . l:name, 0) == 1
+  let l:enabled = get(g:, 'enable_' . l:name, 0) == 1
+  for l:pattern in get(g:, 'plugins_whitelist', [])
+    if matchstr(l:name, l:pattern)
+      let l:enabled = 1
+      break
+    endif
+  endfor
+  " echom l:name . ' is ' . (l:enabled ? 'enabled' : 'disabled')
+  return l:enabled
 endfunction
 
 function! SourceDir(path)
@@ -90,20 +98,10 @@ let s:plug_install = PlugDownload()
 " Start Vim Plug
 call plug#begin()
 
-Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " (alt: gundo)
-" Plug 'metakirby5/codi.vim' " Interactive scratchpad
-" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
-Plug 'tpope/vim-commentary' " Comments
-Plug 'tpope/vim-endwise' " Automatic end keywords
-Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
-" Plug 'tpope/vim-obsession' " Continuously updated session files
-Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
-Plug 'tpope/vim-sleuth' " Automatic indentation detection (alt: ciaranm/detectindent)
-Plug 'tpope/vim-surround' " Quoting/parenthesizing
-Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
+" let g:plugins_whitelist = ['plugins']
 
-" Plug 'altercation/vim-colors-solarized'
-Plug 'lifepillar/vim-solarized8'
+let g:enable_plugins = 1
+let g:enable_solarized = 1
 
 " Improvements:
 let g:enable_commentary = 1
@@ -530,89 +528,18 @@ endfunction
 
 set showtabline=1
 
-" Color scheme {{{1
-
-" colorscheme solarized
-" call togglebg#map('<F5>')
-call colorscheme#Set('solarized8')
-
-nnoremap <silent> <F5> :call colorscheme#ToggleBackground()<CR>
-nnoremap <silent> <F4> :<C-u>call colorscheme#Solarized8Contrast(-v:count1)<CR>
-nnoremap <silent> <F6> :<C-u>call colorscheme#Solarized8Contrast(+v:count1)<CR>
-
 " Completion {{{1
 
 set complete-=i " Do not scan current and included files
 set complete+=kspell " Use the currently active spell checking
 set completeopt+=longest " Only insert the longest common text of the matches
 
-" Next and previous completion Tab and Shift-Tab
-if !get(g:, 'enable_youcompleteme', 0)
-  if maparg('<Tab>', 'i')
-    inoremap <expr> <Tab> ShouldComplete() ? "\<C-n>" : "\<Tab>"
-  endif
-  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
-  if maparg('<S-Tab>', 'i') ==# ''
-    inoremap <S-Tab> <C-p>
-  endif
-  " inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
-  " inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
-  " Close the popup menu (fix at your own risk)
-  " inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
-  " inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
+if exists('+omnifunc')
+  augroup OmniCompletion
+    autocmd!
+    autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+  augroup END
 endif
-
-function! ShouldComplete() abort
-  if pumvisible()
-    return 1
-  endif
-  let l:col = col('.') - 1
-  if !l:col || getline('.')[l:col - 1] !~# '\k'
-    return 0
-  endif
-  return 1
-endfunction
-
-" if exists("+omnifunc")
-augroup OmniCompletion
-  autocmd!
-  autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-  " autocmd CompleteDone -> expand snippet?
-augroup END
-
-" function! InsertTabWrapper(input, fname) abort
-"   if pumvisible()
-"     return {a:fname}()
-"   endif
-"   " return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
-"   let l:col = col('.') - 1
-"   if !l:col || getline('.')[l:col - 1] !~# '\k'
-"     return a:input
-"   else
-"     return StartComp()
-"   endif
-" endfunction
-
-function! StartComp() abort
-  " (<C-x>)<C-p> nearest matching word
-  return "\<C-n>"
-endfunction
-
-function! NextComp() abort
-  return "\<C-n>"
-endfunction
-
-function! PrevComp() abort
-  return "\<C-p>"
-endfunction
-
-function! AcceptComp() abort
-  return "\<C-y>"
-endfunction
-
-function! EndComp() abort
-  return "\<C-e>"
-endfunction
 
 " Abbreviations {{{1
 
@@ -672,8 +599,6 @@ noremap ; :normal n.<CR>
 
 " Stop the highlighting for the 'hlsearch' option
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
-
-" Background and theme switcher
 
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
