@@ -555,9 +555,11 @@ if !get(g:, 'enable_youcompleteme', 0)
   if maparg('<S-Tab>', 'i') ==# ''
     inoremap <S-Tab> <C-p>
   endif
-  " if maparg('<CR>', 'i') ==# ''
-  inoremap <expr> <CR> pumvisible() ? "\<C-y>" : maparg('<CR>', 'i')
-  inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
+  " inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
+  " inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
+  " Close the popup menu (fix at your own risk)
+  " inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
+  " inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
 endif
 
 function! ShouldComplete() abort
@@ -571,16 +573,13 @@ function! ShouldComplete() abort
   return 1
 endfunction
 
-" autocmd CompleteDone -> expand snippet?
-
 " if exists("+omnifunc")
 augroup OmniCompletion
   autocmd!
   autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+  " autocmd CompleteDone -> expand snippet?
 augroup END
 
-" inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
-" inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
 " function! InsertTabWrapper(input, fname) abort
 "   if pumvisible()
 "     return {a:fname}()
@@ -593,10 +592,6 @@ augroup END
 "     return StartComp()
 "   endif
 " endfunction
-
-" Close the popup menu (fix at your own risk)
-" inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
-" inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
 
 function! StartComp() abort
   " (<C-x>)<C-p> nearest matching word
