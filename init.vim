@@ -1,5 +1,6 @@
 " Vim
 
+" https://github.com/christoomey/dotfiles
 " https://github.com/gfontenot/dotfiles/tree/master/tag-vim
 " https://github.com/thoughtbot/dotfiles
 
@@ -12,16 +13,82 @@
 
 " runtime before.vim
 
+" Functions {{{1
+
+function! s:path(path)
+  return expand(g:vim_dir . '/' . a:path)
+endfunction
+
+function! Source(path)
+  if filereadable(expand(a:path))
+    execute 'source' a:path
+  endif
+endfunction
+
+function! SourceIf(path, func)
+  " if !exists('*' . a:func)
+  "   echoerr 'Unknown function:' a:func
+  "   return 0
+  " endif
+  if {a:func}()
+    call Source(a:path)
+  endif
+endfunction
+
+function! IsEnabled(path)
+  let l:name = fnamemodify(a:path, ':t:r')
+  " Enable Package: let g:enable_{l:name} = 1
+  " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
+  return get(g:, 'enable_' . l:name, 0) == 1
+endfunction
+
+function! SourceDir(path)
+  " let l:func = a:0 > 1 ? a:2 : 'Source'
+  let l:files = globpath(a:path, '*.vim')
+  for l:path in split(l:files, '\n')
+    call Source(l:path)
+  endfor
+endfunction
+
+function! SourceDirIf(path, func)
+  let l:files = globpath(a:path, '*.vim')
+  for l:path in split(l:files, '\n')
+    call SourceIf(l:path, a:func)
+  endfor
+endfunction
+
+function! SourceEnabledDir(path)
+  return SourceDirIf(a:path, 'IsEnabled')
+endfunction
+
+function! PlugDownload(...)
+  let l:path = a:0 ? a:1 : g:plug_path
+  if !empty(glob(l:path))
+    return 0 " Already exists
+  endif
+  " confirm('Download vim-plug in ' . l:path . '?') == 1
+  execute 'silent !curl -fLo' l:path '--create-dirs' g:plug_url
+  " return code?
+endfunction
+
 " Variables {{{1
 "
 let g:utf8 = has('multi_byte') && &encoding ==# 'utf-8'
 
-let $PLUGINS = g:package#plugins_dir
+let g:vim_dir = split(&runtimepath, ',')[0] " $HOME . '/.vim'
+let g:vim_undodir = get(g:, 'vim_undodir', s:path('backups'))
+
+let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+let g:plug_path = s:path('autoload/plug.vim')
+" let g:plug_home = s:path('plugged')
 
 " Plugins {{{1
 
+" Automatically install vim-plug
+let s:plug_install = PlugDownload()
+
 " Start Vim Plug
-call package#Begin()
+call plug#begin()
 
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} " (alt: gundo)
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
@@ -36,8 +103,6 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-dirvish)
 
 " Plug 'altercation/vim-colors-solarized'
-" colorscheme solarized
-" call togglebg#map('<F5>')
 Plug 'lifepillar/vim-solarized8'
 
 " Improvements:
@@ -74,10 +139,21 @@ let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 " runtime packages.vim
 
 " Register plugins
-call package#Plug()
+call SourceEnabledDir(s:path('plugins'))
 
 " Add plugins to &runtimepath
-call package#End()
+call plug#end()
+
+if s:plug_install == 1
+  PlugInstall --sync | source $MYVIMRC
+endif
+
+" Register plugins
+call SourceDir(s:path('config'))
+
+" command! -nargs=0 -bar Install PlugInstall --sync | source $MYVIMRC
+" command! -nargs=0 -bar Update PlugUpdate --sync | source $MYVIMRC
+" command! -nargs=0 -bar Upgrade PlugUpdate! --sync | PlugUpgrade | source $MYVIMRC
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -233,12 +309,12 @@ augroup END
 " Undo history {{{1
 
 " Keep undo history across sessions
-if has('persistent_undo')
+" expand(get(g:, 'vim_undodir', '~/.vim/backups'))
+if has('persistent_undo') " && exists('g:vim_undodir')
   " Disable swapfiles and backups
   set noswapfile
   set nobackup
   set nowritebackup
-  let g:vim_undodir = expand(get(g:, 'vim_undodir', '~/.vim/backups'))
   if exists('*mkdir') && !isdirectory(g:vim_undodir)
     call mkdir(g:vim_undodir)
   endif
@@ -454,6 +530,16 @@ endfunction
 
 set showtabline=1
 
+" Color scheme {{{1
+
+" colorscheme solarized
+" call togglebg#map('<F5>')
+call colorscheme#Set('solarized8')
+
+nnoremap <silent> <F5> :call colorscheme#ToggleBackground()<CR>
+nnoremap <silent> <F4> :<C-u>call colorscheme#Solarized8Contrast(-v:count1)<CR>
+nnoremap <silent> <F6> :<C-u>call colorscheme#Solarized8Contrast(+v:count1)<CR>
+
 " Completion {{{1
 
 set complete-=i " Do not scan current and included files
@@ -461,11 +547,17 @@ set complete+=kspell " Use the currently active spell checking
 set completeopt+=longest " Only insert the longest common text of the matches
 
 " Next and previous completion Tab and Shift-Tab
-if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
-  \ && !get(g:, 'enable_youcompleteme', 0)
-  inoremap <expr> <Tab> ShouldComplete() ? "\<C-n>" : "\<Tab>"
-  inoremap <S-Tab> <C-p>
-  " " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
+if !get(g:, 'enable_youcompleteme', 0)
+  if maparg('<Tab>', 'i')
+    inoremap <expr> <Tab> ShouldComplete() ? "\<C-n>" : "\<Tab>"
+  endif
+  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
+  if maparg('<S-Tab>', 'i') ==# ''
+    inoremap <S-Tab> <C-p>
+  endif
+  " if maparg('<CR>', 'i') ==# ''
+  inoremap <expr> <CR> pumvisible() ? "\<C-y>" : maparg('<CR>', 'i')
+  inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 endif
 
 function! ShouldComplete() abort
@@ -587,9 +679,6 @@ noremap ; :normal n.<CR>
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
 
 " Background and theme switcher
-nnoremap <silent> <F5> :call colorscheme#ToggleBackground()<CR>
-nnoremap <silent> <F4> :<C-u>call colorscheme#Solarized8Contrast(-v:count1)<CR>
-nnoremap <silent> <F6> :<C-u>call colorscheme#Solarized8Contrast(+v:count1)<CR>
 
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
@@ -659,8 +748,6 @@ noremap <Leader>W :w!!<CR>
 
 " Autocommands {{{1
 
-call colorscheme#Set('solarized8')
-
 augroup VimInit
   autocmd!
   " Load status line at startup (after CtrlP)
@@ -696,8 +783,9 @@ augroup END
 
 " }}}
 
-if filereadable($HOME . '/.vimrc.local')
-  source ~/.vimrc.local
-endif
+call Source('~/.vimrc.local')
+" if filereadable($HOME . '/.vimrc.local')
+"   source ~/.vimrc.local
+" endif
 
 " vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker
