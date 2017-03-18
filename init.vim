@@ -15,8 +15,8 @@
 
 " Functions {{{1
 
-function! s:path(path)
-  return expand(g:vim_dir . '/' . a:path)
+function! s:home(path)
+  return expand(g:home . '/' . a:path)
 endfunction
 
 function! Source(path)
@@ -80,15 +80,11 @@ function! PlugDownload(...)
 endfunction
 
 " Variables {{{1
-"
-let g:utf8 = has('multi_byte') && &encoding ==# 'utf-8'
 
-let g:vim_dir = split(&runtimepath, ',')[0] " $HOME . '/.vim'
-let g:vim_undodir = get(g:, 'vim_undodir', s:path('backups'))
-
+let g:home = split(&runtimepath, ',')[0] " $HOME . '/.vim'
+let g:plug_path = s:home('autoload/plug.vim')
 let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-let g:plug_path = s:path('autoload/plug.vim')
-" let g:plug_home = s:path('plugged')
+" let g:plug_home = s:home('plugged')
 
 " Plugins {{{1
 
@@ -100,8 +96,9 @@ call plug#begin()
 
 " let g:plugins_whitelist = ['plugins']
 
+" General:
 let g:enable_plugins = 1
-let g:enable_solarized = 1
+let g:enable_colorscheme = 1
 
 " Improvements:
 let g:enable_commentary = 1
@@ -112,32 +109,33 @@ let g:enable_unimpaired = 1
 let g:enable_textobjuser = 1
 
 " Search:
+let g:enable_ctags = 1
 let g:enable_ctrlp = 1
 let g:ctrlp_status_func = {'main': 'status#ctrlp#Main', 'prog': 'status#ctrlp#Prog'}
 
 " Languages:
 let g:enable_polyglot = 1
-let g:enable_tern = executable('node') && executable('npm')
+let g:enable_tern = 1
 
 " Formatting: google/vim-codefmt
 " let g:enable_editorconfig = 1 " Breaks &et
 
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
-let g:enable_neomake = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-let g:enable_ale = has('nvim') || v:version >= 800
+let g:enable_neomake = 0
+let g:enable_ale = 1
 " let g:ale_filetype_blacklist = ['nerdtree', 'unite', 'tags']
 
 " Auto Completion: ervandew/supertab, vim-scripts/AutoComplPop
-let g:enable_youcompleteme = 0 " has('python') || has('python3')
+let g:enable_youcompleteme = 0
 let g:enable_ultisnips = g:enable_youcompleteme
-let g:enable_deoplete = has('nvim') && has('python3')
-let g:enable_neocomplete = !has('nvim') && has('lua')
+let g:enable_deoplete = has('nvim')
+let g:enable_neocomplete = !has('nvim')
 let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 
 " runtime packages.vim
 
 " Register plugins
-call SourceEnabledDir(s:path('plugins'))
+call SourceEnabledDir(s:home('plugins'))
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -147,7 +145,7 @@ if s:plug_install == 1
 endif
 
 " Register plugins
-call SourceDir(s:path('config'))
+call SourceDir(s:home('config'))
 
 " command! -nargs=0 -bar Install PlugInstall --sync | source $MYVIMRC
 " command! -nargs=0 -bar Update PlugUpdate --sync | source $MYVIMRC
@@ -158,13 +156,34 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) =
   runtime! macros/matchit.vim
 endif
 
-" General options {{{1
+" Defaults {{{1
 
-" has('autocmd')
-filetype plugin indent on
+set backspace=indent,eol,start " Allow backspace over everything in insert mode
 
-if has('syntax') && !exists('g:syntax_on')
-  syntax enable
+set nrformats-=octal " Disable octal format for number processing using Ctrl-A and Ctrl-X
+
+set timeout
+set timeoutlen=1000
+" set ttimeout " Time out for key codes
+" set ttimeoutlen=100 " Wait up to 100ms after Esc for special keys
+
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
+
+if has('syntax')
+  set synmaxcol=500 " Limit syntax highlighting for long lines
+  if !exists('g:syntax_on') " &t_Co > 2 || has('gui_running')
+    syntax enable
+  endif
+endif
+
+if has('autocmd')
+  filetype plugin indent on " Enable file type detection
+endif
+
+if has('langmap') && exists('+langremap')
+  set nolangremap " Prevent that the langmap option applies to characters that result from a mapping
 endif
 
 if has('path_extra')
@@ -175,19 +194,6 @@ if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'
   set shell=/bin/bash
 endif
 
-set timeout
-set timeoutlen=1000
-set nottimeout
-" set ttimeoutlen=-1
-
-if &encoding ==# 'latin1' && has('gui_running')
-  set encoding=utf-8
-endif
-
-if &history < 1000
-  set history=1000
-endif
-
 if &tabpagemax < 50
   set tabpagemax=50
 endif
@@ -196,11 +202,9 @@ if !empty(&viminfo)
   set viminfo^=!
 endif
 
+" Options {{{1
+
 set sessionoptions-=options
-
-set nrformats-=octal " Disable octal format for number processing using CTRL-A
-
-set backspace=indent,eol,start " Normal backspace in insert mode
 
 set nostartofline " Keep the cursor on the same column if possible
 
@@ -217,8 +221,6 @@ set modelines=2 " Number of lines checked for set commands
 " set title " Set the title of the window to 'titlestring'
 
 " set fileformats=unix,dos,mac " Use Unix as the standard file type
-
-set synmaxcol=420 " Limit syntax highlighting for long lines
 
 set report=0 " Always report changed lines (default threshold: 2)
 
@@ -274,49 +276,20 @@ set noerrorbells " Disable audible bell for error messages
 set visualbell " Use visual bell instead of beeping
 set t_vb= " Disable audible and visual bells
 
-" Views {{{1
-
-" Options:
-" cursor: cursor position in file and in window
-" folds: manually created folds, opened/closed folds and local fold options
-" options: options and mappings local to a window or buffer (not global values for local options)
-" localoptions: same as 'options'
-" slash,unix: useful on Windows when sharing view files
-
-" set viewdir=$HOME/.vim/view " Customize location of saved views
-set viewoptions-=options " folds,options,cursor
-
-" Return true if the current buffer state should be saved or restored
-function! s:is_file() abort
-  " vim-vinegar opendir() error on Enter (-) if &modifiable is off
-  if &buftype !=# '' || &filetype ==# ''
-    return 0
-  endif
-  if &filetype =~# 'help\|netrw\|qf' " &filetype !=# ''
-    return 0
-  endif
-  return 1
-endfunction
-
-augroup ViewGroup
-  autocmd!
-  autocmd VimEnter,BufWinEnter * if s:is_file() | silent! loadview | endif
-  autocmd BufWinLeave * if s:is_file() | mkview | endif
-augroup END
-
 " Undo history {{{1
 
 " Keep undo history across sessions
-" expand(get(g:, 'vim_undodir', '~/.vim/backups'))
-if has('persistent_undo') " && exists('g:vim_undodir')
+" expand(get(g:, 'undodir', '~/.vim/backups'))
+let g:undodir = get(g:, 'undodir', s:home('backups'))
+if has('persistent_undo') " && exists('g:undodir')
   " Disable swapfiles and backups
   set noswapfile
   set nobackup
   set nowritebackup
-  if exists('*mkdir') && !isdirectory(g:vim_undodir)
-    call mkdir(g:vim_undodir)
+  if exists('*mkdir') && !isdirectory(g:undodir)
+    call mkdir(g:undodir)
   endif
-  let &undodir = g:vim_undodir
+  let &undodir = g:undodir
   set undofile
 endif
 
@@ -328,20 +301,16 @@ endif
 set list " Show invisible characters
 " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
-if g:utf8 == 1
+if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars = 'tab:' . nr2char(0x25B8) . ' '
         \ . ',trail:' . nr2char(0x00B7)
         \ . ',extends:' . nr2char(0x276F)
         \ . ',precedes:' . nr2char(0x276E)
         \ . ',nbsp:' . nr2char(0x005F)
         \ . ',eol:' . nr2char(0x00AC)
+  " " Show line breaks (arrows: 0x21AA or 0x08627)
+  " let &showbreak = nr2char(0x2026) " Ellipsis
 endif
-
-" " let &showbreak = '-> '
-" if g:utf8
-"   " Show line breaks (arrows: 0x21AA or 0x08627)
-"   let &showbreak = nr2char(0x2026) " Ellipsis
-" endif
 
 " Terminal {{{1
 
@@ -435,9 +404,12 @@ augroup END
 " set gdefault " Reverse global flag (always apply to all, except if /g)
 set hlsearch " Keep all matches highlighted when there is a previous search
 set ignorecase " Ignore case in search patterns
-set incsearch " Show the pattern matches while typing
 " set magic " Changes the special characters that can be used in search patterns
 set smartcase " Case sensitive when the search contains upper case characters
+
+if has('reltime')
+  set incsearch " Do incremental searching when it's possible to timeout
+endif
 
 " Indentation {{{1
 
@@ -452,7 +424,7 @@ set tabstop=4 " Spaces used to represent a tab (default: 8)
 
 " Scrolling {{{1
 
-set scrolloff=3 " Lines to keep above and below the cursor
+set scrolloff=5 " Lines to keep above and below the cursor
 set sidescroll=1 " Lines to scroll horizontally when 'wrap' is set
 set sidescrolloff=5 " Lines to the left and right if 'nowrap' is set
 
@@ -472,22 +444,21 @@ set number " Print the line number in front of each line
 " set numberwidth=4 " Minimal number of columns to use for the line number
 set relativenumber " Show the line number relative to the line with the cursor
 
-" Splits {{{1
-
-set splitbelow " Split windows below the current window
-set splitright " Split windows right of the current window
-set diffopt+=vertical " Always use vertical diffs
-
 " Command line {{{1
+
+if &history < 1000
+  set history=1000 " Keep 1000 lines of command line history
+endif
 
 set showcmd " Display incomplete commands
 set noshowmode " Hide current mode in command line
-set wildmenu " Invoke completion on <Tab> in command line mode
+set wildmenu " Display completion matches in a status line
 set wildmode=longest,full " Complete longest common string, then each full match
 
 " Status line {{{1
 
 set display+=lastline " Display as much as possible of the last line
+set display+=truncate " Show @@@ in the last line if it's truncated
 set laststatus=2 " Always show statusline
 set ruler " Always show current position
 set rulerformat=%l,%c%V%=%P
@@ -552,6 +523,13 @@ iabbrev pyhton python
 
 " Key bindings {{{1
 
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break
+inoremap <C-U> <C-G>u<C-U>
+
 " Yank from the cursor to the end of the line
 noremap Y y$
 
@@ -569,10 +547,10 @@ nnoremap <expr> k v:count ? 'k' : 'gk'
 " vnoremap > >gv
 
 " Split navigation shortcuts
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+nnoremap <C-H> <C-w>h
+nnoremap <C-J> <C-w>j
+nnoremap <C-K> <C-w>k
+nnoremap <C-L> <C-w>l
 
 " Bubble single or multiple lines
 noremap <C-Up> ddkP
@@ -593,12 +571,12 @@ noremap ; :normal n.<CR>
 " vnoremap Q gv
 " noremap Q gqap
 
-" if maparg('<C-l>', 'n') ==# ''
-"   nnoremap <silent> <C-l> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
+" if maparg('<C-L>', 'n') ==# ''
+"   nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 " endif
 
 " Stop the highlighting for the 'hlsearch' option
-nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
+nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'

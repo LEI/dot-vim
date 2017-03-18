@@ -36,6 +36,10 @@ if has('gui_macvim')
   " let g:macvim_skip_cmd_opt_movement = 1 " Disable mappings Cmd/Alt + arrow
 endif
 
+if has('win32')
+  set guioptions-=t " Remove 't' flag from 'guioptions': no tearoff menu entries
+endif
+
 if filereadable($HOME . '/.gvimrc.local')
   source ~/.gvimrc.local
 endif
