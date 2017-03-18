@@ -59,6 +59,9 @@ command! -n=0 -bar Lp :ALEPreviousWrap
 let g:ale_loclist_height = get(g:, 'ale_loclist_height', 5)
 
 function! ALEOpenList(...) abort
+  if !exists('g:loaded_ale')
+    finish
+  endif
   let l:winnr = a:0 ? a:1 : 0
   let l:list = []
   if g:ale_set_quickfix
@@ -82,6 +85,9 @@ function! ALEOpenList(...) abort
 endfunction
 
 function! ALECloseList() abort
+  if !exists('g:loaded_ale')
+    finish
+  endif
   if &filetype ==# 'qf'
     return
   endif
@@ -95,7 +101,7 @@ endfunction
 augroup ALE
   autocmd!
   " autocmd VimEnter,BufReadPost * call ale#Lint()
-  autocmd BufEnter,BufRead * if !&modified | call ale#Lint() | endif
+  autocmd BufEnter,BufRead * if exists('g:loaded_ale') && !&modified | call ale#Lint() | endif
   " Open quickfix or loclist
   autocmd User ALELint call ALEOpenList()
   " Automatically close corresponding loclist when quitting a window

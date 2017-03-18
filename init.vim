@@ -59,6 +59,7 @@ let g:enable_tern = executable('node') && executable('npm')
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
 let g:enable_neomake = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
 let g:enable_ale = has('nvim') || v:version >= 800
+" let g:ale_filetype_blacklist = ['nerdtree', 'unite', 'tags']
 
 " Auto Completion: ervandew/supertab, vim-scripts/AutoComplPop
 let g:enable_youcompleteme = 0 " has('python') || has('python3')
@@ -453,36 +454,54 @@ set showtabline=1
 " Completion {{{1
 
 set complete-=i " Do not scan current and included files
-set complete+=kspell " Autocompete with dictionnary words when spell check is on
+set complete+=kspell " Use the currently active spell checking
 set completeopt+=longest " Only insert the longest common text of the matches
-"set completeopt+=longest,menuone " Only insert the longest common text for matches
 
 " Next and previous completion Tab and Shift-Tab
 if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
   \ && !get(g:, 'enable_youcompleteme', 0)
-  inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
-  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
-  inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
+  inoremap <expr> <Tab> ShouldComplete() ? "\<C-n>" : "\<Tab>"
+  inoremap <S-Tab> <C-p>
+  " " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
 endif
+
+function! ShouldComplete() abort
+  if pumvisible()
+    return 1
+  endif
+  let l:col = col('.') - 1
+  if !l:col || getline('.')[l:col - 1] !~# '\k'
+    return 0
+  endif
+  return 1
+endfunction
+
+" autocmd CompleteDone -> expand snippet?
+
+" if exists("+omnifunc")
+augroup OmniCompletion
+  autocmd!
+  autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+augroup END
+
+" inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
+" inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
+" function! InsertTabWrapper(input, fname) abort
+"   if pumvisible()
+"     return {a:fname}()
+"   endif
+"   " return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
+"   let l:col = col('.') - 1
+"   if !l:col || getline('.')[l:col - 1] !~# '\k'
+"     return a:input
+"   else
+"     return StartComp()
+"   endif
+" endfunction
 
 " Close the popup menu (fix at your own risk)
 " inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
 " inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
-
-" autocmd CompleteDone -> expand snippet?
-
-function! InsertTabWrapper(input, fname) abort
-  if pumvisible()
-    return {a:fname}()
-  endif
-  " return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
-  let l:col = col('.') - 1
-  if !l:col || getline('.')[l:col - 1] !~# '\k'
-    return a:input
-  else
-    return StartComp()
-  endif
-endfunction
 
 function! StartComp() abort
   " (<C-x>)<C-p> nearest matching word
@@ -504,12 +523,6 @@ endfunction
 function! EndComp() abort
   return "\<C-e>"
 endfunction
-
-" if exists("+omnifunc")
-augroup OmniCompletion
-  autocmd!
-  autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-augroup END
 
 " Abbreviations {{{1
 
