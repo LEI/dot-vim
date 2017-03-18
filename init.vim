@@ -210,10 +210,11 @@ set viewoptions-=options " folds,options,cursor
 
 " Return true if the current buffer state should be saved or restored
 function! s:is_file() abort
+  " vim-vinegar opendir() error on Enter (-) if &modifiable is off
   if &buftype !=# '' || &filetype ==# ''
     return 0
   endif
-  if &filetype !=# '' && &filetype =~# 'help\|netrw\|qf'
+  if &filetype =~# 'help\|netrw\|qf' " &filetype !=# ''
     return 0
   endif
   return 1
