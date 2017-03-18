@@ -1,6 +1,6 @@
 " Status line
 
-" set statusline=%!stl#Build()
+" set statusline=%!status#Line()
 
 if exists('g:loaded_statusline')
   finish
@@ -32,32 +32,35 @@ set cpoptions&vim
 let g:statusline = get(g:, 'statusline', {})
 call extend(g:statusline, {'modes': {}, 'symbols': {}}, 'keep')
 
-function! stl#Build(...) abort
-  let l:bufname = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
+function! status#Line(...) abort
+  let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
+  let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
   let l:s = ''
   " Mode
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
   let l:s.= ' '
-  let l:s.= '%(%{winwidth(0) > 60 && &modifiable ? stl#f#Mode() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 60 && &modifiable ? status#line#Mode() : ""}' . g:statusline.symbols.sep . '%)'
   let l:s.= '%<'
   " Git branch
-  let l:s.= '%(%{winwidth(0) > 90 ? stl#f#Branch() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 90 ? status#line#Branch() : ""}' . g:statusline.symbols.sep . '%)'
   " Buffer name
-  let l:s.= l:bufname
+  let l:s.= l:name
   " Flags [%W%H%R%M]
-  let l:s.= '%( [%{stl#f#Flags()}]%)'
+  let l:s.= '%( [%{status#line#Flags()}]%)'
   " Break
   let l:s.= ' %='
+  " Extra markers
+  let l:s.= l:info
   " Warnings
   let l:s.= '%#StatusLineWarn#%('
-  let l:s.= '%( %{stl#f#Indent()}%)' " &bt nofile, nowrite
-  let l:s.= '%( %{empty(&bt) ? stl#f#Trailing() : ""}%)'
+  let l:s.= '%( %{status#line#Indent()}%)' " &bt nofile, nowrite
+  let l:s.= '%( %{empty(&bt) ? status#line#Trailing() : ""}%)'
   let l:s.= ' %)%*'
   " Errors
   let l:s.= '%#StatusLineError#%('
   let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#stl#f#QflistStatus("qf: ") : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#stl#f#LoclistStatus() : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#QflistStatus("qf: ") : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#LoclistStatus() : ""}%)'
   let l:s.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
   let l:s.= ' %)%*'
   " Plugins
@@ -65,9 +68,9 @@ function! stl#Build(...) abort
   " Space
   let l:s.= ' '
   " File type
-  let l:s.= '%(%{winwidth(0) > 30 ? stl#f#FileType() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 30 ? status#line#FileType() : ""}' . g:statusline.symbols.sep . '%)'
   " File encoding
-  let l:s.= '%(%{winwidth(0) > 60 ? stl#f#FileInfo() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 60 ? status#line#FileInfo() : ""}' . g:statusline.symbols.sep . '%)'
   " Default ruler
   let l:s.= '%-14.(%l,%c%V/%L%) %P '
   return l:s
@@ -122,7 +125,7 @@ highlight link StatusLineInsert StatusLine
 highlight link StatusLineReplace StatusLine
 highlight link StatusLineVisual StatusLine
 
-function! stl#Colors() abort
+function! status#Colors() abort
   " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
   " highlight link StatusLineBranch StatusLine
   " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
@@ -132,7 +135,7 @@ function! stl#Colors() abort
   highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#dc322f
 endfunction
 
-function! stl#Highlight(...) abort
+function! status#Highlight(...) abort
   let l:im = a:0 ? a:1 : ''
   " let l:im = a:0 ? a:1 : v:insertmode
   if l:im ==# 'i' " Insert mode
@@ -149,33 +152,33 @@ function! stl#Highlight(...) abort
 endfunction
 
 " v:vim_did_enter |!has('vim_starting')
-let s:enable = get(g:, 'stl#enable_at_startup', 1)
-if s:enable
-  " call stl#Colors()
-  call stl#ctrlp#Enable()
-endif
+" let s:enable = get(g:, 'status#enable_at_startup', 1)
+" if s:enable
+"   call status#Colors()
+"   " call status#ctrlp#Enable()
+" endif
 
 " Initialize active window number
 let g:statusline.winnr = winnr()
 
 augroup StatusLine
   autocmd!
-  autocmd ColorScheme * call stl#Colors() | redrawstatus
-  autocmd InsertEnter * call stl#Highlight(v:insertmode)
-  autocmd InsertChange * call stl#Highlight(v:insertmode)
-  autocmd InsertLeave * call stl#Highlight()
+  autocmd ColorScheme * call status#Colors()
+  autocmd InsertEnter * call status#Highlight(v:insertmode)
+  autocmd InsertChange * call status#Highlight(v:insertmode)
+  autocmd InsertLeave * call status#Highlight()
 
   autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
 
   " Update whitespace warnings (add InsertLeave?)
   autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
-  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = stl#Build('Command Line')
+  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = status#Line('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
 
-  autocmd FileType qf let &l:statusline = stl#Build('%f%( %{stl#f#QuickFixTitle()}%)')
-  autocmd FileType vim-plug let &l:statusline = stl#Build('Plugins')
-  autocmd FileType taglist let &l:statusline = stl#Build(s:Replace_(expand('%')))
+  autocmd FileType qf let &l:statusline = status#Line('%f%( %{status#line#QuickFixTitle()}%)')
+  autocmd FileType vim-plug let &l:statusline = status#Line('Plugins')
+  autocmd FileType taglist let &l:statusline = status#Line(s:Replace_(expand('%')))
 augroup END
 
 function! s:Replace_(string) abort
@@ -188,8 +191,8 @@ function! s:Replace_(string) abort
   return l:str
 endfunction
 
-" %<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-command! -nargs=* -bar CursorStl let &g:statusline = stl#Build('%f %([%b 0x%B]%)')
+" Default: %<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
+command! -nargs=* -bar CursorStl let &g:statusline = status#Line('%f', '%([%b 0x%B]%)')
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

@@ -1,7 +1,7 @@
 " Functions
 
 " Get the current mode and update SatusLine highlight group
-function! stl#f#Mode(...) abort
+function! status#line#Mode(...) abort
   let l:mode =  a:0 ? a:1 :mode()
   " if l:mode ==# 'n'
   "   highlight! link StatusLine StatusLineNormal
@@ -19,7 +19,7 @@ function! stl#f#Mode(...) abort
 endfunction
 
 " Display the branch of the cwd if applicable
-function! stl#f#Branch() abort
+function! status#line#Branch() abort
   " &bt !~ 'nofile\|quickfix'
   if !exists('*fugitive#head') || &buftype ==# 'quickfix'
     return ''
@@ -31,7 +31,7 @@ function! stl#f#Branch() abort
 endfunction
 
 " Buffer flags
-function! stl#f#Flags() abort
+function! status#line#Flags() abort
   if &filetype =~# 'netrw\|taglist\|qf\|vim-plug'
     return ''
   endif
@@ -57,7 +57,7 @@ function! stl#f#Flags() abort
 endfunction
 
 " File or buffer type
-function! stl#f#FileType() abort
+function! status#line#FileType() abort
   if &filetype ==# ''
     if &buftype !=# 'nofile'
       return &buftype
@@ -75,7 +75,7 @@ function! stl#f#FileType() abort
 endfunction
 
 " File encoding and format
-function! stl#f#FileInfo() abort
+function! status#line#FileInfo() abort
   if &filetype ==# '' && &buftype !=# '' && &buftype !=# 'nofile'
     return ''
   endif
@@ -100,7 +100,11 @@ function! stl#f#FileInfo() abort
 endfunction
 
 " Whitespace warnings
-function! stl#f#Indent() abort
+function! status#line#Indent() abort
+  let l:symbol_mixed = 'mixed '
+  let l:symbol_space = '\s' " spaces
+  let l:symbol_tab = '\t' " tabs
+  " let l:sep = ':'
   if !&modifiable || &paste " Ignore warnings in paste mode
     return ''
   endif
@@ -111,27 +115,28 @@ function! stl#f#Indent() abort
     let l:tabs = search('^\t', 'nw')
     if l:tabs != 0 && l:spaces != 0
       " Spaces and tabs are used to indent
-      let b:statusline_indent = 'mixed-'
+      let b:statusline_indent = l:symbol_mixed
       if !&expandtab
-        let b:statusline_indent.= 'spaces:' . l:spaces
+        let b:statusline_indent.= l:symbol_space " . l:sep . l:spaces
       else
-        let b:statusline_indent.= 'tabs:' . l:tabs
+        let b:statusline_indent.= l:symbol_tab " . l:sep . l:tabs
       endif
     elseif l:spaces != 0 && !&expandtab
-      let b:statusline_indent = 'spaces:' . l:spaces
+      let b:statusline_indent = l:symbol_space " . l:sep . l:spaces
     elseif l:tabs != 0 && &expandtab
-      let b:statusline_indent = 'tabs:' .l:tabs
+      let b:statusline_indent = l:symbol_tab " . l:sep . l:tabs
     endif
   endif
   return b:statusline_indent
 endfunction
 
-function! stl#f#Trailing() abort
+function! status#line#Trailing() abort
+  let l:search = 'trailing' " \s\+$
   if !exists('b:statusline_trailing')
     let l:msg = ''
     let l:match = search('\s\+$', 'nw')
     if l:match != 0
-      let l:msg = 'trailing:' . l:match " '\s$'
+      let l:msg = l:search . ' ' . l:match " '\s$'
     endif
     let b:statusline_trailing = l:msg
   endif
@@ -139,6 +144,6 @@ function! stl#f#Trailing() abort
 endfunction
 
 " Quickfix or location list title
-function! stl#f#QuickFixTitle() abort
+function! status#line#QuickFixTitle() abort
   return get(w:, 'quickfix_title', '')
 endfunction

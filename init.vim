@@ -38,33 +38,34 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser (alt: justinmk/vim-d
 Plug 'lifepillar/vim-solarized8'
 
 " Improvements:
-let g:package#commentary_enabled = 1
-let g:package#fugitive_enabled = 1
-let g:package#splitjoin_enabled = 1
-let g:package#tabular_enabled = 0
-let g:package#unimpaired_enabled = 1
-let g:package#textobjuser_enabled = 1
+let g:enable_commentary = 1
+let g:enable_fugitive = 1
+let g:enable_splitjoin = 1
+let g:enable_tabular = 0
+let g:enable_unimpaired = 1
+let g:enable_textobjuser = 1
 
 " Search:
-let g:package#ctrlp_enabled = 1
+let g:enable_ctrlp = 1
+let g:ctrlp_status_func = {'main': 'status#ctrlp#Main', 'prog': 'status#ctrlp#Prog'}
 
 " Languages:
-let g:package#polyglot_enabled = 1
-let g:package#tern_enabled = executable('node') && executable('npm')
+let g:enable_polyglot = 1
+let g:enable_tern = executable('node') && executable('npm')
 
 " Formatting: google/vim-codefmt
-" let g:package#editorconfig_enabled = 1 " Breaks &et
+" let g:enable_editorconfig = 1 " Breaks &et
 
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
-let g:package#neomake_enabled = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
-let g:package#ale_enabled = has('nvim') || v:version >= 800
+let g:enable_neomake = 0 " has('nvim') || v:version > 704 || v:version == 704 && has('patch503')
+let g:enable_ale = has('nvim') || v:version >= 800
 
 " Auto Completion: ervandew/supertab, vim-scripts/AutoComplPop
-let g:package#youcompleteme_enabled = 0 " has('python') || has('python3')
-let g:package#ultisnips_enabled = g:package#youcompleteme_enabled
-let g:package#deoplete_enabled = has('nvim') && has('python3')
-let g:package#neocomplete_enabled = !has('nvim') && has('lua')
-let g:package#neosnippet_enabled = g:package#deoplete_enabled || g:package#neocomplete_enabled
+let g:enable_youcompleteme = 0 " has('python') || has('python3')
+let g:enable_ultisnips = g:enable_youcompleteme
+let g:enable_deoplete = has('nvim') && has('python3')
+let g:enable_neocomplete = !has('nvim') && has('lua')
+let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 
 " runtime packages.vim
 
@@ -209,7 +210,7 @@ set viewoptions-=options " folds,options,cursor
 
 " Return true if the current buffer state should be saved or restored
 function! s:is_file() abort
-  if &buftype !=# ''
+  if &buftype !=# '' || &filetype ==# ''
     return 0
   endif
   if &filetype !=# '' && &filetype =~# 'help\|netrw\|qf'
@@ -246,20 +247,19 @@ endif
 " let &fillchars='stl: ,stlnc: '
 
 set list " Show invisible characters
-
-if has('multi_byte') && &encoding ==# 'utf-8'
+" let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
+if g:utf8 == 1
   let &listchars = 'tab:' . nr2char(0x25B8) . ' '
         \ . ',trail:' . nr2char(0x00B7)
         \ . ',extends:' . nr2char(0x276F)
         \ . ',precedes:' . nr2char(0x276E)
         \ . ',nbsp:' . nr2char(0x005F)
         \ . ',eol:' . nr2char(0x00AC)
-else " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
 endif
 
 " " let &showbreak = '-> '
-" if has('multi_byte') && &encoding ==# 'utf-8'
+" if g:utf8
 "   " Show line breaks (arrows: 0x21AA or 0x08627)
 "   let &showbreak = nr2char(0x2026) " Ellipsis
 " endif
@@ -281,16 +281,14 @@ endif
 " Enable true colors if supported (:h xterm-true-color)
 " http://sunaku.github.io/tmux-24bit-color.html#usage
 let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
-  \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
+      \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
 " has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
-if has('nvim')
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  set termguicolors
-elseif has('patch-7.4.1778') && get(g:, 'term_true_color', 0) " Apple_Terminal
+" NVIM_TUI_ENABLE_TRUE_COLOR?
+if (has('nvim') || has('patch-7.4.1778')) && get(g:, 'term_true_color', 0)
   set termguicolors
   " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
   " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
-  " Needed for vim inside tmux
+  " Correct RGB escape codes for vim inside tmux
   if !has('nvim') && $TERM ==# 'screen-256color'
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -424,8 +422,8 @@ set rulerformat=%l,%c%V%=%P
 " endfunction
 " set statusline=%<%f\ %m%r%w\ %=%{ShowFi()?(&fenc?&fenc:&enc.'['.&ff.']'):''}%{strlen(&ft)?&ft:&bt}\ %-14.(%l,%c%V/%L%)\ %P
 
-" set statusline=%!stl#Build()
-let &g:statusline = stl#Build()
+" set statusline=%!status#Line()
+let &g:statusline = status#Line()
 
 function! <SID>HighlightStatusLine() abort
   if &background ==# 'dark'
@@ -456,10 +454,11 @@ set showtabline=1
 set complete-=i " Do not scan current and included files
 set complete+=kspell " Autocompete with dictionnary words when spell check is on
 set completeopt+=longest " Only insert the longest common text of the matches
-" set completeopt+=longest,menuone " Only insert the longest common text for matches
+"set completeopt+=longest,menuone " Only insert the longest common text for matches
 
 " Next and previous completion Tab and Shift-Tab
-if !g:package#youcompleteme_enabled && maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
+if maparg('<Tab>', 'i') ==# '' && maparg('<S-Tab>', 'i') ==# ''
+  \ && !get(g:, 'enable_youcompleteme', 0)
   inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
   " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
   inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
@@ -563,18 +562,17 @@ noremap ; :normal n.<CR>
 " vnoremap Q gv
 " noremap Q gqap
 
-" Clear highlighted search results (vim-sensible: Ctrl-L)
-nnoremap <Space> :nohlsearch<CR>
+" if maparg('<C-l>', 'n') ==# ''
+"   nnoremap <silent> <C-l> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
+" endif
 
-" Use <C-c> to stop the highlighting for the 'hlsearch' option
-if maparg('<C-c>', 'n') ==# ''
-  nnoremap <silent> <C-c> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
-endif
+" Stop the highlighting for the 'hlsearch' option
+nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
 
-" Background and theme switcher (requires solarized8)
-nnoremap <F5> :call colorscheme#ToggleBackground()<CR>
-nnoremap <F4> :<C-u>call colorscheme#Solarized8Contrast(-v:count1)<CR>
-nnoremap <F6> :<C-u>call colorscheme#Solarized8Contrast(+v:count1)<CR>
+" Background and theme switcher
+nnoremap <silent> <F5> :call colorscheme#ToggleBackground()<CR>
+nnoremap <silent> <F4> :<C-u>call colorscheme#Solarized8Contrast(-v:count1)<CR>
+nnoremap <silent> <F6> :<C-u>call colorscheme#Solarized8Contrast(+v:count1)<CR>
 
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
@@ -644,11 +642,14 @@ noremap <Leader>W :w!!<CR>
 
 " Autocommands {{{1
 
+call colorscheme#Set('solarized8')
+
 augroup VimInit
   autocmd!
   " Load status line at startup (after CtrlP)
-  autocmd VimEnter * :call colorscheme#Set('solarized8') | :call stl#Colors()
-  "autocmd VimEnter * :let &g:statusline = stl#Build()
+  " autocmd VimEnter * :call colorscheme#Set('solarized8') | :call status#Colors()
+
+  "autocmd VimEnter * :let &g:statusline = status#Line()
   " Reset colors persisting in terminal
   " autocmd VimLeave * :!echo -ne "\033[0m"
 

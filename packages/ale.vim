@@ -16,7 +16,7 @@ let g:ale_lint_on_save = 1
 " Check files on TextChanged event
 let g:ale_lint_on_text_changed = 0
 " Apply linters on BufEnter and BufRead
-let g:ale_lint_on_enter = 1
+let g:ale_lint_on_enter = 0
 
 let g:ale_lint_delay = 300
 
@@ -56,9 +56,10 @@ endif
 command! -n=0 -bar Ln :ALENextWrap
 command! -n=0 -bar Lp :ALEPreviousWrap
 
+let g:ale_loclist_height = get(g:, 'ale_loclist_height', 5)
+
 function! ALEOpenList(...) abort
   let l:winnr = a:0 ? a:1 : 0
-  let l:height = get(g:, 'ale_loclist_height', 5)
   let l:list = []
   if g:ale_set_quickfix
     let l:cmd = 'copen'
@@ -68,7 +69,7 @@ function! ALEOpenList(...) abort
     let l:list = getloclist(l:winnr)
   endif
   if len(l:list) > 0
-    execute l:cmd . ' ' . l:height
+    execute l:cmd . ' ' . g:ale_loclist_height
     " If focus changed, jump to the last window
     if l:winnr !=# winnr()
       wincmd p
@@ -93,7 +94,9 @@ endfunction
 
 augroup ALE
   autocmd!
-  " autocmd VimEnter,BufEnter * call ale#Lint()
+  " autocmd VimEnter,BufReadPost * call ale#Lint()
+  autocmd BufEnter,BufRead * if !&modified | call ale#Lint() | endif
+  " Open quickfix or loclist
   autocmd User ALELint call ALEOpenList()
   " Automatically close corresponding loclist when quitting a window
   autocmd BufHidden,QuitPre * call ALECloseList()
