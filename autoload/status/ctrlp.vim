@@ -36,7 +36,7 @@ endfunction
 " Argument: len
 "           a:1
 function! status#ctrlp#Prog(...) abort
-  let l:len = ' ' . a:1
-  let l:dir = getcwd() . ' '
-  return l:len . '%=' . g:statusline.symbols.sep . '%<' . l:dir
+  let l:len = a:1
+  let l:dir = getcwd()
+  return ' ' . l:len . '%=%<' . l:dir . ' '
 endfunction
