@@ -14,10 +14,14 @@
 
 ## Resources
 
-- [Vim sensible](https://github.com/tpope/vim-sensible)
-- [Vim Galore](https://github.com/mhinz/vim-galore)
 - [SpaceVim](https://github.com/SpaceVim/SpaceVim)
 - [spf13-vim](https://github.com/spf13/spf13-vim)
+- [vim-galore](https://github.com/mhinz/vim-galore)
+- [vim-sensible](https://github.com/tpope/vim-sensible)
+
+- [christoomey](https://github.com/christoomey/dotfiles)
+- [gfontenot](https://github.com/gfontenot/dotfiles/tree/master/tag-vim)
+- [thoughtbot](https://github.com/thoughtbot/dotfiles)
 
 ## Usage
 

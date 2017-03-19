@@ -100,6 +100,7 @@ function! status#line#FileInfo() abort
 endfunction
 
 " Whitespace warnings
+" aserebryakov/filestyle
 function! status#line#Indent() abort
   let l:symbol_mixed = 'mixed '
   let l:symbol_space = '\s' " spaces

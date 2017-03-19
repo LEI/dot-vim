@@ -3,21 +3,17 @@
 let g:timezone = get(g:, 'timezone', strlen($TZ) ? $TZ : 'Europe/Paris')
 
 function! time#IsDay()
-  return s:daytime()
+  let l:daytime = -1
+  if executable('php')
+    let l:daytime = s:php_daytime()
+  elseif exists('*strftime')
+    let l:daytime = s:strf_daytime()
+  endif
+  return l:daytime
 endfunction
 
 function! time#IsNight()
-  return !s:daytime()
-endfunction
-
-function! s:daytime()
-  if executable('php')
-    return s:php_daytime()
-  endif
-  if exists('*strftime')
-    return s:strf_daytime()
-  endif
-  return -1
+  return !time#IsDay()
 endfunction
 
 function! s:php_daytime()

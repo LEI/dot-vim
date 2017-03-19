@@ -1,9 +1,5 @@
 " Vim
 
-" https://github.com/christoomey/dotfiles
-" https://github.com/gfontenot/dotfiles/tree/master/tag-vim
-" https://github.com/thoughtbot/dotfiles
-
 " zi Folding on/off
 " zR Open all
 " zM Close all
@@ -11,64 +7,7 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
-" Variables {{{1
-
-let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
-let g:plug_path = $VIMHOME . '/autoload/plug.vim'
-let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-" let g:plug_home = $VIMHOME . '/plugged'
-
-" General Improvements:
-let g:enable_plugins = 1
-let g:enable_unimpaired = 1
-
-" Editing:
-let g:enable_commentary = 1
-let g:enable_splitjoin = 1
-" let g:enable_tabular = 1
-let g:enable_textobjuser = 1
-let g:enable_undotree = 1
-
-" VCS:
-let g:enable_fugitive = 1
-
-" Appearance:
-let g:enable_colorscheme = 1
-let g:enable_statusline = 1
-let g:enable_tabline = 1
-
-" Navigation:
-let g:enable_ctags = 1
-let g:enable_ctrlp = 1
-
-" Languages:
-let g:enable_polyglot = 1
-let g:enable_tern = 1
-
-" Formatting: google/vim-codefmt
-" let g:enable_editorconfig = 1 " Breaks &et
-
-" Syntax Checkers:
-let g:enable_ale = 1
-" let g:enable_neomake = 1
-" scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim...
-
-" Auto Completion:
-" let g:enable_youcompleteme = 1
-" let g:enable_ultisnips = g:enable_youcompleteme
-let g:enable_deoplete = has('nvim')
-let g:enable_neocomplete = !has('nvim')
-let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
-
-" Functions {{{1
-
-function! Source(file)
-  return source#File(a:file)
-endfunction
-
-function! Include(dir)
-  return source#DirIf($VIMHOME . '/' . a:dir, 'IsEnabled')
-endfunction
+" Plugins {{{1
 
 function! IsEnabled(path)
   let l:name = fnamemodify(a:path, ':t:r')
@@ -84,7 +23,12 @@ function! IsEnabled(path)
   return l:enabled
 endfunction
 
-" Plugins {{{1
+" let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
+let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
+" let g:plug_home = $VIMHOME . '/plugged'
+
+" Load configuration variables
+call source#File($VIMHOME . '/config.vim')
 
 let s:plug_downloaded = 0
 if empty(glob(g:plug_path)) " && confirm('Download vim-plug in ' . g:plug_path . '?') == 1
@@ -98,7 +42,7 @@ call plug#begin()
 " TODO: source local plugins
 
 " Register plugins
-call Include('plugins')
+call source#Dir($VIMHOME . '/plugins', 'IsEnabled')
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -108,7 +52,7 @@ if get(s:, 'plug_downloaded', 0) == 1
 endif
 
 " Register plugins
-call Include('config')
+call source#Dir($VIMHOME . '/config', 'IsEnabled')
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -458,6 +402,6 @@ endif
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
 " augroup END
 
-call Source($HOME . '/.vimrc.local')
+call source#File($HOME . '/.vimrc.local')
 
 " vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker
