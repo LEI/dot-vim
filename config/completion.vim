@@ -2,7 +2,6 @@
 
 " get(g:, 'loaded_youcompleteme', 0)
 " !get(g:, 'enable_youcompleteme', 0)
-finish
 
 inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
 inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')

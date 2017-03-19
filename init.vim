@@ -13,9 +13,7 @@
 
 " runtime before.vim
 
-" Init {{{1
-
-" Variables {{{2
+" Variables {{{1
 
 " Paths:
 let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
@@ -58,7 +56,7 @@ let g:enable_deoplete = has('nvim')
 let g:enable_neocomplete = !has('nvim')
 let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 
-" Functions {{{2
+" Functions {{{1
 
 function! Source(file)
   let l:path = $HOME . '/' . a:file
@@ -83,7 +81,7 @@ function! IsEnabled(path)
   return l:enabled
 endfunction
 
-" Plugins {{{2
+" Plugins {{{1
 
 let s:plug_downloaded = 0
 if empty(glob(g:plug_path)) " && confirm('Download vim-plug in ' . g:plug_path . '?') == 1
@@ -112,8 +110,6 @@ call Include('config')
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
 endif
-
-" 2}}}
 
 " Defaults {{{1
 
@@ -468,7 +464,7 @@ endfunction
 
 set showtabline=1
 
-" }}}
+" 1}}}
 
 augroup VimInit
   autocmd!
