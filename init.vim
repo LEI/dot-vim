@@ -9,6 +9,38 @@
 
 " Plugins {{{1
 
+" let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
+let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
+" let g:plug_home = $VIMHOME . '/plugged'
+
+" Load variables
+call source#File($VIMHOME . '/config.vim')
+
+let s:plug_downloaded = 0 " Automatically download vim-plug
+if empty(glob(g:plug_path)) " && confirm('Download vim-plug in ' . g:plug_path . '?') == 1
+  execute 'silent !curl -fLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
+  let s:plug_downloaded = 1
+endif
+
+" Start Vim Plug
+call plug#begin()
+
+" Register enabled plugins
+" TODO local plugins: call source#File($VIMHOME, 'plugins.vim')
+call source#Dir($VIMHOME . '/plugins', 'IsEnabled')
+
+" Add plugins to &runtimepath
+call plug#end()
+
+" Install plugins on first run
+if get(s:, 'plug_downloaded', 0) == 1
+  PlugInstall --sync | source $MYVIMRC
+endif
+
+" Configure enabled plugins once loaded
+call source#Dir($VIMHOME . '/config', 'IsEnabled')
+
+" Callback function checking g:enable_{name}
 function! IsEnabled(path)
   let l:name = fnamemodify(a:path, ':t:r')
   " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
@@ -23,45 +55,16 @@ function! IsEnabled(path)
   return l:enabled
 endfunction
 
-" let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
-let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
-" let g:plug_home = $VIMHOME . '/plugged'
-
-" Load configuration variables
-call source#File($VIMHOME . '/config.vim')
-
-let s:plug_downloaded = 0
-if empty(glob(g:plug_path)) " && confirm('Download vim-plug in ' . g:plug_path . '?') == 1
-  execute 'silent !curl -fLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
-  let s:plug_downloaded = 1
-endif
-
-" Start Vim Plug
-call plug#begin()
-
-" TODO: source local plugins
-
-" Register plugins
-call source#Dir($VIMHOME . '/plugins', 'IsEnabled')
-
-" Add plugins to &runtimepath
-call plug#end()
-
-if get(s:, 'plug_downloaded', 0) == 1
-  PlugInstall --sync | source $MYVIMRC
-endif
-
-" Register plugins
-call source#Dir($VIMHOME . '/config', 'IsEnabled')
-
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
 endif
 
-" Options {{{1
+" General {{{1
 
 if exists('*Solarized8') | call Solarized8() | endif
+
+" Options {{{1
 
 set backspace=indent,eol,start " Allow backspace over everything in insert mode
 
