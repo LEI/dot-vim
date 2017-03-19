@@ -11,8 +11,6 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
-" runtime before.vim
-
 " Variables {{{1
 
 let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
@@ -20,25 +18,28 @@ let g:plug_path = $VIMHOME . '/autoload/plug.vim'
 let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 " let g:plug_home = $VIMHOME . '/plugged'
 
+" General Improvements:
 let g:enable_plugins = 1
+let g:enable_unimpaired = 1
 
-" Appearance
+" Editing:
+let g:enable_commentary = 1
+let g:enable_splitjoin = 1
+" let g:enable_tabular = 1
+let g:enable_textobjuser = 1
+let g:enable_undotree = 1
+
+" VCS:
+let g:enable_fugitive = 1
+
+" Appearance:
 let g:enable_colorscheme = 1
 let g:enable_statusline = 1
 let g:enable_tabline = 1
 
-" Improvements:
-let g:enable_commentary = 1
-let g:enable_fugitive = 1
-let g:enable_splitjoin = 1
-" let g:enable_tabular = 1
-let g:enable_unimpaired = 1
-let g:enable_textobjuser = 1
-
-" Search:
+" Navigation:
 let g:enable_ctags = 1
 let g:enable_ctrlp = 1
-let g:ctrlp_status_func = {'main': 'status#ctrlp#Main', 'prog': 'status#ctrlp#Prog'}
 
 " Languages:
 let g:enable_polyglot = 1
@@ -47,7 +48,8 @@ let g:enable_tern = 1
 " Formatting: google/vim-codefmt
 " let g:enable_editorconfig = 1 " Breaks &et
 
-" Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
+" Syntax Checkers:
+" scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim
 " let g:enable_neomake = 1
 let g:enable_ale = 1
 
@@ -93,8 +95,9 @@ endif
 " Start Vim Plug
 call plug#begin()
 
+" TODO: source local plugins
+
 " Register plugins
-" runtime plugins/plugins.vim
 call Include('plugins')
 
 " Add plugins to &runtimepath
@@ -112,11 +115,13 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) =
   runtime! macros/matchit.vim
 endif
 
-" Defaults {{{1
+" Options {{{1
+
+if exists('*Solarized8') | call Solarized8() | endif
 
 set backspace=indent,eol,start " Allow backspace over everything in insert mode
 
-set nrformats-=octal " Disable octal format for number processing using Ctrl-A and Ctrl-X
+" set esckeys " Recognize escape immediately
 
 set timeout
 set timeoutlen=1000
@@ -158,23 +163,23 @@ if !empty(&viminfo)
   set viminfo^=!
 endif
 
-" Options {{{1
-
-set nostartofline " Keep the cursor on the same column if possible
-
-set lazyredraw " Redraw only if necessary, faster macros
-
-" set esckeys " Recognize escape immediately
-
-set exrc " Enable per-directory .vimrc files
-set secure " Disable unsafe commands
-
-set modeline " Allow setting some options at the beginning and end of the file
-set modelines=2 " Number of lines checked for set commands
-
-" set title " Set the title of the window to 'titlestring'
+set nrformats-=octal " Disable octal format for number processing using Ctrl-A and Ctrl-X
 
 " set fileformats=unix,dos,mac " Use Unix as the standard file type
+
+if v:version > 703 || v:version == 703 && has('patch541')
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
+
+set nojoinspaces " Insert only one space after punctuation
+"
+" set noshowmatch " Do not show matching brackets when text indicator is over them
+
+" set matchtime=2 " How many tenths of a second to blink when matching brackets
+
+" set matchpairs+=<:> " HTML brackets
+
+" set title " Set the title of the window to 'titlestring'
 
 set report=0 " Always report changed lines (default threshold: 2)
 
@@ -185,18 +190,16 @@ set autoread " Reload unmodified files when changes are detected outside
 set hidden " Allow modified buffers in the background
 
 set shortmess=atI " Avoid hit-enter prompts caused by file messages
-"
-" set noshowmatch " Do not show matching brackets when text indicator is over them
 
-" set matchtime=2 " How many tenths of a second to blink when matching brackets
+set nostartofline " Keep the cursor on the same column if possible
 
-" set matchpairs+=<:> " HTML brackets
+set lazyredraw " Redraw only if necessary, faster macros
 
-if v:version > 703 || v:version == 703 && has('patch541')
-  set formatoptions+=j " Delete comment character when joining commented lines
-endif
+set exrc " Enable per-directory .vimrc files
+set secure " Disable unsafe commands
 
-set nojoinspaces " Insert only one space after punctuation
+set modeline " Allow setting some options at the beginning and end of the file
+set modelines=2 " Number of lines checked for set commands
 
 set nowrap " Do not wrap by default
 

@@ -162,7 +162,7 @@ endfunction
 " Initialize active window number
 let g:statusline.winnr = winnr()
 
-augroup StatusLine
+augroup StatusGroup
   autocmd!
   autocmd VimEnter,ColorScheme * call status#Colors()
   autocmd InsertEnter * call status#Highlight(v:insertmode)
