@@ -5,7 +5,6 @@
 
 set number " Print the line number in front of each line
 " set numberwidth=4 " Minimal number of columns to use for the line number
-
 if exists('+relativenumber')
   set relativenumber " Show the line number relative to the line with the cursor
 endif

@@ -123,8 +123,6 @@ set secure " Disable unsafe commands
 set modeline " Allow setting some options at the beginning and end of the file
 set modelines=2 " Number of lines checked for set commands
 
-set nowrap " Do not wrap by default
-
 if exists('+colorcolumn')
   set colorcolumn=+1 " Color column relative to textwidth
 endif
@@ -229,23 +227,6 @@ endif
 
 " Characters {{{1
 
-" Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
-" let &fillchars='stl: ,stlnc: '
-
-set list " Show invisible characters
-" let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let &listchars = 'tab:' . nr2char(0x25B8) . ' '
-        \ . ',trail:' . nr2char(0x00B7)
-        \ . ',extends:' . nr2char(0x276F)
-        \ . ',precedes:' . nr2char(0x276E)
-        \ . ',nbsp:' . nr2char(0x005F)
-        \ . ',eol:' . nr2char(0x00AC)
-  " " Show line breaks (arrows: 0x21AA or 0x08627)
-  " let &showbreak = nr2char(0x2026) " Ellipsis
-endif
-
 " Searching {{{1
 
 " set gdefault " Reverse global flag (always apply to all, except if /g)
@@ -258,7 +239,7 @@ if has('reltime')
   set incsearch " Do incremental searching when it's possible to timeout
 endif
 
-" Indentation {{{1
+" Spaces and tabs {{{1
 
 set smarttab
 set autoindent
@@ -268,6 +249,28 @@ set shiftround " >> indents to net multiple of 'shiftwidth'
 set shiftwidth=4 " >> indents by 4 spaces
 set softtabstop=4 " Number of spaces that a tab counts for while editing
 set tabstop=4 " Spaces used to represent a tab (default: 8)
+
+set list " Show invisible characters
+" let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+ " ,eol:$
+if has('multi_byte') && &encoding ==# 'utf-8'
+  let &listchars = 'tab:' . nr2char(0x25B8) . ' '
+        \ . ',trail:' . nr2char(0x00B7)
+        \ . ',extends:' . nr2char(0x276F)
+        \ . ',precedes:' . nr2char(0x276E)
+        \ . ',nbsp:' . nr2char(0x005F)
+        \ . ',eol:' . nr2char(0x00AC)
+endif
+
+" Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
+" let &fillchars='stl: ,stlnc: '
+
+" Wrapping {{{1
+
+set nowrap " Do not wrap by default
+
+" " Show line breaks (arrows: 0x21AA or 0x08627)
+" let &showbreak = nr2char(0x2026) " Ellipsis
 
 " Scrolling {{{1
 
