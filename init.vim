@@ -11,49 +11,32 @@
 
 " let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
+
 " let g:plug_home = $VIMHOME . '/plugged'
+let g:plug_path = $VIMHOME . '/autoload/plug.vim'
+let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-" Load variables
-call source#File($VIMHOME . '/config.vim')
-
-let s:plug_downloaded = 0 " Automatically download vim-plug
-if empty(glob(g:plug_path)) " && confirm('Download vim-plug in ' . g:plug_path . '?') == 1
+if empty(glob(g:plug_path))
+  " confirm('Install Vim Plug in ' . g:plug_path . '?') == 1
   execute 'silent !curl -fLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
-  let s:plug_downloaded = 1
+  let s:run_plug_install = 1
 endif
 
-" Start Vim Plug
-call plug#begin()
+call plug#begin() " Start Vim Plug
 
-" Register enabled plugins
-" TODO local plugins: call source#File($VIMHOME, 'plugins.vim')
-call source#Dir($VIMHOME . '/plugins', 'IsEnabled')
+call source#File($VIMHOME . '/plugins.vim')
+call source#File($VIMHOME . '/plugins.local.vim')
+call source#Dir($VIMHOME . '/plugins', 'source#Enabled')
 
-" Add plugins to &runtimepath
-call plug#end()
+call plug#end() " Add plugins to &runtimepath
 
 " Install plugins on first run
-if get(s:, 'plug_downloaded', 0) == 1
+if get(s:, 'run_plug_install', 0) == 1
   PlugInstall --sync | source $MYVIMRC
 endif
 
 " Configure enabled plugins once loaded
-call source#Dir($VIMHOME . '/config', 'IsEnabled')
-
-" Callback function checking g:enable_{name}
-function! IsEnabled(path)
-  let l:name = fnamemodify(a:path, ':t:r')
-  " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
-  let l:enabled = get(g:, 'enable_' . l:name, 0) == 1
-  " for l:pattern in get(g:, 'plugins_enable', [])
-  "   if matchstr(l:name, l:pattern)
-  "     let l:enabled = 1
-  "     break
-  "   endif
-  " endfor
-  " echom l:name . ' is ' . (l:enabled ? 'enabled' : 'disabled')
-  return l:enabled
-endfunction
+call source#Dir($VIMHOME . '/config', 'source#Enabled')
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -298,6 +281,8 @@ set foldmethod=indent
 set foldnestmax=3
 
 " Number column {{{1
+
+" myusuf3/numbers.vim
 
 if exists('+colorcolumn')
   set colorcolumn=+1 " Color column relative to textwidth

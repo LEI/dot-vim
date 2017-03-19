@@ -1,6 +1,8 @@
 " Color scheme plugins
 
 " Plug 'ajh17/Spacegray.vim'
+" Plug 'chriskempson/base16-vim'
+" Plug 'morhetz/gruvbox'
 
 " Plug 'altercation/vim-colors-solarized'
 " call togglebg#map('<F5>')

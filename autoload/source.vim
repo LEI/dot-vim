@@ -1,5 +1,20 @@
 " Init
 
+" Check g:enable_{name}
+function! source#Enabled(path)
+  let l:name = fnamemodify(a:path, ':t:r')
+  " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
+  let l:enabled = get(g:, 'enable_' . l:name, 0) == 1
+  " for l:pattern in get(g:, 'plugins_enable', [])
+  "   if matchstr(l:name, l:pattern)
+  "     let l:enabled = 1
+  "     break
+  "   endif
+  " endfor
+  " echom l:name . ' is ' . (l:enabled ? 'enabled' : 'disabled')
+  return l:enabled
+endfunction
+
 function! source#File(...)
   let l:path = a:0 > 0 ? a:1 : ''
   let l:func = a:0 > 1 ? a:2 : ''
