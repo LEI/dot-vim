@@ -4,9 +4,12 @@
 
 " Plug 'ajh17/Spacegray.vim'
 " Plug 'chriskempson/base16-vim'
-" Plug 'NLKNguyen/papercolor-theme'
 " Plug 'jonathanfilip/vim-lucius'
+" Plug 'jordwalke/flatlandia'
+" Plug 'kristijanhusak/vim-hybrid-material'
 " Plug 'morhetz/gruvbox'
+" Plug 'NLKNguyen/papercolor-theme'
+" Plug 'raphamorim/lucario'
 " Plug 'whatyouhide/vim-gotham'
 
 " Plug 'altercation/vim-colors-solarized'

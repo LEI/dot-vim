@@ -9,6 +9,7 @@ let g:enable_tabline = 1
 let g:enable_commentary = 1
 let g:enable_splitjoin = 1
 " let g:enable_tabular = 1
+" Plug 'AndrewRadev/sideways.vim'
 " Plug 'mattn/emmet-vim' " Emmet
 
 " Versioning: tpope/vim-git
@@ -27,7 +28,7 @@ let g:enable_tern = 1
 let g:enable_ale = 1
 " let g:enable_neomake = 1
 " scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim
-" google/vim-codefmt
+" google/vim-codefmt, vim-scripts/LanguageTool
 
 " Completion:
 " let g:enable_youcompleteme = 1
@@ -79,8 +80,10 @@ Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'xolox/vim-misc' " Auto-load scripts
 
-" Extras: wikitopian/hardmode
-" Plug 'itchyny/calendar.vim'
+" Extras: wikitopian/hardmode, takac/vim-hardtime
+" Plug 'diepm/vim-rest-console' " REST console
+" Plug 'itchyny/calendar.vim' " Calendar application (alt: mattn/calendar-vim)
+" Plug 'koron/minimap-vim' " GUI only
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
 " Plug 'mhinz/vim-signify' " Sign column diff
 " Plug 'mhinz/vim-startify' " Start screen
