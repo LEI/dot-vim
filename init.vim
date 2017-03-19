@@ -19,28 +19,12 @@ function! s:home(path)
   return expand(g:home . '/' . a:path)
 endfunction
 
-function! Source(path)
-  if filereadable(expand(a:path))
-    execute 'source' a:path
-  endif
-endfunction
-
-function! SourceIf(path, func)
-  if !exists('*' . a:func)
-    echoerr 'Unknown function:' a:func
-    return 0
-  endif
-  if {a:func}(a:path)
-    call Source(a:path)
-  endif
-endfunction
-
 function! IsEnabled(path)
   let l:name = fnamemodify(a:path, ':t:r')
   " Enable Package: let g:enable_{l:name} = 1
   " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
   let l:enabled = get(g:, 'enable_' . l:name, 0) == 1
-  for l:pattern in get(g:, 'plugins_whitelist', [])
+  for l:pattern in get(g:, 'plugins_enable', [])
     if matchstr(l:name, l:pattern)
       let l:enabled = 1
       break
@@ -50,33 +34,8 @@ function! IsEnabled(path)
   return l:enabled
 endfunction
 
-function! SourceDir(path)
-  " let l:func = a:0 > 1 ? a:2 : 'Source'
-  let l:files = globpath(a:path, '*.vim')
-  for l:path in split(l:files, '\n')
-    call Source(l:path)
-  endfor
-endfunction
-
-function! SourceDirIf(path, func)
-  let l:files = globpath(a:path, '*.vim')
-  for l:path in split(l:files, '\n')
-    call SourceIf(l:path, a:func)
-  endfor
-endfunction
-
 function! SourceEnabledDir(path)
-  return SourceDirIf(a:path, 'IsEnabled')
-endfunction
-
-function! PlugDownload(...)
-  let l:path = a:0 ? a:1 : g:plug_path
-  if !empty(glob(l:path))
-    return 0 " Already exists
-  endif
-  " confirm('Download vim-plug in ' . l:path . '?') == 1
-  execute 'silent !curl -fLo' l:path '--create-dirs' g:plug_url
-  " return code?
+  return init#SourceDirIf(a:path, 'IsEnabled')
 endfunction
 
 " Variables {{{1
@@ -85,16 +44,7 @@ let g:home = split(&runtimepath, ',')[0] " $HOME . '/.vim'
 let g:plug_path = s:home('autoload/plug.vim')
 let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 " let g:plug_home = s:home('plugged')
-
-" Plugins {{{1
-
-" Automatically install vim-plug
-let s:plug_install = PlugDownload()
-
-" Start Vim Plug
-call plug#begin()
-
-" let g:plugins_whitelist = ['plugins']
+" let g:plugins_enable = ['plugins']
 
 " General:
 let g:enable_plugins = 1
@@ -123,7 +73,6 @@ let g:enable_tern = 1
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
 let g:enable_neomake = 0
 let g:enable_ale = 1
-" let g:ale_filetype_blacklist = ['nerdtree', 'unite', 'tags']
 
 " Auto Completion: ervandew/supertab, vim-scripts/AutoComplPop
 let g:enable_youcompleteme = 0
@@ -131,6 +80,17 @@ let g:enable_ultisnips = g:enable_youcompleteme
 let g:enable_deoplete = has('nvim')
 let g:enable_neocomplete = !has('nvim')
 let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
+
+" Plugins {{{1
+
+let s:did_download = 0
+if empty(glob(g:plug_path)) " && confirm('Download vim-plug in ' . g:plug_path . '?') == 1
+  execute 'silent !curl -fLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
+  let s:did_download = 1
+endif
+
+" Start Vim Plug
+call plug#begin()
 
 " runtime packages.vim
 
@@ -140,12 +100,12 @@ call SourceEnabledDir(s:home('plugins'))
 " Add plugins to &runtimepath
 call plug#end()
 
-if s:plug_install == 1
+if get(s:, 'did_download', 0) == 1
   PlugInstall --sync | source $MYVIMRC
 endif
 
 " Register plugins
-call SourceDir(s:home('config'))
+call init#SourceDir(s:home('config'))
 
 " command! -nargs=0 -bar Install PlugInstall --sync | source $MYVIMRC
 " command! -nargs=0 -bar Update PlugUpdate --sync | source $MYVIMRC
@@ -203,8 +163,6 @@ if !empty(&viminfo)
 endif
 
 " Options {{{1
-
-set sessionoptions-=options
 
 set nostartofline " Keep the cursor on the same column if possible
 
@@ -276,7 +234,19 @@ set noerrorbells " Disable audible bell for error messages
 set visualbell " Use visual bell instead of beeping
 set t_vb= " Disable audible and visual bells
 
-" Undo history {{{1
+" Sessions and views {{{1
+
+" View Options:
+" cursor: cursor position in file and in window
+" folds: manually created folds, opened/closed folds and local fold options
+" options: options and mappings local to a window or buffer (not global values for local options)
+" localoptions: same as 'options'
+" slash,unix: useful on Windows when sharing view files
+
+" set viewdir=$HOME/.vim/view " Customize location of saved views
+set viewoptions-=options " folds,options,cursor
+
+set sessionoptions-=options
 
 " Keep undo history across sessions
 " expand(get(g:, 'undodir', '~/.vim/backups'))
@@ -365,7 +335,7 @@ else
 endif
 
 " Override cursor highlight groups
-function! <SID>HighlightCursor() abort
+function! HighlightCursor() abort
   if &background ==# 'dark'
     " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
     highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
@@ -475,7 +445,7 @@ set rulerformat=%l,%c%V%=%P
 " set statusline=%!status#Line()
 let &g:statusline = status#Line()
 
-function! <SID>HighlightStatusLine() abort
+function! HighlightStatusLine() abort
   if &background ==# 'dark'
     highlight StatusLineReverse term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
@@ -523,123 +493,11 @@ iabbrev pyhton python
 
 " Key bindings {{{1
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break
-inoremap <C-U> <C-G>u<C-U>
-
-" Yank from the cursor to the end of the line
-noremap Y y$
-
-" Visually select the text that was last edited/pasted
-noremap gV `[v`]
-
-" Move on wrapped lines unless a count is specified
-nnoremap <expr> j v:count ? 'j' : 'gj'
-nnoremap <expr> k v:count ? 'k' : 'gk'
-" nnoremap 0 g0
-" nnoremap $ g$ " FIXME :set wrap
-
-" Restore visual selection after indent (breaks '.' dot repeat)
-" vnoremap < <gv
-" vnoremap > >gv
-
-" Split navigation shortcuts
-nnoremap <C-H> <C-w>h
-nnoremap <C-J> <C-w>j
-nnoremap <C-K> <C-w>k
-nnoremap <C-L> <C-w>l
-
-" Bubble single or multiple lines
-noremap <C-Up> ddkP
-noremap <C-Down> ddp
-vnoremap <C-Up> xkP`[V`]
-vnoremap <C-Down> xp`[V`]
-
-" Repeat latest f, t, F or T [count] times
-noremap <Tab> ;
-
-" Repeat last command on next match
-noremap ; :normal n.<CR>
-
-" Make 'dot' work as expected in visual mode
-" vnoremap . :norm.<CR>
-
-" Paragraph reflow according to textwidth?
-" vnoremap Q gv
-" noremap Q gqap
-
-" if maparg('<C-L>', 'n') ==# ''
-"   nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-" endif
-
-" Stop the highlighting for the 'hlsearch' option
-nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-
-" Edit in the same directory as the current file :e %%
-cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
-
-" Use <Left> and <Right> keys to move the cursor in ':' command mode
-" instead of selecting a different match, as <Tab> / <S-Tab> does
-cnoremap <expr> <Left> getcmdtype() == ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
-cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
-
-" Save as root with :w!!
-"cnoremap <expr> w!! (exists(':SudoWrite') == 2 ? "SudoWrite" : "w !sudo tee % >/dev/null") . "\<CR>"
-cnoremap w!! w !sudo tee % > /dev/null
-" command W w !sudo tee % > /dev/null
-
-" http://vimcasts.org/episodes/tidying-whitespace/
-" https://github.com/bronson/vim-trailing-whitespace
-" https://github.com/csexton/trailertrash.vim
-function! <SID>StripTrailingWhitespaces()
-  call <SID>Preserve("%s/\\s\\+$//e")
-endfunction
-
-" Error detected while processing BufWritePre Auto commands for "*.js":
-" E488: Trailing characters
-function! <SID>Preserve(command)
-  " Save last search and cursor position
-  let l:_s=@/
-  let l:l = line('.')
-  let l:c = col('.')
-  " let save_cursor = getpos(".")
-  " let old_query = getreg('/')
-  " Do the business
-  execute a:command
-  " Clean up: restore previous search history and cursor position
-  let @/=l:_s
-  call cursor(l:l, l:c)
-  " call setpos('.', save_cursor)
-  " call setreg('/', old_query)
-endfunction
-
-" Remove trailing spaces
-noremap _$ :call <SID>StripTrailingWhitespaces()<CR>
-
-" Indent the whole file
-noremap _= :call <SID>Preserve("normal gg=G")<CR>
-
-" Leader mappings {{{1
-
-" Change leader
-let g:mapleader = "\<Space>"
-" Sort selection
-noremap <Leader>s :sort<CR>
-" Quicker quit
-noremap <Leader>q :q<CR>
-" Save a file
-noremap <Leader>w :w<CR>
-" Write as root
-noremap <Leader>W :w!!<CR>
-
 " Commands {{{1
 
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
-" command! -nargs=* CursorHi call <SID>HighlightCursor()
+" command! -nargs=* CursorHi call HighlightCursor()
 
 " command! -nargs=0 HexDump :%!xxd
 " command! -nargs=0 HexRestore :%!xxd -r
@@ -656,11 +514,11 @@ augroup VimInit
   " autocmd VimLeave * :!echo -ne "\033[0m"
 
   " Override highlight groups when color scheme changes
-  autocmd VimEnter,ColorScheme * :call <SID>HighlightCursor() | :call <SID>HighlightStatusLine()
+  autocmd VimEnter,ColorScheme * :call HighlightCursor() | :call HighlightStatusLine()
 
   " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
   " autocmd FocusLost * :set nolazyredraw
-  autocmd FocusGained * :redrawstatus
+  " autocmd FocusGained * :redrawstatus
   " autocmd VimResized * :redrawstatus
 
   " autocmd BufReadPost,FileReadPost *.py :silent %!PythonTidy.py
@@ -668,9 +526,7 @@ augroup VimInit
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
 
-  autocmd BufWritePre *.js,*.php,*.py :call <SID>StripTrailingWhitespaces()
-
-  " Commentary
+  " Comments string
   autocmd FileType cfg,inidos setlocal commentstring=#\ %s
   autocmd FileType xdefaults setlocal commentstring=!\ %s
 
@@ -681,7 +537,7 @@ augroup END
 
 " }}}
 
-call Source('~/.vimrc.local')
+call init#Source('~/.vimrc.local')
 " if filereadable($HOME . '/.vimrc.local')
 "   source ~/.vimrc.local
 " endif

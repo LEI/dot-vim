@@ -1,23 +1,15 @@
 " Views
 
-" Options:
-" cursor: cursor position in file and in window
-" folds: manually created folds, opened/closed folds and local fold options
-" options: options and mappings local to a window or buffer (not global values for local options)
-" localoptions: same as 'options'
-" slash,unix: useful on Windows when sharing view files
-
-" set viewdir=$HOME/.vim/view " Customize location of saved views
-set viewoptions-=options " folds,options,cursor
+" nerdtree, unite, tags... (g:ale_filetype_blacklist)
+let s:ignore_ft = get(g:, 'view_filetype_blacklist', ['help', 'netrw', 'qf'])
 
 " Return true if the current buffer state should be saved or restored
 function! s:is_file() abort
-  let l:ignore = get(g:, 'ignored_filetypes', ['help', 'netrw', 'qf'])
   " vim-vinegar opendir() error on Enter (-) if &modifiable is off
   if &buftype !=# '' || &filetype ==# ''
     return 0
   endif
-  for l:ft in l:ignore
+  for l:ft in s:ignore_ft
     if l:ft ==# &filetype
       return 0
     endif
