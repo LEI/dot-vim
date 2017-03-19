@@ -227,23 +227,15 @@ if !has('nvim')
   set ttyfast
 endif
 
-" Bells {{{1
-
-set noerrorbells " Disable audible bell for error messages
-set visualbell " Use visual bell instead of beeping
-set t_vb= " Disable audible and visual bells
-
 " Sessions and views {{{1
 
-" View Options:
+" set viewdir=$HOME/.vim/view " Customize location of saved views
+set viewoptions-=options " folds,options,cursor
 " cursor: cursor position in file and in window
 " folds: manually created folds, opened/closed folds and local fold options
 " options: options and mappings local to a window or buffer (not global values for local options)
 " localoptions: same as 'options'
 " slash,unix: useful on Windows when sharing view files
-
-" set viewdir=$HOME/.vim/view " Customize location of saved views
-set viewoptions-=options " folds,options,cursor
 
 set sessionoptions-=options
 
@@ -314,6 +306,12 @@ endif
 
 " set t_AB=^[[48;5;%dm
 " set t_AF=^[[38;5;%dm
+
+" Bells {{{1
+
+set noerrorbells " Disable audible bell for error messages
+set visualbell " Use visual bell instead of beeping
+set t_vb= " Disable audible and visual bells
 
 " Searching {{{1
 
