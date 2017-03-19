@@ -1,8 +1,12 @@
 " Completion
 
 " https://github.com/ajh17/VimCompletesMe/blob/master/plugin/VimCompletesMe.vim
+" ervandew/supertab, vim-scripts/AutoComplPop...
+
 " get(g:, 'loaded_youcompleteme', 0)
 " !get(g:, 'enable_youcompleteme', 0)
+
+finish
 
 inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
 inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')

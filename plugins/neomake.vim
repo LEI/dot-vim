@@ -5,9 +5,6 @@ if !has('nvim') || v:version < 704 || v:version == 704 && !has('patch503')
 endif
 
 Plug 'neomake/neomake'
-" Shell: bashate, shellcheck
-" VimL: vim-vint
-Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
 
 " let g:neomake_vim_enabled_makers = ['vimlint']
 " let g:neomake_vim_vimlint_exe = g:plug_home . '/vim-vimlint/bin/vimlint.sh'
@@ -36,13 +33,12 @@ let g:neomake_warning_sign = {'text': '!', 'texthl': 'WarningMsg'}
 
   " Run checkers on open and save in quickfix list
 function! Neomake()
-  " 0verb Neomake!
+  let l:cmd = 'Neomake' " 0verb Neomake!
   if &filetype ==# 'go'
     " Use location list for `go vet`
-    Neomake!
-  else
-    Neomake
+    let l:cmd.= '!'
   endif
+  execute l:cmd
 endfunction
 
 augroup NeomakeConfig

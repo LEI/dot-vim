@@ -49,11 +49,11 @@ let g:enable_tern = 1
 " let g:enable_editorconfig = 1 " Breaks &et
 
 " Syntax Checkers:
-" scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim
-" let g:enable_neomake = 1
 let g:enable_ale = 1
+" let g:enable_neomake = 1
+" scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim...
 
-" Auto Completion: ervandew/supertab, vim-scripts/AutoComplPop
+" Auto Completion:
 " let g:enable_youcompleteme = 1
 " let g:enable_ultisnips = g:enable_youcompleteme
 let g:enable_deoplete = has('nvim')

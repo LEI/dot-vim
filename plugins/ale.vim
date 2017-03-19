@@ -6,6 +6,14 @@ endif
 
 Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
+" Shell: bashate, shellcheck
+
+" VimL: pip3 install vim-vint
+" Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
+" if executable('go')
+"   Plug 'haya14busa/go-vimlparser'
+" endif
+
 " Disable 'eslint' and 'standard'
 let s:js_linters = ['flow', 'jscs', 'jshint', 'xo']
 let g:ale_linters = {'javascript': s:js_linters}
