@@ -1,4 +1,4 @@
-" Views
+" Automatically make and load views
 
 " nerdtree, unite, tags... (g:ale_filetype_blacklist)
 let s:ignore_ft = get(g:, 'view_filetype_blacklist', ['help', 'netrw', 'qf'])

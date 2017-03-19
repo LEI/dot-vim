@@ -1,45 +1,27 @@
-" Completion with Tab and Shift-Tab
+" Custom completion
 
-" if !get(g:, 'enable_youcompleteme', 0)
-if exists('g:loaded_youcompleteme')
-  finish
-endif
+" get(g:, 'loaded_youcompleteme', 0)
+" !get(g:, 'enable_youcompleteme', 0)
+finish
 
-if maparg('<Tab>', 'i') ==# ''
-  inoremap <expr> <Tab> <SID>Complete() ? "\<C-n>" : "\<Tab>"
-endif
-
-if maparg('<S-Tab>', 'i') ==# ''
-  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
-  inoremap <S-Tab> <C-p>
-endif
-
-" inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
-" inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
-" Close the popup menu (fix at your own risk)
+inoremap <expr> <Tab> InsertTabWrapper("\<Tab>", 'NextComp')
+inoremap <expr> <S-Tab> InsertTabWrapper("\<S-Tab>", 'PrevComp')
+" " Close the popup menu (fix at your own risk)
 " inoremap <expr> <CR> pumvisible() ? AcceptComp() : "\<CR>"
 " inoremap <expr> <Esc> pumvisible() ? EndComp() : "\<Esc>"
 
-function! <SID>Complete() abort
+function! InsertTabWrapper(input, fname) abort
+  if pumvisible()
+    return {a:fname}()
+  endif
+  " return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
   let l:col = col('.') - 1
   if !l:col || getline('.')[l:col - 1] !~# '\k'
-    return 0
+    return a:input
+  else
+    return StartComp()
   endif
-  return 1
 endfunction
-
-" function! InsertTabWrapper(input, fname) abort
-"   if pumvisible()
-"     return {a:fname}()
-"   endif
-"   " return strpart( getline('.'), 0, col('.')-1 ) =~# '^\s*$'
-"   let l:col = col('.') - 1
-"   if !l:col || getline('.')[l:col - 1] !~# '\k'
-"     return a:input
-"   else
-"     return StartComp()
-"   endif
-" endfunction
 
 function! StartComp() abort
   " (<C-x>)<C-p> nearest matching word

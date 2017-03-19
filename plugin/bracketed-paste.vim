@@ -1,8 +1,8 @@
 " https://github.com/ConradIrwin/vim-bracketed-paste
 
-if has('nvim')
+" if has('nvim')
   finish
-endif
+" endif
 
 " Code from:
 " http://stackoverflow.com/questions/5585129/pasting-code-into-terminal-window-into-vim-on-mac-os-x

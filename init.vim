@@ -13,38 +13,15 @@
 
 " runtime before.vim
 
-" Functions {{{1
+" Init {{{1
 
-function! s:home(path)
-  return expand(g:home . '/' . a:path)
-endfunction
+" Variables {{{2
 
-function! IsEnabled(path)
-  let l:name = fnamemodify(a:path, ':t:r')
-  " Enable Package: let g:enable_{l:name} = 1
-  " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
-  let l:enabled = get(g:, 'enable_' . l:name, 0) == 1
-  for l:pattern in get(g:, 'plugins_enable', [])
-    if matchstr(l:name, l:pattern)
-      let l:enabled = 1
-      break
-    endif
-  endfor
-  " echom l:name . ' is ' . (l:enabled ? 'enabled' : 'disabled')
-  return l:enabled
-endfunction
-
-function! SourceEnabledDir(path)
-  return init#SourceDirIf(a:path, 'IsEnabled')
-endfunction
-
-" Variables {{{1
-
-let g:home = split(&runtimepath, ',')[0] " $HOME . '/.vim'
-let g:plug_path = s:home('autoload/plug.vim')
+" Paths:
+let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
+let g:plug_path = $VIMHOME . '/autoload/plug.vim'
 let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-" let g:plug_home = s:home('plugged')
-" let g:plugins_enable = ['plugins']
+" let g:plug_home = $VIMHOME . '/plugged'
 
 " General:
 let g:enable_plugins = 1
@@ -54,7 +31,7 @@ let g:enable_colorscheme = 1
 let g:enable_commentary = 1
 let g:enable_fugitive = 1
 let g:enable_splitjoin = 1
-let g:enable_tabular = 0
+" let g:enable_tabular = 1
 let g:enable_unimpaired = 1
 let g:enable_textobjuser = 1
 
@@ -71,50 +48,72 @@ let g:enable_tern = 1
 " let g:enable_editorconfig = 1 " Breaks &et
 
 " Syntax Checkers: scrooloose/syntastic, maralla/validator.vim
-let g:enable_neomake = 0
+" let g:enable_neomake = 1
 let g:enable_ale = 1
 
 " Auto Completion: ervandew/supertab, vim-scripts/AutoComplPop
-let g:enable_youcompleteme = 0
-let g:enable_ultisnips = g:enable_youcompleteme
+" let g:enable_youcompleteme = 1
+" let g:enable_ultisnips = g:enable_youcompleteme
 let g:enable_deoplete = has('nvim')
 let g:enable_neocomplete = !has('nvim')
 let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 
-" Plugins {{{1
+" Functions {{{2
 
-let s:did_download = 0
+function! Source(file)
+  let l:path = $HOME . '/' . a:file
+  return init#Source($HOME . '/' . a:file)
+endfunction
+
+function! Include(dir)
+  return init#SourceDirIf($VIMHOME . '/' . a:dir, 'IsEnabled')
+endfunction
+
+function! IsEnabled(path)
+  let l:name = fnamemodify(a:path, ':t:r')
+  " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
+  let l:enabled = get(g:, 'enable_' . l:name, 0) == 1
+  " for l:pattern in get(g:, 'plugins_enable', [])
+  "   if matchstr(l:name, l:pattern)
+  "     let l:enabled = 1
+  "     break
+  "   endif
+  " endfor
+  " echom l:name . ' is ' . (l:enabled ? 'enabled' : 'disabled')
+  return l:enabled
+endfunction
+
+" Plugins {{{2
+
+let s:plug_downloaded = 0
 if empty(glob(g:plug_path)) " && confirm('Download vim-plug in ' . g:plug_path . '?') == 1
   execute 'silent !curl -fLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
-  let s:did_download = 1
+  let s:plug_downloaded = 1
 endif
 
 " Start Vim Plug
 call plug#begin()
 
-" runtime packages.vim
-
 " Register plugins
-call SourceEnabledDir(s:home('plugins'))
+" runtime plugins/plugins.vim
+call Include('plugins')
 
 " Add plugins to &runtimepath
 call plug#end()
 
-if get(s:, 'did_download', 0) == 1
+if get(s:, 'plug_downloaded', 0) == 1
   PlugInstall --sync | source $MYVIMRC
 endif
 
 " Register plugins
-call init#SourceDir(s:home('config'))
-
-" command! -nargs=0 -bar Install PlugInstall --sync | source $MYVIMRC
-" command! -nargs=0 -bar Update PlugUpdate --sync | source $MYVIMRC
-" command! -nargs=0 -bar Upgrade PlugUpdate! --sync | PlugUpgrade | source $MYVIMRC
+call Include('config')
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
 endif
+
+" 2}}}
 
 " Defaults {{{1
 
@@ -250,7 +249,7 @@ set sessionoptions-=options
 
 " Keep undo history across sessions
 " expand(get(g:, 'undodir', '~/.vim/backups'))
-let g:undodir = get(g:, 'undodir', s:home('backups'))
+let g:undodir = get(g:, 'undodir', $VIMHOME . '/backups')
 if has('persistent_undo') " && exists('g:undodir')
   " Disable swapfiles and backups
   set noswapfile
@@ -469,46 +468,10 @@ endfunction
 
 set showtabline=1
 
-" Completion {{{1
-
-set complete-=i " Do not scan current and included files
-set complete+=kspell " Use the currently active spell checking
-set completeopt+=longest " Only insert the longest common text of the matches
-
-if exists('+omnifunc')
-  augroup OmniCompletion
-    autocmd!
-    autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-  augroup END
-endif
-
-" Abbreviations {{{1
-
-function! Eatchar(pat)
-  let l:c = nr2char(getchar(0))
-  return (l:c =~ a:pat) ? '' : l:c
-endfunc
-
-iabbrev pyhton python
-
-" Key bindings {{{1
-
-" Commands {{{1
-
-" Enable soft wrap (break lines without breaking words)
-" command! -nargs=* Wrap setlocal wrap linebreak nolist
-" command! -nargs=* CursorHi call HighlightCursor()
-
-" command! -nargs=0 HexDump :%!xxd
-" command! -nargs=0 HexRestore :%!xxd -r
-
-" Autocommands {{{1
+" }}}
 
 augroup VimInit
   autocmd!
-  " Load status line at startup (after CtrlP)
-  " autocmd VimEnter * :call colorscheme#Set('solarized8') | :call status#Colors()
-
   "autocmd VimEnter * :let &g:statusline = status#Line()
   " Reset colors persisting in terminal
   " autocmd VimLeave * :!echo -ne "\033[0m"
@@ -525,19 +488,10 @@ augroup VimInit
   " autocmd BufReadPost,FileReadPost *.p[lm] :silent %!perltidy -q
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
-
-  " Comments string
-  autocmd FileType cfg,inidos setlocal commentstring=#\ %s
-  autocmd FileType xdefaults setlocal commentstring=!\ %s
-
-  " Auto reload vimrc on save
-  autocmd BufWritePost $MYVIMRC nested source %
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
 augroup END
 
-" }}}
-
-call init#Source('~/.vimrc.local')
+call Source('.vimrc.local')
 " if filereadable($HOME . '/.vimrc.local')
 "   source ~/.vimrc.local
 " endif

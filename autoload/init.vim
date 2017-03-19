@@ -27,7 +27,7 @@ function! init#SourceDirIf(path, func)
 endfunction
 
 function! s:glob(path)
-  let l:files = globpath(a:path, '*.vim')
+  let l:files = globpath(expand(a:path), '*.vim')
   return split(l:files, '\n')
 endfunction
 
