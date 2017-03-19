@@ -15,7 +15,7 @@ function! s:daytime()
     return s:php_daytime()
   endif
   if exists('*strftime')
-    return s:vim_daytime()
+    return s:strf_daytime()
   endif
   return -1
 endfunction
@@ -38,7 +38,7 @@ function! s:php_daytime()
   return system(printf("php -r '%s'", l:cmd)) == 1
 endfunction
 
-function! s:vim_daytime()
+function! s:strf_daytime()
   let l:time = strftime('%h%M')
   let l:sunrise = 700
   let l:sunset = 2000
