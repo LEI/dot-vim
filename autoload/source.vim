@@ -1,10 +1,10 @@
 " Init
 
-function! init#Source(path)
+function! source#File(path)
   return s:source(a:path)
 endfunction
 
-function! init#SourceIf(path, func)
+function! source#If(path, func)
   if !exists('*' . a:func)
     echoerr 'Unknown function:' a:func
     return 0
@@ -14,15 +14,15 @@ function! init#SourceIf(path, func)
   endif
 endfunction
 
-function! init#SourceDir(path)
+function! source#Dir(path)
   for l:path in s:glob(a:path)
     call s:source(l:path)
   endfor
 endfunction
 
-function! init#SourceDirIf(path, func)
+function! source#DirIf(path, func)
   for l:path in s:glob(a:path)
-    call init#SourceIf(l:path, a:func)
+    call source#If(l:path, a:func)
   endfor
 endfunction
 

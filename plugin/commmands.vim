@@ -6,7 +6,6 @@
 
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
-" command! -nargs=* CursorHi call HighlightCursor()
 
 " command! -nargs=0 HexDump :%!xxd
 " command! -nargs=0 HexRestore :%!xxd -r

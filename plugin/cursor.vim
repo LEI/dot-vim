@@ -34,6 +34,8 @@ augroup Cursor
   autocmd VimEnter,ColorScheme * :call HighlightCursor()
 augroup END
 
+" command! -nargs=0 CursorHi call HighlightCursor()
+
 " Restore cursor position and toggle cursor line
 " Not needed with mkview/loadview
 " https://github.com/farmergreg/vim-lastplace
