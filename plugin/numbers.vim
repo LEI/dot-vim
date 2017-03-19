@@ -5,11 +5,18 @@
 
 set number " Print the line number in front of each line
 " set numberwidth=4 " Minimal number of columns to use for the line number
+
 if exists('+relativenumber')
   set relativenumber " Show the line number relative to the line with the cursor
 endif
 
-function! s:disable_local() abort
+" gundo,minibufexpl,nerdtree,startify,tagbar,taglist,unite,vimshell,w3m
+let g:numbers_exclude = ['unite', 'tagbar', 'startify', 'gundo', 'vimshell', 'w3m', 'nerdtree']
+
+function! s:disable_numbers() abort
+  if index(g:numbers_exclude, &filetype) == -1
+    return 0
+  endif
   setlocal nonumber
   if exists('+relativenumber')
     setlocal norelativenumber
@@ -18,5 +25,5 @@ endfunction
 
 augroup NumberColumn
   autocmd!
-  autocmd FileType gundo,minibufexpl,nerdtree,startify,tagbar,taglist,unite,vimshell,w3m call s:disable_local()
+  autocmd FileType * call s:disable_numbers()
 augroup END
