@@ -15,15 +15,17 @@
 
 " Variables {{{1
 
-" Paths:
 let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
 let g:plug_path = $VIMHOME . '/autoload/plug.vim'
 let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 " let g:plug_home = $VIMHOME . '/plugged'
 
-" General:
 let g:enable_plugins = 1
+
+" Appearance
 let g:enable_colorscheme = 1
+let g:enable_statusline = 1
+let g:enable_tabline = 1
 
 " Improvements:
 let g:enable_commentary = 1
@@ -59,8 +61,7 @@ let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 " Functions {{{1
 
 function! Source(file)
-  let l:path = $HOME . '/' . a:file
-  return init#Source($HOME . '/' . a:file)
+  return init#Source(a:file)
 endfunction
 
 function! Include(dir)
@@ -311,59 +312,6 @@ endif
 " set t_AB=^[[48;5;%dm
 " set t_AF=^[[38;5;%dm
 
-" Cursor {{{1
-
-if has('nvim')
-  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
-elseif empty($TMUX)
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  if v:version >= 800
-    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-  endif
-else
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-  if v:version >= 800
-    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-  endif
-endif
-
-" Override cursor highlight groups
-function! HighlightCursor() abort
-  if &background ==# 'dark'
-    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
-    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
-  elseif &background ==# 'light'
-    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
-    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
-  endif
-endfunction
-
-" Show cursor line on active window only (or use InsertLeave/InsertEnter)
-augroup ToggleCursorLine
-  autocmd!
-  autocmd WinEnter * set cursorline
-  autocmd WinLeave * set nocursorline
-augroup END
-
-" Restore cursor position and toggle cursor line
-" Not needed with mkview/loadview
-" https://github.com/farmergreg/vim-lastplace
-" function! RestoreCursorPosition()
-"   if &filetype ==# 'gitcommit'
-"     return 0
-"   endif
-"   if line("'\"") > 0 && line("'\"") <= line('$')
-"     normal! g`"
-"     return 1
-"   endif
-" endfunction
-" augroup RestoreCursorPosition
-"   autocmd!
-"   autocmd BufReadPost * call RestoreCursorPosition()
-" augroup END
-
 " Searching {{{1
 
 " set gdefault " Reverse global flag (always apply to all, except if /g)
@@ -422,58 +370,22 @@ set wildmode=longest,full " Complete longest common string, then each full match
 
 " Status line {{{1
 
+if v:version > 730 " 800?
+  set display+=truncate " Show @@@ in the last line if it's truncated
+endif
 set display+=lastline " Display as much as possible of the last line
-set display+=truncate " Show @@@ in the last line if it's truncated
 set laststatus=2 " Always show statusline
 set ruler " Always show current position
-set rulerformat=%l,%c%V%=%P
-
+" set rulerformat=%l,%c%V%=%P " Ruler format
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-
-" function! ShowFi() abort
-"   let l:ft = &filetype
-"   let l:bt = &buftype
-"   return strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help'
-" endfunction
-" set statusline=%<%f\ %m%r%w\ %=%{ShowFi()?(&fenc?&fenc:&enc.'['.&ff.']'):''}%{strlen(&ft)?&ft:&bt}\ %-14.(%l,%c%V/%L%)\ %P
-
-" set statusline=%!status#Line()
-let &g:statusline = status#Line()
-
-function! HighlightStatusLine() abort
-  if &background ==# 'dark'
-    highlight StatusLineReverse term=reverse ctermfg=14 ctermbg=0
-    " highlight StatusLineNormal ctermfg=0 ctermbg=4
-    "term=reverse cterm=reverse ctermfg=14 ctermbg=0 gui=bold,reverse
-    highlight StatusLineInsert cterm=NONE ctermfg=0 ctermbg=2 gui=NONE guifg=#073642 guibg=#859900
-    highlight StatusLineReplace cterm=NONE ctermfg=0 ctermbg=9 gui=NONE guifg=#073642 guibg=#cb4b16
-    highlight StatusLineVisual cterm=NONE ctermfg=0 ctermbg=3 gui=NONE guifg=#073642 guibg=#b58900
-  elseif &background ==# 'light'
-    highlight StatusLineReverse term=reverse ctermfg=10 ctermbg=7
-    " highlight StatusLineNormal ctermfg=7 ctermbg=4
-    "term=reverse cterm=reverse ctermfg=10 ctermbg=7 gui=bold,reverse
-    highlight StatusLineInsert cterm=NONE ctermfg=7 ctermbg=2 gui=NONE guifg=#eee8d5 guibg=#859900
-    highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-    highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
-  endif
-endfunction
-
-" Tab line {{{1
-
-" Plug 'webdevel/tabulous'
-
-set showtabline=1
 
 " 1}}}
 
-augroup VimInit
-  autocmd!
-  "autocmd VimEnter * :let &g:statusline = status#Line()
+" augroup VimInit
+  " autocmd!
+
   " Reset colors persisting in terminal
   " autocmd VimLeave * :!echo -ne "\033[0m"
-
-  " Override highlight groups when color scheme changes
-  autocmd VimEnter,ColorScheme * :call HighlightCursor() | :call HighlightStatusLine()
 
   " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
   " autocmd FocusLost * :set nolazyredraw
@@ -485,11 +397,8 @@ augroup VimInit
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
-augroup END
+" augroup END
 
-call Source('.vimrc.local')
-" if filereadable($HOME . '/.vimrc.local')
-"   source ~/.vimrc.local
-" endif
+call Source($HOME . '/.vimrc.local')
 
 " vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker
