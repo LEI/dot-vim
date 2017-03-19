@@ -325,6 +325,7 @@ if &history < 1000
   set history=1000 " Keep 1000 lines of command line history
 endif
 set showcmd " Display incomplete commands
+" set showmode " Show current mode in command line
 
 set wildmenu " Display completion matches in a status line
 set wildmode=longest,full " Complete longest common string, then each full match
@@ -340,30 +341,8 @@ set ruler " Always show current position
 " set rulerformat=%l,%c%V%=%P
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-if &statusline ==# ''
-  set showmode " Show current mode in command line
-  set statusline=%(%{&paste?'PASTE':''}\ %)
-  set statusline+=%<%f\ %m%r%w%=
-  set statusline+=%(\ %{FileInfo()}%)
-  set statusline+=%(\ %{strlen(&ft)?&ft:&bt}%)
-  set statusline+=\ %-14.(%l,%c%V/%L%)\ %P
-  function! FileInfo() abort
-    let l:str = ''
-    let l:ft = &filetype
-    let l:bt = &buftype
-    if !(strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help')
-      return l:str
-    endif
-    let l:fe = strlen(&fileencoding) ? &fileencoding : &encoding
-    let l:ff = &fileformat
-    if has('+bomb') && &bomb
-      let l:fe.= ',B'
-    endif
-    if l:fe !=# 'utf-8' | let l:str.= l:fe | endif
-    if l:ff !=# 'unix' | let l:str.= '[' . l:ff . ']' | endif
-    return l:str
-  endfunction
-endif
+" if &statusline ==# ''
+" endif
 
 " Leader mappings {{{1
 
