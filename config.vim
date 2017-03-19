@@ -21,8 +21,14 @@ let g:enable_ctags = 1
 let g:enable_ctrlp = 1
 
 " Languages:
-let g:enable_languages = 1
 let g:enable_tern = 1
+Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
+let g:jsx_ext_required = 1
+
+" Plug 'fatih/vim-go', {'for': 'go'}
+" Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
+" Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
+" Plug 'spf13/PIV', {'for': 'php'}
 
 " Checkers:
 let g:enable_ale = 1

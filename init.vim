@@ -32,10 +32,6 @@ if get(g:, 'did_install', 1) == 0
   PlugInstall --sync | let g:did_install = 1 | source $MYVIMRC
 endif
 
-" Source files after loading enabled plugins
-" call config#Source($VIMHOME . '/after.vim')
-" call config#SourceDir($VIMHOME . '/after', 'config#Enabled')
-
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
