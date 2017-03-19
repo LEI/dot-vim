@@ -27,8 +27,8 @@ function! status#ctrlp#Main(...) abort
   let l:item = '%1* ' . a:5 . ' %* '
   let l:nxt = a:6 . ' '
   let l:marked = a:7 . ' '
-  let l:focus = a:1 . g:statusline.symbols.sep
-  let l:byfname = a:2 . g:statusline.symbols.sep
+  let l:focus = a:1 . ' ' " g:statusline.symbols.sep
+  let l:byfname = '%1* ' . a:2 . ' %* ' " g:statusline.symbols.sep
   let l:dir = getcwd() . ' '
   return l:regex . l:prv . l:item . l:nxt . l:marked . '%=' . '%<' . l:focus . l:byfname . l:dir
 endfunction

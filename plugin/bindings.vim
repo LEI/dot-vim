@@ -3,7 +3,7 @@
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break
 inoremap <C-U> <C-G>u<C-U>
 
@@ -56,7 +56,7 @@ noremap ; :normal n.<CR>
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " Edit in the same directory as the current file :e %%
-cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
+" cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
 
 " Use <Left> and <Right> keys to move the cursor in ':' command mode
 " instead of selecting a different match, as <Tab> / <S-Tab> does

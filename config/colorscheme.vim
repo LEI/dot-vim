@@ -1,8 +1,13 @@
 " Color scheme plugins
 
+" sindresorhus/focus/vim/colors
+
 " Plug 'ajh17/Spacegray.vim'
 " Plug 'chriskempson/base16-vim'
+" Plug 'NLKNguyen/papercolor-theme'
+" Plug 'jonathanfilip/vim-lucius'
 " Plug 'morhetz/gruvbox'
+" Plug 'whatyouhide/vim-gotham'
 
 " Plug 'altercation/vim-colors-solarized'
 " call togglebg#map('<F5>')
@@ -19,8 +24,11 @@ function! Solarized8(...) abort
   let l:colors = a:0 ? a:1 : 'solarized8'
   let l:bg = a:0 > 1 ? a:2 : ''
   let l:theme = a:0 > 2 ? a:3 : ''
-  if l:bg ==# ''
-    let l:bg = time#IsDay() ? 'light' : 'dark'
+  let l:daytime = time#IsDay()
+  if l:daytime != -1
+    let l:bg = l:daytime ? 'light' : 'dark'
+  elseif l:bg ==# ''
+    let l:bg = &background
   endif
   let l:colors_name = l:colors
         \ . (strlen(l:bg) ? '_' . l:bg : '')
@@ -40,10 +48,12 @@ function! Solarized8Contrast(delta) abort
 endfunction
 
 function! ToggleBackground(...) abort
-  if g:colors_name =~# 'dark'
-    let l:c = substitute(g:colors_name, 'dark', 'light', '')
-  else
-    let l:c = substitute(g:colors_name, 'light', 'dark', '')
+  let l:background = &background
+  let l:c = g:colors_name
+  let l:b = l:background !=# 'dark' ? 'dark' : 'light'
+  if g:colors_name =~# l:background
+    let l:c = substitute(l:c, l:background, l:b, '')
   endif
+  let &background = l:b
   execute 'colorscheme' l:c
 endfunction

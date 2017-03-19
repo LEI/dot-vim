@@ -1,5 +1,7 @@
 " Graphical vim options
 
+" jordwalke/VimBox
+
 try
   set guifont=Hack:h12 " Change the default font
 catch /E596:/

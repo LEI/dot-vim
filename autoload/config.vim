@@ -1,7 +1,7 @@
 " Init
 
 " Check g:enable_{name}
-function! source#Enabled(path)
+function! config#Enabled(path)
   let l:name = fnamemodify(a:path, ':t:r')
   " !exists('g:enable_' . l:name) || g:enable_{l:name} == 0
   let l:enabled = get(g:, 'enable_' . l:name, 0) == 1
@@ -15,7 +15,7 @@ function! source#Enabled(path)
   return l:enabled
 endfunction
 
-function! source#File(...)
+function! config#Source(...)
   let l:path = a:0 > 0 ? a:1 : ''
   let l:func = a:0 > 1 ? a:2 : ''
   if strlen(l:path) == 0
@@ -35,7 +35,7 @@ function! source#File(...)
   return s:source(l:path)
 endfunction
 
-function! source#Dir(...)
+function! config#SourceDir(...)
   let l:dir = a:1
   let l:fun = a:0 > 1 ? a:2 : ''
   let l:pat = a:0 > 2 ? a:3 : '*.vim'
@@ -50,9 +50,9 @@ function! source#Dir(...)
   let l:files = globpath(expand(l:dir), l:pat)
   for l:path in split(l:files, '\n')
     if strlen(l:fun) > 0
-      call source#File(l:path, l:fun)
+      call config#Source(l:path, l:fun)
     else
-      call source#File(l:path)
+      call config#Source(l:path)
     endif
   endfor
 endfunction

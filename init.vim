@@ -18,34 +18,28 @@ let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plu
 
 if empty(glob(g:plug_path))
   " confirm('Install Vim Plug in ' . g:plug_path . '?') == 1
-  execute 'silent !curl -fLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
-  let s:run_plug_install = 1
+  execute 'silent !curl -sfLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
+  let g:did_install = 0
 endif
 
 call plug#begin() " Start Vim Plug
-
-call source#File($VIMHOME . '/plugins.vim')
-call source#File($VIMHOME . '/plugins.local.vim')
-call source#Dir($VIMHOME . '/plugins', 'source#Enabled')
-
+call config#Source($VIMHOME . '/config.vim')
+call config#SourceDir($VIMHOME . '/config', 'config#Enabled')
 call plug#end() " Add plugins to &runtimepath
 
-" Install plugins on first run
-if get(s:, 'run_plug_install', 0) == 1
-  PlugInstall --sync | source $MYVIMRC
+" Install plugins if Vim Plug has been downloaded
+if get(g:, 'did_install', 1) == 0
+  PlugInstall --sync | let g:did_install = 1 | source $MYVIMRC
 endif
 
-" Configure enabled plugins once loaded
-call source#Dir($VIMHOME . '/config', 'source#Enabled')
+" Source files after loading enabled plugins
+" call config#Source($VIMHOME . '/after.vim')
+" call config#SourceDir($VIMHOME . '/after', 'config#Enabled')
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
 endif
-
-" General {{{1
-
-if exists('*Solarized8') | call Solarized8() | endif
 
 " Options {{{1
 
@@ -55,15 +49,17 @@ set backspace=indent,eol,start " Allow backspace over everything in insert mode
 
 set timeout
 set timeoutlen=1000
-" set ttimeout " Time out for key codes
-" set ttimeoutlen=100 " Wait up to 100ms after Esc for special keys
+if !has('nvim')
+  set ttimeout " Time out for key codes
+  set ttimeoutlen=100 " Wait up to 100ms after Esc for special keys
+endif
 
 if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 
 if has('syntax')
-  set synmaxcol=500 " Limit syntax highlighting for long lines
+  set synmaxcol=420 " Limit syntax highlighting for long lines
   if !exists('g:syntax_on') " &t_Co > 2 || has('gui_running')
     syntax enable
   endif
@@ -133,6 +129,10 @@ set modelines=2 " Number of lines checked for set commands
 
 set nowrap " Do not wrap by default
 
+if exists('+colorcolumn')
+  set colorcolumn=+1 " Color column relative to textwidth
+endif
+
 set clipboard=unnamed " Use system clipboard
 
 " Mouse {{{1
@@ -156,6 +156,53 @@ if !has('nvim')
   " Faster terminal redrawing
   set ttyfast
 endif
+
+" Terminal {{{1
+
+if &term =~# '256color'
+  " Disable Background Color Erase (BCE) so that color schemes
+  " work properly when Vim is used inside tmux and GNU screen
+  " See also http://snk.tuxfamily.org/log/vim-256color-bce.html
+  set t_ut=
+endif
+
+" Allow color schemes to use bright colors without forcing bold
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+  set t_Co=16
+endif
+
+" Enable true colors if supported (:h xterm-true-color)
+" http://sunaku.github.io/tmux-24bit-color.html#usage
+let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
+      \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
+" has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
+" NVIM_TUI_ENABLE_TRUE_COLOR?
+if (has('nvim') || has('patch-7.4.1778')) && get(g:, 'term_true_color', 0)
+  set termguicolors
+  " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+  " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
+  " Correct RGB escape codes for vim inside tmux
+  if !has('nvim') && $TERM ==# 'screen-256color'
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  endif
+endif
+
+" set t_AB=^[[48;5;%dm
+" set t_AF=^[[38;5;%dm
+
+" Color scheme {{{1
+
+" set background=dark
+" colorscheme spacegray
+
+if exists('*Solarized8') | call Solarized8() | endif
+
+" Bells {{{1
+
+set noerrorbells " Disable audible bell for error messages
+set visualbell " Use visual bell instead of beeping
+set t_vb= " Disable audible and visual bells
 
 " Sessions and views {{{1
 
@@ -203,46 +250,6 @@ if has('multi_byte') && &encoding ==# 'utf-8'
   " let &showbreak = nr2char(0x2026) " Ellipsis
 endif
 
-" Terminal {{{1
-
-if &term =~# '256color'
-  " Disable Background Color Erase (BCE) so that color schemes
-  " work properly when Vim is used inside tmux and GNU screen
-  " See also http://snk.tuxfamily.org/log/vim-256color-bce.html
-  set t_ut=
-endif
-
-" Allow color schemes to use bright colors without forcing bold
-if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-  set t_Co=16
-endif
-
-" Enable true colors if supported (:h xterm-true-color)
-" http://sunaku.github.io/tmux-24bit-color.html#usage
-let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
-      \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
-" has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
-" NVIM_TUI_ENABLE_TRUE_COLOR?
-if (has('nvim') || has('patch-7.4.1778')) && get(g:, 'term_true_color', 0)
-  set termguicolors
-  " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
-  " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
-  " Correct RGB escape codes for vim inside tmux
-  if !has('nvim') && $TERM ==# 'screen-256color'
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  endif
-endif
-
-" set t_AB=^[[48;5;%dm
-" set t_AF=^[[38;5;%dm
-
-" Bells {{{1
-
-set noerrorbells " Disable audible bell for error messages
-set visualbell " Use visual bell instead of beeping
-set t_vb= " Disable audible and visual bells
-
 " Searching {{{1
 
 " set gdefault " Reverse global flag (always apply to all, except if /g)
@@ -279,17 +286,6 @@ set nofoldenable
 " set foldlevelstart=10
 set foldmethod=indent
 set foldnestmax=3
-
-" Number column {{{1
-
-" myusuf3/numbers.vim
-
-if exists('+colorcolumn')
-  set colorcolumn=+1 " Color column relative to textwidth
-endif
-set number " Print the line number in front of each line
-" set numberwidth=4 " Minimal number of columns to use for the line number
-set relativenumber " Show the line number relative to the line with the cursor
 
 " Complete {{{1
 
@@ -372,8 +368,8 @@ endif
 
 " 1}}}
 
-" augroup VimInit
-  " autocmd!
+augroup VimInit
+  autocmd!
 
   " Reset colors persisting in terminal
   " autocmd VimLeave * :!echo -ne "\033[0m"
@@ -388,8 +384,8 @@ endif
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
-" augroup END
+augroup END
 
-call source#File($HOME . '/.vimrc.local')
+call config#Source($HOME . '/.vimrc.local')
 
 " vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker

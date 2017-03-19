@@ -1,0 +1,87 @@
+" Plugins configuration
+
+" Appearance:
+let g:enable_colorscheme = 1
+let g:enable_statusline = 1
+let g:enable_tabline = 1
+
+" Editing:
+let g:enable_commentary = 1
+let g:enable_splitjoin = 1
+" let g:enable_tabular = 1
+" Plug 'mattn/emmet-vim' " Emmet
+
+" Versioning: tpope/vim-git
+let g:enable_fugitive = 1
+" Plug 'gregsexton/gitv' " gitk
+
+" Navigation: spolu/dwm.vim
+let g:enable_ctags = 1
+let g:enable_ctrlp = 1
+
+" Languages:
+let g:enable_languages = 1
+let g:enable_tern = 1
+
+" Checkers:
+let g:enable_ale = 1
+" let g:enable_neomake = 1
+" scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim
+" google/vim-codefmt
+
+" Completion:
+" let g:enable_youcompleteme = 1
+" let g:enable_ultisnips = g:enable_youcompleteme
+let g:enable_deoplete = has('nvim')
+let g:enable_neocomplete = !has('nvim')
+let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
+
+" File Explorer: justinmk/vim-dirvish, Shougo/vimfiler.vim
+Plug 'tpope/vim-vinegar' " Improved netrw directory browser
+
+" File Type:
+" Plug 'chrisbra/csv.vim' " CSV files
+
+" Settings: ciaranm/detectindent, tpope/vim-projectionist
+Plug 'dahu/EditorConfig'
+" Plug 'editorconfig/editorconfig-vim' " Official editorconfig, python required
+" Plug 'sgur/vim-editorconfig' " Breaks vim-sleuth
+Plug 'tpope/vim-sleuth' " Automatic indentation detection
+
+" Undo History:
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
+" Plug 'simnalamburt/vim-mundo'
+" Plug 'sjl/gundo.vim'
+
+" Movements: justinmk/vim-sneak, goldfeld/vim-seek, tommcdo/vim-exchange
+" Plug 'terryma/vim-expand-region' " Visually select increasingly larger regions
+Plug 'tpope/vim-commentary' " Comments (alt: tomtom/tcomment_vim)
+Plug 'tpope/vim-surround' " Quoting/parenthesizing
+
+" Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
+let g:enable_unimpaired = 1
+Plug 'keith/investigate.vim' " Look up documentation with gK
+" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+Plug 'tpope/vim-endwise' " Automatic end keywords
+" Plug 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
+Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
+
+" Text Objects:
+" Plug 'kana/vim-textobj-user'
+" Plug 'jceb/vim-textobj-uri'
+" Plug 'kana/vim-textobj-indent'
+" Plug 'kana/vim-textobj-line'
+" Plug 'lucapette/vim-textobj-underscore'
+" Plug 'wellle/targets.vim' " Additional text objects
+
+" Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim
+" Plug 'jamessan/vim-gnupg' " Transparent editing of *.gpg, *.pgp and *.asc
+Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
+" Plug 'xolox/vim-misc' " Auto-load scripts
+
+" Extras: wikitopian/hardmode
+" Plug 'itchyny/calendar.vim'
+" Plug 'metakirby5/codi.vim' " Interactive scratchpad
+" Plug 'mhinz/vim-signify' " Sign column diff
+" Plug 'mhinz/vim-startify' " Start screen
+" Plug 'vim-scripts/dbext.vim' " Database access
