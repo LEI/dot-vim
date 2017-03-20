@@ -33,7 +33,9 @@ if get(g:, 'did_install', 1) == 0
 endif
 
 " Execute commands once plugins are loaded
-doautocmd User Loaded
+if exists('#User#Init')
+  doautocmd User Init
+endif
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -98,7 +100,7 @@ endif
 
 set nojoinspaces " Insert only one space after punctuation
 "
-" set noshowmatch " Do not show matching brackets when text indicator is over them
+" set noshowmatch " Don't show matching brackets when text indicator is over them
 
 " set matchtime=2 " How many tenths of a second to blink when matching brackets
 
@@ -219,8 +221,6 @@ if has('persistent_undo') " && exists('g:undodir')
   set undofile
 endif
 
-" Characters {{{1
-
 " Searching {{{1
 
 " set gdefault " Reverse global flag (always apply to all, except if /g)
@@ -261,7 +261,7 @@ endif
 
 " Wrapping {{{1
 
-set nowrap " Do not wrap lines by default
+set nowrap " Don't wrap lines by default
 
 " " Show line breaks (arrows: 0x21AA or 0x08627)
 " let &showbreak = nr2char(0x2026) " Ellipsis
@@ -282,16 +282,9 @@ set foldnestmax=3
 
 " Complete {{{1
 
-set complete-=i " Do not scan current and included files
+set complete-=i " Don't scan current and included files
 set complete+=kspell " Use the currently active spell checking
 set completeopt+=longest " Only insert the longest common text of the matches
-
-if exists('+omnifunc')
-  augroup OmniCompletion
-    autocmd!
-    autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-  augroup END
-endif
 
 " Command line {{{1
 
@@ -316,18 +309,6 @@ set ruler " Always show current position
 " set rulerformat=%l,%c%V%=%P
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-" if &statusline ==# ''
-" endif
-
-" Abbreviations {{{1
-
-function! Eatchar(pat)
-  let l:c = nr2char(getchar(0))
-  return (l:c =~ a:pat) ? '' : l:c
-endfunc
-
-iabbrev pyhton python
-
 " Leader mappings {{{1
 
 " Change leader
@@ -345,12 +326,12 @@ noremap <Leader>W :w!!<CR>
 
 " Key bindings {{{1
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
 " CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break
 inoremap <C-U> <C-G>u<C-U>
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
 
 " Yank from the cursor to the end of the line
 noremap Y y$
@@ -393,18 +374,18 @@ noremap ; :normal n.<CR>
 " vnoremap Q gv
 " noremap Q gqap
 
+" Remove trailing spaces
+noremap _$ :call StripTrailingWhitespaces()<CR>
+
+" Indent the whole file
+noremap _= :call Preserve("normal gg=G")<CR>
+
 " if maparg('<C-L>', 'n') ==# ''
 "   nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 " endif
 
 " Stop the highlighting for the 'hlsearch' option
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-
-" Remove trailing spaces
-noremap _$ :call StripTrailingWhitespaces()<CR>
-
-" Indent the whole file
-noremap _= :call Preserve("normal gg=G")<CR>
 
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() ==# ':' ? fnameescape(expand('%:h')) . '/' : '%%'
@@ -419,7 +400,7 @@ cnoremap w!! w !sudo tee % > /dev/null
 
 " Next completion with Tab
 if maparg('<Tab>', 'i') ==# ''
-  inoremap <expr> <Tab> CanComplete() ? "\<C-N>" : "\<Tab>"
+  inoremap <expr> <Tab> MayComplete() ? "\<C-N>" : "\<Tab>"
 endif
 
 " Previous completion with Shift-Tab
@@ -428,16 +409,30 @@ if maparg('<S-Tab>', 'i') ==# ''
   inoremap <S-Tab> <C-P>
 endif
 
-" Check characters before the cursor
-function! CanComplete() abort
-  let l:col = col('.') - 1
-  if !l:col || getline('.')[l:col - 1] !~# '\k'
-    return 0
-  endif
-  return 1
-endfunction
+" Abbreviations {{{1
 
-" 1}}}
+iabbrev pyhton python
+
+" Commands {{{1
+
+" command! -nargs=0 -bar Install PlugInstall --sync | source $MYVIMRC
+" command! -nargs=0 -bar Update PlugUpdate --sync | source $MYVIMRC
+" command! -nargs=0 -bar Upgrade PlugUpdate! --sync | PlugUpgrade | source $MYVIMRC
+
+" Enable soft wrap (break lines without breaking words)
+" command! -nargs=* Wrap setlocal wrap linebreak nolist
+
+" command! -nargs=0 HexDump :%!xxd
+" command! -nargs=0 HexRestore :%!xxd -r
+
+" Auto commands {{{1
+
+if exists('+omnifunc')
+  augroup OmniCompletion
+    autocmd!
+    autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+  augroup END
+endif
 
 augroup VimInit
   autocmd!
@@ -458,6 +453,8 @@ augroup VimInit
 
   " au BufWritePost ~/.Xdefaults redraw | echo system('xrdb ' . expand('<amatch>'))
 augroup END
+
+" 1}}}
 
 call config#Source($HOME . '/.vimrc.local')
 
