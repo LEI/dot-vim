@@ -103,8 +103,6 @@ set nojoinspaces " Insert only one space after punctuation
 
 " set title " Set the title of the window to 'titlestring'
 
-set report=0 " Always report changed lines (default threshold: 2)
-
 set autoread " Reload unmodified files when changes are detected outside
 
 " set autowrite " Automatically :write before running commands
@@ -324,6 +322,7 @@ endif
 if &history < 1000
   set history=1000 " Keep 1000 lines of command line history
 endif
+set report=0 " Always report changed lines (default threshold: 2)
 set showcmd " Display incomplete commands
 " set showmode " Show current mode in command line
 
@@ -343,6 +342,15 @@ set ruler " Always show current position
 
 " if &statusline ==# ''
 " endif
+
+" Abbreviations {{{1
+
+function! Eatchar(pat)
+  let l:c = nr2char(getchar(0))
+  return (l:c =~ a:pat) ? '' : l:c
+endfunc
+
+iabbrev pyhton python
 
 " Leader mappings {{{1
 
@@ -451,6 +459,8 @@ augroup VimInit
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
+
+  " au BufWritePost ~/.Xdefaults redraw | echo system('xrdb ' . expand('<amatch>'))
 augroup END
 
 call config#Source($HOME . '/.vimrc.local')
