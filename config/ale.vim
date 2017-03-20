@@ -111,4 +111,7 @@ augroup ALE
   autocmd User ALELint call ALEOpenList()
   " Automatically close corresponding loclist when quitting a window
   autocmd BufHidden,QuitPre * call ALECloseList()
+
+  " autocmd QuickFixCmdPost [^l]* cwindow
+  " autocmd QuickFixCmdPost    l* lwindow
 augroup END

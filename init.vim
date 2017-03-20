@@ -315,6 +315,10 @@ set ruler " Always show current position
 let g:mapleader = "\<Space>"
 " Switch between the current and previous buffer
 nnoremap <Leader><Leader> <C-^>
+" Find a loaded buffer
+nnoremap <leader>b :b */*<C-d>
+" Find a file in current working directory
+nnoremap <leader>e :e **/*
 " Sort selection
 noremap <Leader>s :sort<CR>
 " Quicker quit
@@ -411,6 +415,10 @@ endif
 
 " Abbreviations {{{1
 
+" Insert today's date
+iabbrev <expr> ddate strftime("%b %d - %a")
+
+" Typos
 iabbrev pyhton python
 
 " Commands {{{1
