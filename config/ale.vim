@@ -14,9 +14,8 @@ Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 "   Plug 'haya14busa/go-vimlparser'
 " endif
 
-" Disable 'eslint' and 'standard'
-let s:js_linters = ['flow', 'jscs', 'jshint', 'xo']
-let g:ale_linters = {'javascript': s:js_linters}
+" Disable 'eslint' and 'standard' JavaScript linters
+let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
 
 let g:ale_lint_on_save = 1
 " Check files on TextChanged event
@@ -38,7 +37,7 @@ let g:ale_warn_about_trailing_whitespace = 1
 
 let g:ale_sign_error = 'x' " >>
 let g:ale_sign_warning = '!' " --
-let g:ale_statusline_format = ['x %d', '! %d', '']
+let g:ale_statusline_format = ['x %d', '! %d', ''] " ['%d error(s)', '%d warning(s)', 'OK']
 if has('multi_byte') && &encoding ==# 'utf-8'
   let g:ale_sign_error =  nr2char(0xD7)
   let g:ale_sign_warning = '!'

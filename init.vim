@@ -32,6 +32,9 @@ if get(g:, 'did_install', 1) == 0
   PlugInstall --sync | let g:did_install = 1 | source $MYVIMRC
 endif
 
+" Execute commands once plugins are loaded
+doautocmd User Loaded
+
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
@@ -183,13 +186,6 @@ endif
 " set t_AB=^[[48;5;%dm
 " set t_AF=^[[38;5;%dm
 
-" Color scheme {{{1
-
-" set background=dark
-" colorscheme spacegray
-
-if exists('*Solarized8') | call Solarized8() | endif
-
 " Bells {{{1
 
 set noerrorbells " Disable audible bell for error messages
@@ -265,7 +261,7 @@ endif
 
 " Wrapping {{{1
 
-set nowrap " Do not wrap by default
+set nowrap " Do not wrap lines by default
 
 " " Show line breaks (arrows: 0x21AA or 0x08627)
 " let &showbreak = nr2char(0x2026) " Ellipsis
@@ -289,26 +285,6 @@ set foldnestmax=3
 set complete-=i " Do not scan current and included files
 set complete+=kspell " Use the currently active spell checking
 set completeopt+=longest " Only insert the longest common text of the matches
-
-" Nex completion with Tab
-if maparg('<Tab>', 'i') ==# ''
-  inoremap <expr> <Tab> CanComplete() ? "\<C-n>" : "\<Tab>"
-endif
-
-" Previous completion with Shift-Tab
-if maparg('<S-Tab>', 'i') ==# ''
-  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
-  inoremap <S-Tab> <C-p>
-endif
-
-" Check characters before the cursor
-function! CanComplete() abort
-  let l:col = col('.') - 1
-  if !l:col || getline('.')[l:col - 1] !~# '\k'
-    return 0
-  endif
-  return 1
-endfunction
 
 if exists('+omnifunc')
   augroup OmniCompletion
@@ -356,6 +332,8 @@ iabbrev pyhton python
 
 " Change leader
 let g:mapleader = "\<Space>"
+" Switch between the current and previous buffer
+nnoremap <Leader><Leader> <C-^>
 " Sort selection
 noremap <Leader>s :sort<CR>
 " Quicker quit
@@ -391,10 +369,10 @@ nnoremap <expr> k v:count ? 'k' : 'gk'
 " vnoremap > >gv
 
 " Split navigation shortcuts
-nnoremap <C-H> <C-w>h
-nnoremap <C-J> <C-w>j
-nnoremap <C-K> <C-w>k
-nnoremap <C-L> <C-w>l
+nnoremap <C-H> <C-W>h
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
 
 " Bubble single or multiple lines
 noremap <C-Up> ddkP
@@ -422,24 +400,42 @@ noremap ; :normal n.<CR>
 " Stop the highlighting for the 'hlsearch' option
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
-" Edit in the same directory as the current file :e %%
-" cnoremap <expr> %% getcmdtype() == ':' ? fnameescape(expand('%:h')) . '/' : '%%'
-
-" Use <Left> and <Right> keys to move the cursor in ':' command mode
-" instead of selecting a different match, as <Tab> / <S-Tab> does
-cnoremap <expr> <Left> getcmdtype() == ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
-cnoremap <expr> <Right> getcmdtype() == ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
-
-" Save as root with :w!!
-"cnoremap <expr> w!! (exists(':SudoWrite') == 2 ? "SudoWrite" : "w !sudo tee % >/dev/null") . "\<CR>"
-cnoremap w!! w !sudo tee % > /dev/null
-" command W w !sudo tee % > /dev/null
-
 " Remove trailing spaces
 noremap _$ :call StripTrailingWhitespaces()<CR>
 
 " Indent the whole file
 noremap _= :call Preserve("normal gg=G")<CR>
+
+" Edit in the same directory as the current file :e %%
+cnoremap <expr> %% getcmdtype() ==# ':' ? fnameescape(expand('%:h')) . '/' : '%%'
+
+" Use <Left> and <Right> keys to move the cursor in ':' command mode
+" instead of selecting a different match, as <Tab> / <S-Tab> does
+cnoremap <expr> <Left> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
+cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
+
+" Save current file as root with sudo
+cnoremap w!! w !sudo tee % > /dev/null
+
+" Next completion with Tab
+if maparg('<Tab>', 'i') ==# ''
+  inoremap <expr> <Tab> CanComplete() ? "\<C-N>" : "\<Tab>"
+endif
+
+" Previous completion with Shift-Tab
+if maparg('<S-Tab>', 'i') ==# ''
+  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
+  inoremap <S-Tab> <C-P>
+endif
+
+" Check characters before the cursor
+function! CanComplete() abort
+  let l:col = col('.') - 1
+  if !l:col || getline('.')[l:col - 1] !~# '\k'
+    return 0
+  endif
+  return 1
+endfunction
 
 " 1}}}
 

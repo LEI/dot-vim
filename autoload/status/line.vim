@@ -102,9 +102,6 @@ endfunction
 " Whitespace warnings
 " aserebryakov/filestyle
 function! status#line#Indent() abort
-  let l:symbol_mixed = 'mixed '
-  let l:symbol_space = '\s' " spaces
-  let l:symbol_tab = '\t' " tabs
   " let l:sep = ':'
   if !&modifiable || &paste " Ignore warnings in paste mode
     return ''
@@ -116,28 +113,27 @@ function! status#line#Indent() abort
     let l:tabs = search('^\t', 'nw')
     if l:tabs != 0 && l:spaces != 0
       " Spaces and tabs are used to indent
-      let b:statusline_indent = l:symbol_mixed
+      let b:statusline_indent = 'mixed-'
       if !&expandtab
-        let b:statusline_indent.= l:symbol_space " . l:sep . l:spaces
+        let b:statusline_indent.= '&noet' " . '[' . l:spaces . ']'
       else
-        let b:statusline_indent.= l:symbol_tab " . l:sep . l:tabs
+        let b:statusline_indent.= '&et' " . '[' . l:tabs . ']'
       endif
     elseif l:spaces != 0 && !&expandtab
-      let b:statusline_indent = l:symbol_space " . l:sep . l:spaces
+      let b:statusline_indent = '&noet' " . '[' . l:spaces . ']'
     elseif l:tabs != 0 && &expandtab
-      let b:statusline_indent = l:symbol_tab " . l:sep . l:tabs
+      let b:statusline_indent = '&et' " . '[' . l:tabs . ']'
     endif
   endif
   return b:statusline_indent
 endfunction
 
 function! status#line#Trailing() abort
-  let l:search = 'trailing' " \s\+$
   if !exists('b:statusline_trailing')
-    let l:msg = ''
     let l:match = search('\s\+$', 'nw')
+    let l:msg = ''
     if l:match != 0
-      let l:msg = l:search . ' ' . l:match " '\s$'
+      let l:msg = 'trailing' " . '[' . l:match . ']'
     endif
     let b:statusline_trailing = l:msg
   endif

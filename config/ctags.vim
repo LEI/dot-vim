@@ -33,6 +33,7 @@ function! ReindexCtags()
   execute l:cmd
 endfunction
 
+" http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html
 " ~/.git_template/hooks/ctags:
 " $ .git/hooks/ctags >/dev/null 2>&1 &
 

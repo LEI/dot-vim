@@ -5,11 +5,14 @@ let &g:statusline = status#Line()
 set noshowmode
 
 " set statusline=%{&paste?'PASTE\ ':''}
-" set statusline+=%<%f\ %m%r%w%=
+" set statusline+=%<%f\ %m%r%w
 " set statusline+=%{fugitive#statusline()}
+" set statusline+=%=
+" set statusline+=%#ErrorMsg#%(\ %{ale#statusline#Status()}\ %)%*
 " set statusline+=%(\ %{FileInfo()}%)
 " set statusline+=%(\ %{strlen(&ft)?&ft:&bt}%)
 " set statusline+=\ %-14.(%l,%c%V/%L%)\ %P
+
 " function! FileInfo() abort
 "   let l:str = ''
 "   let l:ft = &filetype

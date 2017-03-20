@@ -8,7 +8,7 @@ let g:enable_tabline = 1
 " Editing:
 let g:enable_commentary = 1
 let g:enable_splitjoin = 1
-" let g:enable_tabular = 1
+let g:enable_tabular = 1
 " Plug 'AndrewRadev/sideways.vim'
 " Plug 'mattn/emmet-vim' " Emmet
 
@@ -87,6 +87,7 @@ Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'xolox/vim-misc' " Auto-load scripts
 
 " Extras: wikitopian/hardmode, takac/vim-hardtime
+" Plug 'chrisbra/unicode.vim' " Unicode glyphs
 " Plug 'diepm/vim-rest-console' " REST console
 " Plug 'itchyny/calendar.vim' " Calendar application (alt: mattn/calendar-vim)
 " Plug 'koron/minimap-vim' " GUI only
