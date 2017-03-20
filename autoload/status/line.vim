@@ -2,7 +2,13 @@
 
 " Get the current mode and update SatusLine highlight group
 function! status#line#Mode(...) abort
+  if !&modifiable
+    return ''
+  endif
   let l:mode =  a:0 ? a:1 :mode()
+  if g:statusline.winnr != winnr()
+    let l:mode = 'nc'
+  endif
   " if l:mode ==# 'n'
   "   highlight! link StatusLine StatusLineNormal
   " elseif l:mode ==# 'i'
@@ -12,9 +18,6 @@ function! status#line#Mode(...) abort
   " elseif l:mode ==# 'v' || l:mode ==# 'V' || l:mode ==# '^V'
   "   highlight! link StatusLine StatusLineVisual
   " endif
-  if g:statusline.winnr != winnr()
-    let l:mode = 'nc'
-  endif
   return get(g:statusline.modes, l:mode, l:mode)
 endfunction
 

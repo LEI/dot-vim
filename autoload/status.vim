@@ -39,7 +39,7 @@ function! status#Line(...) abort
   " Mode
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
   let l:s.= ' '
-  let l:s.= '%(%{winwidth(0) > 60 && &modifiable ? status#line#Mode() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 60 ? status#line#Mode() : ""}' . g:statusline.symbols.sep . '%)'
   let l:s.= '%<'
   " Git branch
   let l:s.= '%(%{winwidth(0) > 90 ? status#line#Branch() : ""}' . g:statusline.symbols.sep . '%)'
@@ -169,6 +169,7 @@ augroup StatusGroup
   autocmd InsertChange * call status#Highlight(v:insertmode)
   autocmd InsertLeave * call status#Highlight()
 
+  " autocmd WinEnter,FileType,BufWinEnter * let &l:statusline = status#Line()
   autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
 
   " Update whitespace warnings (add InsertLeave?)
