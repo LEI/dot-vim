@@ -17,7 +17,7 @@ function! time#IsNight()
 endfunction
 
 function! s:daytime()
-  let l:time = strftime('%h%M')
+  let l:time = strftime('%H%M')
   let l:sunrise = 700
   let l:sunset = 2000
   return l:time > l:sunrise && l:time < l:sunset
