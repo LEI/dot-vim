@@ -23,7 +23,7 @@ set noshowmode
 "   let l:fe = strlen(&fileencoding) ? &fileencoding : &encoding
 "   let l:ff = &fileformat
 "   if has('+bomb') && &bomb
-"     let l:fe.= ',B'
+"     let l:fe.= '-bom'
 "   endif
 "   if l:fe !=# 'utf-8' | let l:str.= l:fe | endif
 "   if l:ff !=# 'unix' | let l:str.= '[' . l:ff . ']' | endif

@@ -88,7 +88,7 @@ function! status#line#FileInfo() abort
     let l:enc = &encoding
   endif
   if exists('+bomb') && &bomb
-    let l:enc.= ',B'
+    let l:enc.= '-bom'
   endif
   if l:enc ==# 'utf-8'
     let l:enc = ''

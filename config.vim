@@ -15,6 +15,7 @@ let g:enable_tabular = 1
 " Versioning: tpope/vim-git
 let g:enable_fugitive = 1
 " Plug 'gregsexton/gitv' " gitk
+" Plug 'mhinz/vim-signify' " Sign column
 
 " Navigation: spolu/dwm.vim
 let g:enable_ctags = 1
@@ -92,6 +93,5 @@ Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'itchyny/calendar.vim' " Calendar application (alt: mattn/calendar-vim)
 " Plug 'koron/minimap-vim' " GUI only
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
-" Plug 'mhinz/vim-signify' " Sign column diff
 " Plug 'mhinz/vim-startify' " Start screen
 " Plug 'vim-scripts/dbext.vim' " Database access
