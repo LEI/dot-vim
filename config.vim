@@ -7,8 +7,11 @@ let g:enable_tabline = 1
 
 " Editing:
 let g:enable_commentary = 1
+let g:enable_editorconfig = 1
 let g:enable_splitjoin = 1
 let g:enable_tabular = 1
+Plug 'tpope/vim-sleuth' " Automatic indentation detection
+" ciaranm/detectindent, tpope/vim-projectionist...
 " Plug 'AndrewRadev/sideways.vim'
 " Plug 'mattn/emmet-vim' " Emmet
 
@@ -50,16 +53,8 @@ Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 " File Type:
 " Plug 'chrisbra/csv.vim' " CSV files
 
-" Settings: ciaranm/detectindent, tpope/vim-projectionist
-Plug 'dahu/EditorConfig'
-" Plug 'editorconfig/editorconfig-vim' " Official editorconfig, python required
-" Plug 'sgur/vim-editorconfig' " Breaks vim-sleuth
-Plug 'tpope/vim-sleuth' " Automatic indentation detection
-
-" Undo History:
+" Undo History: sjl/gundo.vim, simnalamburt/vim-mundo
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
-" Plug 'simnalamburt/vim-mundo'
-" Plug 'sjl/gundo.vim'
 
 " Movements: justinmk/vim-sneak, goldfeld/vim-seek, tommcdo/vim-exchange
 " Plug 'terryma/vim-expand-region' " Visually select increasingly larger regions
@@ -67,20 +62,13 @@ Plug 'tpope/vim-commentary' " Comments (alt: tomtom/tcomment_vim)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
 
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
+let g:enable_textobj = 1
 let g:enable_unimpaired = 1
 Plug 'keith/investigate.vim' " Look up documentation with gK
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 Plug 'tpope/vim-endwise' " Automatic end keywords
 " Plug 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
-
-" Text Objects:
-" Plug 'kana/vim-textobj-user'
-" Plug 'jceb/vim-textobj-uri'
-" Plug 'kana/vim-textobj-indent'
-" Plug 'kana/vim-textobj-line'
-" Plug 'lucapette/vim-textobj-underscore'
-" Plug 'wellle/targets.vim' " Additional text objects
 
 " Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim
 " Plug 'jamessan/vim-gnupg' " Transparent editing of *.gpg, *.pgp and *.asc
