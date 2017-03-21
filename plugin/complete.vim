@@ -1,5 +1,6 @@
 " Check characters before the cursor
 
+" Check characters before the cursor
 function! MayComplete() abort
   let l:col = col('.') - 1
   if !l:col || getline('.')[l:col - 1] !~# '\k'
@@ -8,6 +9,13 @@ function! MayComplete() abort
   return 1
 endfunction
 
+" Enable syntax completion when &omnifunc is empty
+if exists('+omnifunc')
+  augroup OmniCompletion
+    autocmd!
+    autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+  augroup END
+endif
 
 finish
 

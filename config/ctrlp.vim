@@ -35,7 +35,7 @@ endif
 
 augroup CtrlP
   autocmd!
-  " autocmd User Init :call s:CtrlP_highlight()
+  " autocmd User Config :call s:CtrlP_highlight()
 augroup END
 
 " function! s:CtrlP_highlight() abort

@@ -24,7 +24,7 @@ nnoremap <silent> <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 
 augroup Solarized
   autocmd!
-  autocmd User Init if exists('*Solarized8') | call Solarized8() | endif
+  autocmd User Config if exists('*Solarized8') | call Solarized8() | endif
 augroup END
 
 " call Solarized8('solarized8', 'dark')

@@ -4,6 +4,10 @@
 let &g:statusline = status#Line()
 set noshowmode
 
+augroup StatusLineConfig
+  autocmd!
+augroup END
+
 " set statusline=%{&paste?'PASTE\ ':''}
 " set statusline+=%<%f\ %m%r%w
 " set statusline+=%{fugitive#statusline()}
@@ -30,6 +34,7 @@ set noshowmode
 "   return l:str
 " endfunction
 
+" Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
 function! HighlightStatusLine() abort
   if &background ==# 'dark'
     highlight StatusLineReverse term=reverse ctermfg=14 ctermbg=0
@@ -46,10 +51,15 @@ function! HighlightStatusLine() abort
     highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
     highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
   endif
+  " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+  highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#dc322f
+  " highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
+  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#cb4b16
 endfunction
 
 augroup StatusLine
   autocmd!
   " Override cursor and status line highlight groups when color scheme changes
-  autocmd VimEnter,ColorScheme * :call HighlightStatusLine()
+  autocmd User Config :call HighlightStatusLine()
+  autocmd ColorScheme * :call HighlightStatusLine()
 augroup END

@@ -3,9 +3,9 @@
 let g:timezone = get(g:, 'timezone', strlen($TZ) ? $TZ : 'Europe/Paris')
 
 function! time#IsDay()
-  " if executable('php')
-  "   return s:php_daytime()
-  " endif
+  if executable('php')
+    return s:php_daytime()
+  endif
   if exists('*strftime')
     return s:daytime()
   endif

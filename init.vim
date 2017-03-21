@@ -7,8 +7,6 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
-" Plugins {{{1
-
 " let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 
@@ -17,9 +15,9 @@ let g:plug_path = $VIMHOME . '/autoload/plug.vim'
 let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 if empty(glob(g:plug_path))
-  " confirm('Install Vim Plug in ' . g:plug_path . '?') == 1
+  " confirm('Install Vim Plug?', "&Yes\n&No") == 1
   execute 'silent !curl -sfLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
-  let g:did_install = 0
+  let g:plug_install = 1
 endif
 
 call plug#begin() " Start Vim Plug
@@ -27,15 +25,22 @@ call config#Source($VIMHOME . '/config.vim')
 call config#SourceDir($VIMHOME . '/config', 'config#Enabled')
 call plug#end() " Add plugins to &runtimepath
 
-" Install plugins if Vim Plug has been downloaded
-if get(g:, 'did_install', 1) == 0
-  PlugInstall --sync | let g:did_install = 1 | source $MYVIMRC
-endif
+" Clone and configure plugins once loaded
+function! s:config()
+  if get(g:, 'plug_install', 0)
+    PlugInstall --sync
+    let g:plug_install = 0
+  endif
+  if get(g:, 'loaded_plug', 0) && exists('#User#Config')
+    doautocmd User Config
+  endif
+endfunction
 
-" Execute commands once plugins are loaded
-if exists('#User#Init')
-  doautocmd User Init
-endif
+augroup InitConfig
+  autocmd!
+  " Wait until vim is ready, or :PlugInstall will create the first window
+  autocmd VimEnter * :call s:config() | autocmd! InitConfig
+augroup END
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -418,33 +423,22 @@ endif
 " Insert today's date
 iabbrev <expr> ddate strftime("%b %d - %a")
 
-" Typos
-iabbrev pyhton python
-
 " Commands {{{1
 
-" command! -nargs=0 -bar Install PlugInstall --sync | source $MYVIMRC
-" command! -nargs=0 -bar Update PlugUpdate --sync | source $MYVIMRC
-" command! -nargs=0 -bar Upgrade PlugUpdate! --sync | PlugUpgrade | source $MYVIMRC
+command! -nargs=0 -bar Install PlugInstall
+command! -nargs=0 -bar Update PlugUpdate
+command! -nargs=0 -bar Upgrade PlugUpgrade | PlugUpdate!
 
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
 " command! -nargs=0 HexDump :%!xxd
-" command! -nargs=0 HexRestore :%!xxd -r
+" command! -nargs=0 HexRest :%!xxd -r
 
-" Auto commands {{{1
+" 1}}}
 
-if exists('+omnifunc')
-  augroup OmniCompletion
-    autocmd!
-    autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
-  augroup END
-endif
-
-augroup VimInit
+augroup Config
   autocmd!
-
   " Reset colors persisting in terminal
   " autocmd VimLeave * :!echo -ne "\033[0m"
 
@@ -461,8 +455,6 @@ augroup VimInit
 
   " au BufWritePost ~/.Xdefaults redraw | echo system('xrdb ' . expand('<amatch>'))
 augroup END
-
-" 1}}}
 
 call config#Source($HOME . '/.vimrc.local')
 

@@ -125,18 +125,10 @@ highlight link StatusLineInsert StatusLine
 highlight link StatusLineReplace StatusLine
 highlight link StatusLineVisual StatusLine
 " highlight link StatusLineBranch StatusLine
-" highlight link StatusLineError ErrorMsg
-" highlight link StatusLineWarn WarningMsg
+highlight link StatusLineError ErrorMsg
+highlight link StatusLineWarn WarningMsg
 
-" Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
-function! status#Colors() abort
-" highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-  highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#dc322f
-" highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
-  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#cb4b16
-endfunction
-
-function! status#Highlight(...) abort
+function! status#HighlightMode(...) abort
   let l:im = a:0 ? a:1 : ''
   " let l:im = a:0 ? a:1 : v:insertmode
   if l:im ==# 'i' " Insert mode
@@ -152,7 +144,7 @@ function! status#Highlight(...) abort
   endif
 endfunction
 
-" v:vim_did_enter |!has('vim_starting')
+" " v:vim_did_enter |!has('vim_starting')
 " let s:enable = get(g:, 'status#enable_at_startup', 1)
 " if s:enable
 "   call status#Colors()
@@ -164,10 +156,10 @@ let g:statusline.winnr = winnr()
 
 augroup StatusGroup
   autocmd!
-  autocmd VimEnter,ColorScheme * call status#Colors()
-  autocmd InsertEnter * call status#Highlight(v:insertmode)
-  autocmd InsertChange * call status#Highlight(v:insertmode)
-  autocmd InsertLeave * call status#Highlight()
+  autocmd ColorScheme * call status#Colors()
+  autocmd InsertEnter * call status#HighlightMode(v:insertmode)
+  autocmd InsertChange * call status#HighlightMode(v:insertmode)
+  autocmd InsertLeave * call status#HighlightMode()
 
   " autocmd WinEnter,FileType,BufWinEnter * let &l:statusline = status#Line()
   autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
