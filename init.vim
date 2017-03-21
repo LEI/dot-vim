@@ -219,8 +219,8 @@ if has('persistent_undo') " && exists('g:undodir')
   set noswapfile
   set nobackup
   set nowritebackup
-  if exists('*mkdir') && !isdirectory(g:undodir)
-    call mkdir(g:undodir)
+  if !isdirectory(g:undodir)
+    call Mkdir(g:undodir)
   endif
   let &undodir = g:undodir
   set undofile
