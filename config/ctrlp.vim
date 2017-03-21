@@ -38,9 +38,9 @@ endif
 
 augroup CtrlP
   autocmd!
-  " autocmd User Config :call s:CtrlP_highlight()
+  " autocmd User Config :call s:CtrlPHL()
 augroup END
 
-" function! s:CtrlP_highlight() abort
+" function! s:CtrlPHL() abort
 "   highlight CtrlPLinePre ...
 " endfunction
