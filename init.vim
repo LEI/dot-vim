@@ -338,16 +338,12 @@ noremap <Leader>W :w!!<CR>
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
-" CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break
-inoremap <C-U> <C-G>u<C-U>
-
 " Paragraph reflow according to textwidth?
 " noremap Q gqap
 " vnoremap Q gv
 
 " Make 'dot' work as expected in visual mode
-" vnoremap . :norm.<CR>
+vnoremap . :norm.<CR>
 
 " Yank from the cursor to the end of the line
 noremap Y y$
@@ -408,6 +404,10 @@ cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Righ
 
 " Save current file as root with sudo
 cnoremap w!! w !sudo tee % > /dev/null
+
+" CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break
+inoremap <C-U> <C-G>u<C-U>
 
 " Make last typed word uppercase
 inoremap <Plug>UpCase <Esc>hgUawea
