@@ -38,50 +38,15 @@ let g:statusline.winnr = winnr()
 " }}}
 
 function! status#Line(...) abort
+  let l:func = get(g:, 'statusline_func', '')
+  " echom (l:func !=# '') . '/' . exists('*' . l:func)
+  if l:func !=# '' && exists('*' . l:func)
+    return call(l:func, a:000)
+  endif
+  " Default status line
   let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
   let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
-  let l:s = ''
-  " Paste
-  let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
-  " Space
-  let l:s = ' '
-  " Mode
-  let l:s.= '%(%{winwidth(0) > 60 ? status#mode#name() : ""}' . g:statusline.symbols.sep . '%)'
-  " Truncate here
-  let l:s.= '%<'
-  " Git branch
-  let l:s.= '%(%{winwidth(0) > 70 ? status#branch#name() : ""}' . g:statusline.symbols.sep . '%)'
-  " Buffer name
-  let l:s.= l:name
-  " Flags [%W%H%R%M]
-  let l:s.= '%( [%{status#flag#line()}]%)'
-  " Break
-  let l:s.= '%='
-  " Extra markers
-  let l:s.= l:info
-  " Warnings
-  let l:s.= '%#StatusLineWarn#%(' " WarningMsg
-  let l:s.= '%( %{status#warn#indent()}%)' " &bt nofile, nowrite
-  let l:s.= '%( %{empty(&bt) ? status#warn#trailing() : ""}%)'
-  let l:s.= ' %)%*'
-  " Errors
-  let l:s.= '%#StatusLineError#%(' " ErrorMsg
-  let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#QflistStatus("qf: ") : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#LoclistStatus() : ""}%)'
-  let l:s.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
-  let l:s.= ' %)%*'
-  " Plugins
-  let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
-  " Space
-  let l:s.= ' '
-  " File type
-  let l:s.= '%(%{winwidth(0) > 40 ? status#file#type() : ""}' . g:statusline.symbols.sep . '%)'
-  " File encoding
-  let l:s.= '%(%{winwidth(0) > 50 ? status#file#format() : ""}' . g:statusline.symbols.sep . '%)'
-  " Default ruler
-  let l:s.= '%-14.(%l,%c%V/%L%) %P '
-  return l:s
+  return '%<' . l:name . ' %h%m%r%=' . l:info . '%-14.(%l,%c%V%) %P'
 endfunction
 
 " Modes: {{{
