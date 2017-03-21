@@ -15,7 +15,7 @@ function! Mkdir(path)
   endif
 endfunction
 
-function s:Mkdir()
+function s:AutoMkdir()
   let l:dir = expand('%:p:h')
   if !isdirectory(l:dir)
     if confirm("Directory '" . l:dir . "' doestn't exists.", '&Create it?') == 1
@@ -27,5 +27,5 @@ endfunction
 
 augroup AutoMkdir
   autocmd!
-  autocmd BufNewFile,BufWritePre,FileWritePre * call s:Mkdir()
+  autocmd BufNewFile,BufWritePre,FileWritePre * call s:AutoMkdir()
 augroup END
