@@ -1,4 +1,15 @@
-" Check characters before the cursor
+" Completion
+
+" Next completion with Tab
+if maparg('<Tab>', 'i') ==# ''
+  inoremap <expr> <Tab> MayComplete() ? "\<C-N>" : "\<Tab>"
+endif
+
+" Previous completion with Shift-Tab
+" :exe 'set t_kB=' . nr2char(27) . '[Z'
+if maparg('<S-Tab>', 'i') ==# ''
+  inoremap <S-Tab> <C-P>
+endif
 
 " Check characters before the cursor
 function! MayComplete() abort

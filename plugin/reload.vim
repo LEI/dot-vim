@@ -1,4 +1,4 @@
-" Reloading
+" Auto reloading
 
 augroup Reload
   " Auto reload vimrc on save

@@ -26,12 +26,12 @@ function! HighlightCursor() abort
   endif
 endfunction
 
-" Show cursor line on active window only (or use InsertLeave/InsertEnter)
 augroup Cursor
   autocmd!
+  autocmd VimEnter,ColorScheme * :call HighlightCursor()
+  " Show cursor line on active window only (or use InsertLeave/InsertEnter)
   autocmd WinEnter * set cursorline
   autocmd WinLeave * set nocursorline
-  autocmd VimEnter,ColorScheme * :call HighlightCursor()
 augroup END
 
 " command! -nargs=0 CursorHi call HighlightCursor()

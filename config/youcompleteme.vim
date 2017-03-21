@@ -31,7 +31,8 @@ augroup YCM
   " autocmd User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
   " autocmd CompleteDone * pclose
   " autocmd CursorHold, CursorHoldI * :packadd YouCompleteMe | autocmd! YCM
-  autocmd CursorHold,CursorHoldI * :call YCMEnable() | :autocmd! YCM
+  " autocmd CursorHold,CursorHoldI * :call YCMEnable() | :autocmd! YCM
+  autocmd User Config :call YCMEnable() | :autocmd! YCM
 augroup END
 
 " !exists('g:loaded_youcompleteme') | call plug#load('YouCompleteMe') | call youcompleteme#Enable()

@@ -387,14 +387,13 @@ noremap ; :normal n.<CR>
 noremap _$ :call StripTrailingWhitespaces()<CR>
 
 " Indent the whole file
-noremap _= :call Preserve("normal gg=G")<CR>
+noremap _= :call Preserve('normal gg=G')<CR>
 
+" Stop the highlighting for the 'hlsearch' option and redraw the screen
+nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 " if maparg('<C-L>', 'n') ==# ''
 "   nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 " endif
-
-" Stop the highlighting for the 'hlsearch' option
-nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() ==# ':' ? fnameescape(expand('%:h')) . '/' : '%%'
@@ -406,17 +405,6 @@ cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Righ
 
 " Save current file as root with sudo
 cnoremap w!! w !sudo tee % > /dev/null
-
-" Next completion with Tab
-if maparg('<Tab>', 'i') ==# ''
-  inoremap <expr> <Tab> MayComplete() ? "\<C-N>" : "\<Tab>"
-endif
-
-" Previous completion with Shift-Tab
-if maparg('<S-Tab>', 'i') ==# ''
-  " <S-Tab> :exe 'set t_kB=' . nr2char(27) . '[Z'
-  inoremap <S-Tab> <C-P>
-endif
 
 " Abbreviations {{{1
 
@@ -453,6 +441,7 @@ augroup Config
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
 
+  autocmd BufWritePre *.js,*.php,*.py :call StripTrailingWhitespaces()
   " au BufWritePost ~/.Xdefaults redraw | echo system('xrdb ' . expand('<amatch>'))
 augroup END
 

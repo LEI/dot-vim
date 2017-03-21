@@ -13,7 +13,7 @@
 
 " Arguments: focus, byfname, s:regexp, prv, item, nxt, marked
 "            a:1    a:2      a:3       a:4  a:5   a:6  a:7
-function! status#ctrlp#Main(...) abort
+function! status#extension#ctrlp#Main(...) abort
   " let focus = '%#LineNr# '.a:1.' %*'
   " let byfname = '%#Character# '.a:2.' %*'
   " let regex = a:3 ? '%#LineNr# regex %*' : ''
@@ -35,7 +35,7 @@ endfunction
 
 " Argument: len
 "           a:1
-function! status#ctrlp#Prog(...) abort
+function! status#extension#ctrlp#Prog(...) abort
   let l:len = a:1
   let l:dir = getcwd()
   return ' ' . l:len . '%=%<' . l:dir . ' '

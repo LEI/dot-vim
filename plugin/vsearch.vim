@@ -1,4 +1,4 @@
-" Visual Star Search:
+" Visual star search
 
 " https://github.com/nelstrom/vim-visual-star-search
 " From got-ravings.blogspot.com/2008/07/vim-pr0n-visual-search-mappings.html

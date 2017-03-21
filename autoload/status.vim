@@ -11,7 +11,13 @@ let g:loaded_statusline = 1
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-" Format Markers:
+let g:statusline = get(g:, 'statusline', {})
+call extend(g:statusline, {'modes': {}, 'symbols': {}}, 'keep')
+
+" Active window number
+let g:statusline.winnr = winnr()
+
+" Format Markers: {{{
 " %< Where to truncate line if too long
 " %n Buffer number
 " %F Full path to the file in the buffed
@@ -29,32 +35,34 @@ set cpoptions&vim
 " %P Percentage through file of displayed window
 " %( Start of item group (%-35. width and alignement of a section)
 " %) End of item group
-let g:statusline = get(g:, 'statusline', {})
-call extend(g:statusline, {'modes': {}, 'symbols': {}}, 'keep')
+" }}}
 
 function! status#Line(...) abort
   let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
   let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
   let l:s = ''
-  " Mode
+  " Paste
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
-  let l:s.= ' '
-  let l:s.= '%(%{winwidth(0) > 60 ? status#line#Mode() : ""}' . g:statusline.symbols.sep . '%)'
+  " Space
+  let l:s = ' '
+  " Mode
+  let l:s.= '%(%{winwidth(0) > 60 ? status#mode#name() : ""}' . g:statusline.symbols.sep . '%)'
+  " Truncate here
   let l:s.= '%<'
   " Git branch
-  let l:s.= '%(%{winwidth(0) > 90 ? status#line#Branch() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 70 ? status#branch#name() : ""}' . g:statusline.symbols.sep . '%)'
   " Buffer name
   let l:s.= l:name
   " Flags [%W%H%R%M]
-  let l:s.= '%( [%{status#line#Flags()}]%)'
+  let l:s.= '%( [%{status#flag#line()}]%)'
   " Break
-  let l:s.= ' %='
+  let l:s.= '%='
   " Extra markers
   let l:s.= l:info
   " Warnings
   let l:s.= '%#StatusLineWarn#%(' " WarningMsg
-  let l:s.= '%( %{status#line#Indent()}%)' " &bt nofile, nowrite
-  let l:s.= '%( %{empty(&bt) ? status#line#Trailing() : ""}%)'
+  let l:s.= '%( %{status#warn#indent()}%)' " &bt nofile, nowrite
+  let l:s.= '%( %{empty(&bt) ? status#warn#trailing() : ""}%)'
   let l:s.= ' %)%*'
   " Errors
   let l:s.= '%#StatusLineError#%(' " ErrorMsg
@@ -68,15 +76,15 @@ function! status#Line(...) abort
   " Space
   let l:s.= ' '
   " File type
-  let l:s.= '%(%{winwidth(0) > 30 ? status#line#FileType() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 40 ? status#file#type() : ""}' . g:statusline.symbols.sep . '%)'
   " File encoding
-  let l:s.= '%(%{winwidth(0) > 60 ? status#line#FileInfo() : ""}' . g:statusline.symbols.sep . '%)'
+  let l:s.= '%(%{winwidth(0) > 50 ? status#file#format() : ""}' . g:statusline.symbols.sep . '%)'
   " Default ruler
   let l:s.= '%-14.(%l,%c%V/%L%) %P '
   return l:s
 endfunction
 
-" Modes:
+" Modes: {{{
 " n       Normal
 " no      Operator-pending
 " v       Visual by character
@@ -109,8 +117,9 @@ call extend(g:statusline.modes, {
       \   '': 'S-BLOCK',
       \   't': 'TERMINAL',
       \ }, 'keep')
+" }}}
 
-" Symbols: (key: 0x1F511)
+" Symbols: {{{ (key: 0x1F511)
 let s:c = has('multi_byte') && &encoding ==# 'utf-8'
 call extend(g:statusline.symbols, {
       \   'key': s:c ? nr2char(0x1F511) : '$',
@@ -119,7 +128,9 @@ call extend(g:statusline.symbols, {
       \   'nl': s:c ? nr2char(0x2424) : '\n',
       \   'ws': s:c ? nr2char(0x39E) : '\s',
       \ }, 'keep')
+" }}}
 
+" Highlight Groups: {{{
 highlight link StatusLineReverse StatusLine
 highlight link StatusLineInsert StatusLine
 highlight link StatusLineReplace StatusLine
@@ -127,22 +138,7 @@ highlight link StatusLineVisual StatusLine
 " highlight link StatusLineBranch StatusLine
 highlight link StatusLineError ErrorMsg
 highlight link StatusLineWarn WarningMsg
-
-function! status#HighlightMode(...) abort
-  let l:im = a:0 ? a:1 : ''
-  " let l:im = a:0 ? a:1 : v:insertmode
-  if l:im ==# 'i' " Insert mode
-    highlight! link StatusLine StatusLineInsert
-  elseif l:im ==# 'r' " Replace mode
-    highlight! link StatusLine StatusLineReplace
-  elseif l:im ==# 'v' " Virtual replace mode
-    highlight! link StatusLine StatusLineReplace
-  elseif strlen(l:im) > 0
-    echoerr 'Unknown mode: ' . l:im
-  else
-    highlight link StatusLine NONE
-  endif
-endfunction
+" }}}
 
 " " v:vim_did_enter |!has('vim_starting')
 " let s:enable = get(g:, 'status#enable_at_startup', 1)
@@ -151,15 +147,12 @@ endfunction
 "   " call status#ctrlp#Enable()
 " endif
 
-" Initialize active window number
-let g:statusline.winnr = winnr()
-
 augroup StatusGroup
   autocmd!
-  autocmd ColorScheme * call status#Colors()
-  autocmd InsertEnter * call status#HighlightMode(v:insertmode)
-  autocmd InsertChange * call status#HighlightMode(v:insertmode)
-  autocmd InsertLeave * call status#HighlightMode()
+  " autocmd ColorScheme * call status#Colors()
+  autocmd InsertEnter * call status#mode#highlight(v:insertmode)
+  autocmd InsertChange * call status#mode#highlight(v:insertmode)
+  autocmd InsertLeave * call status#mode#highlight()
 
   " autocmd WinEnter,FileType,BufWinEnter * let &l:statusline = status#Line()
   autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
@@ -170,7 +163,7 @@ augroup StatusGroup
   autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = status#Line('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
 
-  autocmd FileType qf let &l:statusline = status#Line('%f%( %{status#line#QuickFixTitle()}%)')
+  autocmd FileType qf let &l:statusline = status#Line('%f%( %{get(w:, "quickfix_title", '')}%)')
   autocmd FileType vim-plug let &l:statusline = status#Line('Plugins')
   autocmd FileType taglist let &l:statusline = status#Line(s:Replace_(expand('%')))
 augroup END
@@ -190,3 +183,5 @@ command! -nargs=* -bar CursorStl let &g:statusline = status#Line('%f', '%([%b 0x
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
+
+" vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker
