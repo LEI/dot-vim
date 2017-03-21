@@ -37,18 +37,6 @@ let g:statusline.winnr = winnr()
 " %) End of item group
 " }}}
 
-function! status#Line(...) abort
-  let l:func = get(g:, 'statusline_func', '')
-  " echom (l:func !=# '') . '/' . exists('*' . l:func)
-  if l:func !=# '' && exists('*' . l:func)
-    return call(l:func, a:000)
-  endif
-  " Default status line
-  let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
-  let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
-  return '%<' . l:name . ' %h%m%r%=' . l:info . '%-14.(%l,%c%V%) %P'
-endfunction
-
 " Modes: {{{
 " n       Normal
 " no      Operator-pending
@@ -104,6 +92,19 @@ highlight link StatusLineVisual StatusLine
 highlight link StatusLineError ErrorMsg
 highlight link StatusLineWarn WarningMsg
 " }}}
+
+" Build status line
+function! status#Line(...) abort
+  let l:func = get(g:, 'statusline_func', '')
+  " echom (l:func !=# '') . '/' . exists('*' . l:func)
+  if l:func !=# '' && exists('*' . l:func)
+    return call(l:func, a:000)
+  endif
+  " Default status line
+  let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
+  let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
+  return '%<' . l:name . ' %h%m%r%=' . l:info . '%-14.(%l,%c%V%) %P'
+endfunction
 
 " " v:vim_did_enter |!has('vim_starting')
 " let s:enable = get(g:, 'status#enable_at_startup', 1)
