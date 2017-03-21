@@ -15,13 +15,13 @@ function! s:MixedIndent()
   " Find spaces that arent used as alignment in the first indent column
   let l:s = search('^ \{' . &tabstop . ',}[^\t]', 'nw')
   let l:t = search('^\t', 'nw')
-  let l:et = (&expandtab ? '&et' : '&noet')
+  let l:et = (&expandtab ? '\s' : '\t') " &et / &noet
   if l:s != 0 && l:t != 0
-    return 'mixed-' . l:et
+    return 'mixed-' . l:et . printf('[%s]', &expandtab ? l:t : l:s)
   elseif l:s != 0 && !&expandtab
-    return l:et
+    return l:et . printf('[%s]', l:s)
   elseif l:t != 0 && &expandtab
-    return l:et
+    return l:et . printf('[%s]', l:t)
   endif
   return ''
 endfunction
@@ -33,7 +33,7 @@ function! status#warn#trailing() abort
   endif
   if !exists('b:statusline_trailing')
     let l:s = search('\s\+$', 'nw')
-    let b:statusline_trailing =  l:s != 0 ? 'trailing' : ''
+    let b:statusline_trailing =  l:s != 0 ? 'trailing' . printf('[%s]', l:s) : ''
   endif
   return b:statusline_trailing
 endfunction

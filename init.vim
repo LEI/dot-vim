@@ -7,44 +7,19 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
-" let $VIMHOME = split(&runtimepath, ',')[0] " $HOME . '/.vim'
+" Plugins {{{1
+
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
-
-" let g:plug_home = $VIMHOME . '/plugged'
-let g:plug_path = $VIMHOME . '/autoload/plug.vim'
-let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-if empty(glob(g:plug_path))
-  " confirm('Install Vim Plug?', "&Yes\n&No") == 1
-  execute 'silent !curl -sfLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
-  let g:plug_install = 1
-endif
-
-call plug#begin() " Start Vim Plug
-call config#Source($VIMHOME . '/config.vim')
-call config#SourceDir($VIMHOME . '/config', 'config#Enabled')
-call plug#end() " Add plugins to &runtimepath
-
-" Clone and configure plugins once loaded
-function! s:config()
-  if get(g:, 'plug_install', 0)
-    PlugInstall --sync
-    let g:plug_install = 0
-  endif
-  if get(g:, 'loaded_plug', 0) && exists('#User#Config')
-    doautocmd User Config
-  endif
-endfunction
-
-augroup InitConfig
-  autocmd!
-  " Wait until vim is ready, or :PlugInstall will create the first window
-  autocmd VimEnter * :call s:config() | autocmd! InitConfig
-augroup END
+" split(&runtimepath, ',')[0] " $HOME . '/.vim'
+call config#Init($VIMHOME, 'config')
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
+endif
+
+if has('autocmd')
+  filetype plugin indent on " Enable file type detection
 endif
 
 " Options {{{1
@@ -69,10 +44,6 @@ if has('syntax')
   if !exists('g:syntax_on') " &t_Co > 2 || has('gui_running')
     syntax enable
   endif
-endif
-
-if has('autocmd')
-  filetype plugin indent on " Enable file type detection
 endif
 
 if has('langmap') && exists('+langremap')
@@ -141,15 +112,15 @@ set clipboard=unnamed " Use system clipboard
 
 " Mouse {{{1
 
-" n  Normal mode
-" v  Visual mode
-" i  Insert mode
-" c  Command-line mode
-" h  all previous modes when editing a help file
-" a  all previous modes
-" r  for |hit-enter| and |more-prompt| prompt
 if has('mouse')
   set mouse=a
+  " n  Normal mode
+  " v  Visual mode
+  " i  Insert mode
+  " c  Command-line mode
+  " h  all previous modes when editing a help file
+  " a  all previous modes
+  " r  for |hit-enter| and |more-prompt| prompt
 endif
 
 if !has('nvim')
@@ -161,7 +132,7 @@ if !has('nvim')
   set ttyfast
 endif
 
-" Terminal {{{1
+" Terminal colors {{{1
 
 if &term =~# '256color'
   " Disable Background Color Erase (BCE) so that color schemes
@@ -211,21 +182,23 @@ set viewoptions-=options " folds,options,cursor
 " localoptions: same as 'options'
 " slash,unix: useful on Windows when sharing view files
 
+" Don't save all options and mappings
 set sessionoptions-=options
 
 " Keep undo history across sessions
 " expand(get(g:, 'undodir', '~/.vim/backups'))
 let g:undodir = get(g:, 'undodir', $VIMHOME . '/backups')
 if has('persistent_undo') " && exists('g:undodir')
+  if !isdirectory(g:undodir)
+    call Mkdir(g:undodir)
+  endif
+  " Enable undo files
+  let &undodir = g:undodir
+  set undofile
   " Disable swapfiles and backups
   set noswapfile
   set nobackup
   set nowritebackup
-  if !isdirectory(g:undodir)
-    call Mkdir(g:undodir)
-  endif
-  let &undodir = g:undodir
-  set undofile
 endif
 
 " Searching {{{1
@@ -389,12 +362,6 @@ noremap <Tab> ;
 " Repeat last command on next match
 noremap ; :normal n.<CR>
 
-" Remove trailing spaces
-noremap _$ :call StripTrailingWhitespaces()<CR>
-
-" Indent the whole file
-noremap _= :call Preserve('normal gg=G')<CR>
-
 " Stop the highlighting for the 'hlsearch' option and redraw the screen
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 " if maparg('<C-L>', 'n') ==# ''
@@ -416,6 +383,12 @@ cnoremap w!! w !sudo tee % > /dev/null
 " so that you can undo CTRL-U after inserting a line break
 inoremap <C-U> <C-G>u<C-U>
 
+" Remove trailing spaces in the current file
+" noremap _$ :call StripTrailingWhitespace()<CR>
+
+" Indent the whole file
+" noremap _= :call Preserve('normal gg=G')<CR>
+
 " Make last typed word uppercase by typing ';u'
 " inoremap <Plug>UpCase <Esc>hgUawea
 " imap ;u <Plug>UpCase
@@ -427,17 +400,13 @@ iabbrev <expr> ddate strftime("%b %d - %a")
 
 " Commands {{{1
 
-command! -nargs=0 -bar Install PlugInstall
-command! -nargs=0 -bar Update PlugUpdate
-command! -nargs=0 -bar Upgrade PlugUpgrade | PlugUpdate!
-
 " Enable soft wrap (break lines without breaking words)
 " command! -nargs=* Wrap setlocal wrap linebreak nolist
 
 " command! -nargs=0 HexDump :%!xxd
 " command! -nargs=0 HexRest :%!xxd -r
 
-" 1}}}
+" Autocommands {{{1
 
 augroup Config
   autocmd!
@@ -454,10 +423,9 @@ augroup Config
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
-
-  autocmd BufWritePre *.js,*.php,*.py :call StripTrailingWhitespaces()
-  " au BufWritePost ~/.Xdefaults redraw | echo system('xrdb ' . expand('<amatch>'))
 augroup END
+
+" 1}}}
 
 call config#Source($HOME . '/.vimrc.local')
 

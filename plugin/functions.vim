@@ -6,7 +6,7 @@ function! Eatchar(pat)
   return (l:c =~ a:pat) ? '' : l:c
 endfunc
 
-" Restore cursor position and search query after a command
+" Restore cursor position and search query
 function! Preserve(command)
   " Save last search and cursor position
   " let l:_s=@/ | let l:l = line('.') | let l:c = col('.')
