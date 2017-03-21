@@ -1,4 +1,9 @@
 " Completion
+" http://vim.wikia.com/wiki/Make_Vim_completion_popup_menu_work_just_like_in_an_IDE
+" https://github.com/ajh17/VimCompletesMe/blob/master/plugin/VimCompletesMe.vim
+" ervandew/supertab, vim-scripts/AutoComplPop...
+
+" set completeopt=longest,menuone
 
 " Next completion with Tab
 if maparg('<Tab>', 'i') ==# ''
@@ -28,10 +33,7 @@ if exists('+omnifunc')
   augroup END
 endif
 
-finish
-
-" https://github.com/ajh17/VimCompletesMe/blob/master/plugin/VimCompletesMe.vim
-" ervandew/supertab, vim-scripts/AutoComplPop...
+finish " Stop here
 
 " get(g:, 'loaded_youcompleteme', 0)
 " !get(g:, 'enable_youcompleteme', 0)
@@ -75,9 +77,6 @@ endfunction
 function! EndComp() abort
   return "\<C-e>"
 endfunction
-
-" inoremap <expr> <Tab> Complete("\<Tab>", 'NextComp')
-" inoremap <expr> <S-Tab> Complete("\<S-Tab>", 'PrevComp')
 
 "let s:save_cr = maparg('<CR>', 'i')
 "(s:save_cr !=# '' ? s:save_cr : "\<CR>")

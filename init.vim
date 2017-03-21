@@ -289,7 +289,7 @@ set foldnestmax=3
 
 set complete-=i " Don't scan current and included files
 set complete+=kspell " Use the currently active spell checking
-set completeopt+=longest " Only insert the longest common text of the matches
+" set completeopt+=longest " Only insert the longest common text of the matches
 
 " Command line {{{1
 
@@ -335,12 +335,19 @@ noremap <Leader>W :w!!<CR>
 
 " Key bindings {{{1
 
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
 " CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break
 inoremap <C-U> <C-G>u<C-U>
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
+" Paragraph reflow according to textwidth?
+" noremap Q gqap
+" vnoremap Q gv
+
+" Make 'dot' work as expected in visual mode
+" vnoremap . :norm.<CR>
 
 " Yank from the cursor to the end of the line
 noremap Y y$
@@ -348,11 +355,14 @@ noremap Y y$
 " Visually select the text that was last edited/pasted
 noremap gV `[v`]
 
-" Move on wrapped lines unless a count is specified
+" Move on virtual lines (wrapped) unless a count is specified
+" To add j/k motions to the jump list: (v:count > 1 ? "m'" . v:count : '') . 'j/k'
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
-" nnoremap 0 g0
-" nnoremap $ g$ " FIXME :set wrap
+
+" Move horizontally on virtual lines only when 'wrap' is on
+nnoremap <expr> 0 !&wrap ? '0' : 'g0'
+nnoremap <expr> $ !&wrap ? '$' : 'g$'
 
 " Restore visual selection after indent (breaks '.' dot repeat)
 " vnoremap < <gv
@@ -376,13 +386,6 @@ noremap <Tab> ;
 " Repeat last command on next match
 noremap ; :normal n.<CR>
 
-" Make 'dot' work as expected in visual mode
-" vnoremap . :norm.<CR>
-
-" Paragraph reflow according to textwidth?
-" vnoremap Q gv
-" noremap Q gqap
-
 " Remove trailing spaces
 noremap _$ :call StripTrailingWhitespaces()<CR>
 
@@ -405,6 +408,10 @@ cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Righ
 
 " Save current file as root with sudo
 cnoremap w!! w !sudo tee % > /dev/null
+
+" Make last typed word uppercase
+inoremap <Plug>UpCase <Esc>hgUawea
+imap ;u <Plug>UpCase
 
 " Abbreviations {{{1
 

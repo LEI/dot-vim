@@ -18,10 +18,10 @@
 - [spf13-vim](https://github.com/spf13/spf13-vim)
 - [vim-galore](https://github.com/mhinz/vim-galore)
 - [vim-sensible](https://github.com/tpope/vim-sensible)
-
-- [christoomey](https://github.com/christoomey/dotfiles)
-- [gfontenot](https://github.com/gfontenot/dotfiles/tree/master/tag-vim)
-- [thoughtbot](https://github.com/thoughtbot/dotfiles)
+- [christoomey](https://github.com/christoomey/dotfiles) dotfiles
+- [gfontenot](https://github.com/gfontenot/dotfiles/tree/master/tag-vim) dotfiles
+- [thoughtbot](https://github.com/thoughtbot/dotfiles) dotfiles
+- [paulirish](https://github.com/paulirish/dotfiles/blob/master/.vimrc) dotfiles
 
 ## Usage
 
