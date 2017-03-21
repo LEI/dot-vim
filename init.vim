@@ -135,6 +135,8 @@ if exists('+colorcolumn')
   set colorcolumn=+1 " Color column relative to textwidth
 endif
 
+" Clipboard adds a new line when yanking under Termux
+" system('uname -o') !=# "Android\n"
 set clipboard=unnamed " Use system clipboard
 
 " Mouse {{{1

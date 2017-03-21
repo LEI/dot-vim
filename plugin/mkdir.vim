@@ -27,5 +27,5 @@ endfunction
 
 augroup AutoMkdir
   autocmd!
-  autocmd BufWritePre * call s:Mkdir()
+  autocmd BufNewFile,BufWritePre,FileWritePre * call s:Mkdir()
 augroup END
