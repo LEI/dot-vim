@@ -6,6 +6,9 @@ endif
 
 let g:loaded_config = 1
 
+let s:save_cpo = &cpoptions
+set cpoptions&vim
+
 " let g:config_path = get(g:, 'config_path', $VIMHOME . '/config')
 let s:root = expand('~/.vim')
 let s:name = 'config'
@@ -155,3 +158,6 @@ function! s:FilterList(list, filter)
   call filter(l:list, a:filter)
   return l:list
 endfunction
+
+let &cpoptions = s:save_cpo
+unlet s:save_cpo

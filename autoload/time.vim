@@ -1,5 +1,11 @@
 " Time utils
 
+if exists('g:loaded_time')
+  finish
+endif
+
+let g:loaded_time = 1
+
 let g:timezone = get(g:, 'timezone', strlen($TZ) ? $TZ : 'Europe/Paris')
 
 function! time#IsDay()

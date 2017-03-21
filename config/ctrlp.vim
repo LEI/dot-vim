@@ -11,10 +11,7 @@ Plug 'ctrlpvim/ctrlp.vim' " Fuzzy finder (alt: junegunn/fzf.vim)
 " https://github.com/thoughtbot/dotfiles/blob/master/vimrc
 " https://github.com/ggreer/the_silver_searcher
 
-let g:ctrlp_status_func = {
-  \ 'main': 'status#extension#ctrlp#Main',
-  \ 'prog': 'status#extension#ctrlp#Prog'
-  \ }
+let g:ctrlp_status_func = {'main': 'status#extension#ctrlp#Main', 'prog': 'status#extension#ctrlp#Prog'}
 
 " let g:ctrlp_line_prefix = '> '
 " if has('multi_byte') && &encoding ==# 'utf-8'
@@ -36,10 +33,10 @@ else
   let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 endif
 
-augroup CtrlP
-  autocmd!
-  " autocmd User Config :call s:CtrlPHL()
-augroup END
+" augroup CtrlP
+"   autocmd!
+"   " autocmd User Config :call s:CtrlPHL()
+" augroup END
 
 " function! s:CtrlPHL() abort
 "   highlight CtrlPLinePre ...
