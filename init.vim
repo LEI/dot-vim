@@ -340,10 +340,6 @@ noremap <Leader>W :w!!<CR>
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
-" Paragraph reflow according to textwidth?
-" noremap Q gqap
-" vnoremap Q gv
-
 " Make 'dot' work as expected in visual mode
 vnoremap . :norm.<CR>
 
@@ -353,18 +349,19 @@ noremap Y y$
 " Visually select the text that was last edited/pasted
 noremap gV `[v`]
 
-" Move on virtual lines (wrapped) unless a count is specified
+" Move by rows instead of lines
+" Unless a count is specified: nnoremap <expr> j v:count ? 'j/k' : 'gj/gk'
 " To add j/k motions to the jump list: (v:count > 1 ? "m'" . v:count : '') . 'j/k'
-nnoremap <expr> j v:count ? 'j' : 'gj'
-nnoremap <expr> k v:count ? 'k' : 'gk'
+nnoremap j gj
+nnoremap k gk
 
-" Move horizontally on virtual lines only when 'wrap' is on
+" Reverse mappings to move linewise
+nnoremap gj j
+nnoremap gk k
+
+" Horizontal movements on rows when 'wrap' is set
 nnoremap <expr> 0 !&wrap ? '0' : 'g0'
 nnoremap <expr> $ !&wrap ? '$' : 'g$'
-
-" Restore visual selection after indent (breaks '.' dot repeat)
-" vnoremap < <gv
-" vnoremap > >gv
 
 " Split navigation shortcuts
 nnoremap <C-H> <C-W>h
@@ -377,6 +374,14 @@ noremap <C-Up> ddkP
 noremap <C-Down> ddp
 vnoremap <C-Up> xkP`[V`]
 vnoremap <C-Down> xp`[V`]
+
+" Paragraph reflow according to textwidth?
+" noremap Q gqap
+" vnoremap Q gv
+
+" Restore visual selection after indenting?
+" vnoremap < <gv
+" vnoremap > >gv
 
 " Repeat latest f, t, F or T [count] times
 noremap <Tab> ;
@@ -411,9 +416,9 @@ cnoremap w!! w !sudo tee % > /dev/null
 " so that you can undo CTRL-U after inserting a line break
 inoremap <C-U> <C-G>u<C-U>
 
-" Make last typed word uppercase
-inoremap <Plug>UpCase <Esc>hgUawea
-imap ;u <Plug>UpCase
+" Make last typed word uppercase by typing ';u'
+" inoremap <Plug>UpCase <Esc>hgUawea
+" imap ;u <Plug>UpCase
 
 " Abbreviations {{{1
 
