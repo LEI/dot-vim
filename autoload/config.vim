@@ -10,8 +10,8 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 " let g:config_path = get(g:, 'config_path', $VIMHOME . '/config')
-let s:root = expand('~/.vim')
-let s:name = 'config'
+let s:rootdir = expand('~/.vim')
+let s:dirname = 'config'
 
 command! -nargs=0 -bar Install PlugInstall
 command! -nargs=0 -bar -bang Install PlugInstall<bang>
@@ -26,33 +26,37 @@ command! -nargs=* -bar -complete=customlist,s:ListDisabled Enable call config#Lo
 " Automatically install Vim Plug and configure enabled plugins
 function! config#Init(...) abort
   " Set defaults
-  let s:root = a:0 ? a:1 : s:root
-  let s:name = a:0 > 1 ? a:2 : s:name
+  let s:rootdir = a:0 ? a:1 : s:rootdir
+  let s:dirname = a:0 > 1 ? a:2 : s:dirname
   " let g:plug_home = a:root . '/plugged'
-  let g:plug_path = s:root . '/autoload/plug.vim'
+  let g:plug_path = s:rootdir . '/autoload/plug.vim'
   let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   if empty(glob(g:plug_path))
     execute 'silent !curl -sfLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
     let g:plug_install = 1
   endif
-  call config#LoadEnabled(s:name)
+  call config#LoadEnabled(s:dirname)
 endfunction
 
 " Source ~/.vim/{config}/{name}.vim
 function! config#Load(...) abort
   call plug#begin()
   for l:name in a:000
-    call config#Source(s:root . '/' . s:name . '/' . l:name . '.vim')
+    call config#Source(s:rootdir . '/' . s:dirname . '/' . l:name . '.vim')
   endfor
   call plug#end()
   call config#Enable()
 endfunction
 
-" Source ~/.vim/{config}.vim and ~/.vim/{config}/*.vim
+" Source ~/.vim/{config,config/init,config/*}.vim
 function! config#LoadEnabled(name) abort
+  let l:name = s:rootdir . '/' . a:name
   call plug#begin() " Start Vim Plug
-  call config#Source(s:root . '/' . a:name . '.vim')
-  call config#SourceDir(s:root . '/' . a:name, 'config#IsEnabled')
+  call config#Source(l:name . '.vim')
+  if isdirectory(l:name)
+    call config#Source(l:name . '/init.vim')
+    call config#SourceDir(l:name, 'config#IsEnabled')
+  endif
   call plug#end() " Add plugins to &runtimepath
   augroup InitConfig
     autocmd!
@@ -139,19 +143,19 @@ function! s:source(path) abort
 endfunction
 
 function! s:List(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath(s:root . '/' . s:name, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath(s:rootdir . '/' . s:dirname, a:ArgLead . '*.vim'), "\n")
   " call map(l:list, string(a:fn) . '(v:val)')
   call map(l:list, "fnamemodify(v:val, ':t:r')")
   return l:list
 endfunction
 
 function! s:ListEnabled(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath(s:root . '/' . s:name, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath(s:rootdir . '/' . s:dirname, a:ArgLead . '*.vim'), "\n")
   return s:FilterList(l:list, "get(g:, 'enable_' . v:val, 0) == 1")
 endfunction
 
 function! s:ListDisabled(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath(s:root . '/' . s:name, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath(s:rootdir . '/' . s:dirname, a:ArgLead . '*.vim'), "\n")
   return s:FilterList(l:list, "get(g:, 'enable_' . v:val, 0) == 0")
 endfunction
 
