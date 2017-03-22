@@ -114,4 +114,6 @@ augroup ALE
 
   " autocmd QuickFixCmdPost [^l]* cwindow
   " autocmd QuickFixCmdPost    l* lwindow
+
+  " autocmd QuickFixCmdPost * botright cwindow 5
 augroup END

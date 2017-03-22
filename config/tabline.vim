@@ -2,4 +2,6 @@
 
 " Plug 'webdevel/tabulous'
 
-" set showtabline=1
+if has('windows')
+  set showtabline=1
+endif

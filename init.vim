@@ -7,6 +7,14 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
+" if v:progname =~? 'evim' | finish | endif
+
+" Bail out if something that ran earlier, e.g. a system wide vimrc, does not
+" want Vim to use these default values.
+if exists('skip_defaults_vim')
+  finish
+endif
+
 " Plugins {{{1
 
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
@@ -39,26 +47,29 @@ if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 
-if has('syntax')
+if has('syntax') && &t_Co > 2 || has('gui_running')
+  " let c_comment_string=1 " Highlight strings inside C comments
   set synmaxcol=420 " Limit syntax highlighting for long lines
-  if !exists('g:syntax_on') " &t_Co > 2 || has('gui_running')
+  if !exists('g:syntax_on')
     syntax enable
   endif
 endif
 
 if has('langmap') && exists('+langremap')
-  set nolangremap " Prevent that the langmap option applies to characters that result from a mapping
+  " Prevent that the langmap option applies to characters that result from a mapping
+  " If set (default), this may break plugins but it's backward compatible
+  set nolangremap
 endif
 
 if has('path_extra')
-  setglobal tags-=./tags tags-=./tags; tags^=./tags;
+  setglobal tags-=./tags tags-=./tags; tags^=./tags; " Filenames for the tag command
 endif
 
 if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
   set shell=/bin/bash
 endif
 
-if &tabpagemax < 50
+if has('windows') && &tabpagemax < 50
   set tabpagemax=50
 endif
 
@@ -74,7 +85,7 @@ if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j " Delete comment character when joining commented lines
 endif
 
-set nojoinspaces " Insert only one space after punctuation
+set nojoinspaces " Insert only one space after a '.', '?' and '!' with a join command
 "
 " set noshowmatch " Don't show matching brackets when text indicator is over them
 
@@ -82,7 +93,16 @@ set nojoinspaces " Insert only one space after punctuation
 
 " set matchpairs+=<:> " HTML brackets
 
-" set title " Set the title of the window to 'titlestring'
+if has('title')
+  " set title " Set the title of the window to 'titlestring'
+  " set titlelen=85 " Percentage of 'columns' to use for the window title
+  " set titleold= " Thanks\ for\ flying\ Vim
+endif
+
+if has('title') && has('statusline')
+  " set titlestring=%<%F%=%l/%L-%P
+  " set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:~:.:h\")})%)%(\ %a%)
+endif
 
 set autoread " Reload unmodified files when changes are detected outside
 
@@ -121,7 +141,7 @@ if has('mouse')
   " r  for |hit-enter| and |more-prompt| prompt
 endif
 
-if !has('nvim')
+if has('mouse_xterm') && !has('nvim')
   " Fix mouse inside screen and tmux
   if &term =~# '^screen' || strlen($TMUX) > 0
     set ttymouse=xterm2
@@ -144,7 +164,7 @@ if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
   set t_Co=16
 endif
 
-" Enable true colors if supported (:h xterm-true-color)
+" Enable true color if supported (:h xterm-true-color)
 " http://sunaku.github.io/tmux-24bit-color.html#usage
 let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
       \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
@@ -201,15 +221,16 @@ endif
 
 " Searching {{{1
 
-" set gdefault " Reverse global flag (always apply to all, except if /g)
-set hlsearch " Keep all matches highlighted when there is a previous search
-set ignorecase " Ignore case in search patterns
-" set magic " Changes the special characters that can be used in search patterns
-set smartcase " Case sensitive when the search contains upper case characters
-
+if has('extra_search')
+  set hlsearch " Keep all matches highlighted when there is a previous search
+endif
 if has('reltime')
   set incsearch " Do incremental searching when it's possible to timeout
 endif
+" set gdefault " Reverse global flag (always apply to all, except if /g)
+set ignorecase " Ignore case in search patterns
+" set magic " Changes the special characters that can be used in search patterns
+set smartcase " Case sensitive when the search contains upper case characters
 
 " Spaces and tabs {{{1
 
@@ -239,14 +260,16 @@ endif
 
 " Wrapping {{{1
 
+set nowrap " Don't wrap lines by default
+
+if has('linebreak')
+  " Show line breaks (arrows: 0x21AA or 0x08627)
+  "let &showbreak = nr2char(0x2026) " Ellipsis
+endif
+
 if exists('+colorcolumn')
   set colorcolumn=+1 " Color column relative to textwidth
 endif
-
-set nowrap " Don't wrap lines by default
-
-" " Show line breaks (arrows: 0x21AA or 0x08627)
-" let &showbreak = nr2char(0x2026) " Ellipsis
 
 " Scrolling {{{1
 
@@ -273,30 +296,40 @@ set complete+=kspell " Use the currently active spell checking
 " Command line {{{1
 
 if &history < 1000
-  set history=1000 " Keep 1000 lines of command line history
+  set history=1000 " Keep more lines of command line history
 endif
 set report=0 " Always report changed lines (default threshold: 2)
 set showcmd " Display incomplete commands
 " set showmode " Show current mode in command line
 
-set wildmenu " Display completion matches in a status line
+if has('wildmenu')
+  set wildmenu " Display completion matches in a status line
+endif
 set wildmode=longest,full " Complete longest common string, then each full match
 
 " Status line {{{1
 
-if v:version > 730 " 800?
-  set display+=truncate " Show @@@ in the last line if it's truncated
-endif
 set display+=lastline " Display as much as possible of the last line
+try " v:version > 730?
+  set display+=truncate " Display @@@ in the last line if it's truncated
+catch
+endtry
 set laststatus=2 " Always show statusline
-set ruler " Always show current position
-" set rulerformat=%l,%c%V%=%P
-" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+if has('cmdline_info')
+  set ruler " Always show current position
+endif
+if has('statusline')
+  " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+  " set rulerformat=%l,%c%V%=%P
+endif
 
 " Leader mappings {{{1
 
 " Change leader
 let g:mapleader = "\<Space>"
+
+" set pastetoggle=<Leader>p
+
 " Switch between the current and previous buffer
 nnoremap <Leader><Leader> <C-^>
 " Find a loaded buffer
@@ -354,6 +387,9 @@ noremap <C-Up> ddkP
 noremap <C-Down> ddp
 vnoremap <C-Up> xkP`[V`]
 vnoremap <C-Down> xp`[V`]
+
+" Maintain cursor position when joining lines
+" nnoremap J mzJ`z
 
 " Paragraph reflow according to textwidth?
 " noremap Q gqap
