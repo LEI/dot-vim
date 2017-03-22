@@ -43,6 +43,7 @@ function! s:php_daytime()
   let l:cmd.= '$sunrise = date_sunrise($time, SUNFUNCS_RET_TIMESTAMP, $lat, $lon, $zen, $off);'
   let l:cmd.= '$sunset = date_sunset($time, SUNFUNCS_RET_TIMESTAMP, $lat, $lon, $zen, $off);'
   " let l:cmd.= '$now = $dt->format("H:i");' " SUNFUNCS_RET_STRING
+  " echom system(printf("php -r '%s'", l:cmd . 'echo date("H:i", $sunrise) . " -> " . date("H:i", $sunset) . " (" . date("H:i", $time) . ")";'))
   let l:cmd.= 'exit($time > $sunrise && $time < $sunset);'
   return system(printf("php -r '%s'", l:cmd)) == 1
 endfunction
