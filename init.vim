@@ -91,6 +91,9 @@ set autoread " Reload unmodified files when changes are detected outside
 set hidden " Allow modified buffers in the background
 
 set shortmess=atI " Avoid hit-enter prompts caused by file messages
+" a  enable all abbreviations of message (flags: filmnrwx)
+" t  truncate file message at the start when necessary
+" I  don't give the intro message when starting
 
 set nostartofline " Keep the cursor on the same column if possible
 
@@ -102,12 +105,7 @@ set secure " Disable unsafe commands
 set modeline " Allow setting some options at the beginning and end of the file
 set modelines=2 " Number of lines checked for set commands
 
-if exists('+colorcolumn')
-  set colorcolumn=+1 " Color column relative to textwidth
-endif
-
 " Clipboard adds a new line when yanking under Termux
-" system('uname -o') !=# "Android\n"
 set clipboard=unnamed " Use system clipboard
 
 " Mouse {{{1
@@ -196,8 +194,8 @@ if has('persistent_undo') " && exists('g:undodir')
   let &undodir = g:undodir
   set undofile
   " Disable swapfiles and backups
-  set noswapfile
-  set nobackup
+  set noswapfile " directory=~/.vim/swap
+  set nobackup " backupdir=~/.vim/backup
   set nowritebackup
 endif
 
@@ -241,6 +239,10 @@ endif
 
 " Wrapping {{{1
 
+if exists('+colorcolumn')
+  set colorcolumn=+1 " Color column relative to textwidth
+endif
+
 set nowrap " Don't wrap lines by default
 
 " " Show line breaks (arrows: 0x21AA or 0x08627)
@@ -254,11 +256,13 @@ set sidescrolloff=5 " Lines to the left and right if 'nowrap' is set
 
 " Folding {{{1
 
-set nofoldenable
-" set foldcolumn=1
-" set foldlevelstart=10
-set foldmethod=indent
-set foldnestmax=3
+if has('folding')
+  set nofoldenable
+  " set foldcolumn=1
+  " set foldlevelstart=10
+  set foldmethod=indent
+  set foldnestmax=3
+endif
 
 " Complete {{{1
 
@@ -313,9 +317,6 @@ noremap <Leader>W :w!!<CR>
 " Don't use Ex mode, use Q for formatting
 map Q gq
 
-" Make 'dot' work as expected in visual mode
-vnoremap . :norm.<CR>
-
 " Yank from the cursor to the end of the line
 noremap Y y$
 
@@ -335,6 +336,12 @@ nnoremap gk k
 " Horizontal movements on rows when 'wrap' is set
 nnoremap <expr> 0 !&wrap ? '0' : 'g0'
 nnoremap <expr> $ !&wrap ? '$' : 'g$'
+
+" Repeat latest linewise character searches (f, t, F or T [count] times)
+noremap <Tab> ;
+
+" Repeat last command on next match
+noremap ; :normal n.<CR>
 
 " Split navigation shortcuts
 nnoremap <C-H> <C-W>h
@@ -356,11 +363,8 @@ vnoremap <C-Down> xp`[V`]
 " vnoremap < <gv
 " vnoremap > >gv
 
-" Repeat latest f, t, F or T [count] times
-noremap <Tab> ;
-
-" Repeat last command on next match
-noremap ; :normal n.<CR>
+" Make 'dot' work as expected in visual mode
+vnoremap . :norm.<CR>
 
 " Stop the highlighting for the 'hlsearch' option and redraw the screen
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>

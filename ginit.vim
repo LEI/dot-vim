@@ -2,8 +2,8 @@
 
 " jordwalke/VimBox
 
-try
-  set guifont=Hack:h12 " Change the default font
+try " Change the default font
+  set guifont=Hack:h12
 catch /E596:/
 endtry
 

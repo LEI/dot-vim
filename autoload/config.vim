@@ -14,8 +14,11 @@ let s:root = expand('~/.vim')
 let s:name = 'config'
 
 command! -nargs=0 -bar Install PlugInstall
+command! -nargs=0 -bar -bang Install PlugInstall<bang>
 command! -nargs=0 -bar Update PlugUpdate
+command! -nargs=0 -bar -bang Update PlugUpdate<bang>
 command! -nargs=0 -bar Upgrade PlugUpgrade | PlugUpdate!
+
 command! -nargs=* -bar -complete=customlist,s:ListEnabled Reload call config#Load(<f-args>)
 command! -nargs=* -bar -complete=customlist,s:ListDisabled Enable call config#Load(<f-args>)
 " command! -nargs=? -bar LoadEnabled call config#LoadEnabled(<f-args>)
@@ -48,8 +51,8 @@ endfunction
 " Source ~/.vim/{config}.vim and ~/.vim/{config}/*.vim
 function! config#LoadEnabled(name) abort
   call plug#begin() " Start Vim Plug
-  call config#Source($VIMHOME . '/' . a:name . '.vim')
-  call config#SourceDir($VIMHOME . '/' . a:name, 'config#IsEnabled')
+  call config#Source(s:root . '/' . a:name . '.vim')
+  call config#SourceDir(s:root . '/' . a:name, 'config#IsEnabled')
   call plug#end() " Add plugins to &runtimepath
   augroup InitConfig
     autocmd!
@@ -136,19 +139,19 @@ function! s:source(path) abort
 endfunction
 
 function! s:List(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath($VIMHOME . '/' . s:name, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath(s:root . '/' . s:name, a:ArgLead . '*.vim'), "\n")
   " call map(l:list, string(a:fn) . '(v:val)')
   call map(l:list, "fnamemodify(v:val, ':t:r')")
   return l:list
 endfunction
 
 function! s:ListEnabled(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath($VIMHOME . '/' . s:name, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath(s:root . '/' . s:name, a:ArgLead . '*.vim'), "\n")
   return s:FilterList(l:list, "get(g:, 'enable_' . v:val, 0) == 1")
 endfunction
 
 function! s:ListDisabled(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath($VIMHOME . '/' . s:name, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath(s:root . '/' . s:name, a:ArgLead . '*.vim'), "\n")
   return s:FilterList(l:list, "get(g:, 'enable_' . v:val, 0) == 0")
 endfunction
 

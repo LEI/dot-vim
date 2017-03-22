@@ -1,7 +1,9 @@
 " Markdown
 
 " Enable spellchecking
-setlocal spell
+if has('spell')
+  setlocal spell
+endif
 
 " Automatically wrap at 80 characters
 setlocal textwidth=80

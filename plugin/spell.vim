@@ -1,6 +1,6 @@
 " Spell checking
 
-if !has('syntax')
+if !has('spell')
   finish
 endif
 

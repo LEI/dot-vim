@@ -1,7 +1,9 @@
 " Text
 
 " Enable spellchecking
-" setlocal spell
+" if has('spell')
+"   setlocal spell
+" endif
 
 " Automatically wrap at 78 characters
 setlocal textwidth=78

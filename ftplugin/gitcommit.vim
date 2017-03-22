@@ -1,7 +1,9 @@
 " Git commit
 
 " Enable spellchecking
-setlocal spell
+if has('spell')
+  setlocal spell
+endif
 
 " Automatically wrap at 72 characters
 setlocal textwidth=72
