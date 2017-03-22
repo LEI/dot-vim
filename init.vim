@@ -34,7 +34,9 @@ endif
 
 set backspace=indent,eol,start " Allow backspace over everything in insert mode
 
-" set esckeys " Recognize escape immediately
+if !has('nvim')
+  set esckeys " Recognize escape immediately
+endif
 
 set timeout
 set timeoutlen=1000
@@ -48,11 +50,11 @@ if &encoding ==# 'latin1' && has('gui_running')
 endif
 
 if has('syntax') && &t_Co > 2 || has('gui_running')
-  " let c_comment_string=1 " Highlight strings inside C comments
-  set synmaxcol=420 " Limit syntax highlighting for long lines
   if !exists('g:syntax_on')
     syntax enable
   endif
+  " let c_comment_string=1 " Highlight strings inside C comments
+  set synmaxcol=420 " Limit syntax highlighting for long lines
 endif
 
 if has('langmap') && exists('+langremap')
@@ -67,10 +69,6 @@ endif
 
 if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
   set shell=/bin/bash
-endif
-
-if has('windows') && &tabpagemax < 50
-  set tabpagemax=50
 endif
 
 if !empty(&viminfo)
@@ -92,17 +90,6 @@ set nojoinspaces " Insert only one space after a '.', '?' and '!' with a join co
 " set matchtime=2 " How many tenths of a second to blink when matching brackets
 
 " set matchpairs+=<:> " HTML brackets
-
-if has('title')
-  " set title " Set the title of the window to 'titlestring'
-  " set titlelen=85 " Percentage of 'columns' to use for the window title
-  " set titleold= " Thanks\ for\ flying\ Vim
-endif
-
-if has('title') && has('statusline')
-  " set titlestring=%<%F%=%l/%L-%P
-  " set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:~:.:h\")})%)%(\ %a%)
-endif
 
 set autoread " Reload unmodified files when changes are detected outside
 
@@ -219,6 +206,26 @@ if has('persistent_undo') " && exists('g:undodir')
   set nowritebackup
 endif
 
+" Windows {{{1
+
+if has('windows')
+  if &tabpagemax < 50
+    set tabpagemax=50
+  endif
+  set winminheight=0 " Minimal height of a window when it's not the current one
+endif
+
+if has('title')
+  " set title " Set the title of the window to 'titlestring'
+  " set titlelen=85 " Percentage of 'columns' to use for the window title
+  " set titleold= " Thanks\ for\ flying\ Vim
+endif
+
+if has('title') && has('statusline')
+  " set titlestring=%<%F%=%l/%L-%P
+  " set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:~:.:h\")})%)%(\ %a%)
+endif
+
 " Searching {{{1
 
 if has('extra_search')
@@ -231,17 +238,21 @@ endif
 set ignorecase " Ignore case in search patterns
 " set magic " Changes the special characters that can be used in search patterns
 set smartcase " Case sensitive when the search contains upper case characters
+set wrapscan " Searches wrap around the end of the file
 
 " Spaces and tabs {{{1
 
-set smarttab
-set autoindent
-" set smartindent " When starting a new line
+set smarttab " Tab and backspace behave accordingly to 'sw', 'ts' or 'sts'
+set autoindent " Copy indent from the current line when starting a new one
+if has('smartindent')
+  set smartindent " Automatically insert an indent in complement with 'autoindent'
+endif
+
 set expandtab " Use spaces instead of tabs
-set shiftround " >> indents to net multiple of 'shiftwidth'
-set shiftwidth=4 " >> indents by 4 spaces
+set shiftround " Round indent to multiple of 'shiftwidth'
+set shiftwidth=4 " Number of spaces to use for each step of (auto)indent
 set softtabstop=4 " Number of spaces that a tab counts for while editing
-set tabstop=4 " Spaces used to represent a tab (default: 8)
+" set tabstop=8 " Number of spaces that a tab in the file counts for
 
 set list " Show invisible characters
 " let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
@@ -301,11 +312,12 @@ endif
 set report=0 " Always report changed lines (default threshold: 2)
 set showcmd " Display incomplete commands
 " set showmode " Show current mode in command line
-
 if has('wildmenu')
+  " set wildchar=<Tab>
   set wildmenu " Display completion matches in a status line
+  set wildmode=longest,full " Complete longest common string, then each full match
+  " if exists('&wildignorecase') | set wildignorecase | endif
 endif
-set wildmode=longest,full " Complete longest common string, then each full match
 
 " Status line {{{1
 
