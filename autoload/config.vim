@@ -39,7 +39,7 @@ endfunction
 function! config#Load(...) abort
   call plug#begin()
   for l:name in a:000
-    call config#Source($VIMHOME . '/' . s:name . '/' . l:name . '.vim')
+    call config#Source(s:root . '/' . s:name . '/' . l:name . '.vim')
   endfor
   call plug#end()
   call config#Enable()
