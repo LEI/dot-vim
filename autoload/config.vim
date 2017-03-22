@@ -68,14 +68,15 @@ function! config#LoadEnabled(name) abort
 endfunction
 
 function! config#Enable() abort
+  if !exists('#User#Config')
+    return 0
+  endif
   augroup UserConfig
     autocmd!
     " Clear User Config autocommands after executing it
     autocmd User Config :autocmd! User Config
   augroup END
-  if exists('#User#Config')
-    doautocmd User Config
-  endif
+  doautocmd User Config
 endfunction
 
 " Check g:enable_{name}

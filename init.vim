@@ -490,10 +490,6 @@ vnoremap <C-Down> xp`[V`]
 " noremap Q gqap
 " vnoremap Q gv
 
-" Restore visual selection after indenting?
-" vnoremap < <gv
-" vnoremap > >gv
-
 " Make 'dot' work as expected in visual mode
 vnoremap . :norm.<CR>
 
