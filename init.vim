@@ -26,10 +26,6 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) =
   runtime! macros/matchit.vim
 endif
 
-if has('autocmd')
-  filetype plugin indent on " Enable file type detection
-endif
-
 " Options {{{1
 
 set backspace=indent,eol,start " Allow backspace over everything in insert mode
@@ -49,12 +45,19 @@ if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 
-if has('syntax') && &t_Co > 2 || has('gui_running')
+if &t_Co > 2 || has('gui_running') " has('syntax')
   if !exists('g:syntax_on')
     syntax enable
   endif
   " let c_comment_string=1 " Highlight strings inside C comments
+endif
+
+if has('syntax')
   set synmaxcol=420 " Limit syntax highlighting for long lines
+endif
+
+if has('autocmd')
+  filetype plugin indent on " Enable file type detection
 endif
 
 if has('langmap') && exists('+langremap')
@@ -179,16 +182,36 @@ set t_vb= " Disable audible and visual bells
 
 " Sessions and views {{{1
 
-" set viewdir=$HOME/.vim/view " Customize location of saved views
-set viewoptions-=options " folds,options,cursor
-" cursor: cursor position in file and in window
-" folds: manually created folds, opened/closed folds and local fold options
-" options: options and mappings local to a window or buffer (not global values for local options)
-" localoptions: same as 'options'
-" slash,unix: useful on Windows when sharing view files
-
 " Don't save all options and mappings
 set sessionoptions-=options
+
+if has('mksession')
+  " set viewdir=$HOME/.vim/view " Customize location of saved views
+  set viewoptions-=options " folds,options,cursor
+  " cursor: cursor position in file and in window
+  " folds: manually created folds, opened/closed folds and local fold options
+  " options: options and mappings local to a window or buffer (not global values for local options)
+  " localoptions: same as 'options'
+  " slash,unix: useful on Windows when sharing view files
+else
+  " Restore cursor position when reading a file
+  " https://github.com/farmergreg/vim-lastplace
+  function! RestoreCursorPosition()
+    if &filetype ==# 'gitcommit'
+      return 0
+    endif
+    if line("'\"") > 0 && line("'\"") <= line('$')
+      normal! g`"
+      return 1
+    endif
+  endfunction
+  augroup RestoreCursorPosition
+    autocmd!
+    autocmd BufReadPost * call RestoreCursorPosition()
+  augroup END
+endif
+
+" Undodir {{{1
 
 " Keep undo history across sessions
 " expand(get(g:, 'undodir', '~/.vim/backups'))
@@ -206,13 +229,15 @@ if has('persistent_undo') " && exists('g:undodir')
   set nowritebackup
 endif
 
-" Windows {{{1
+" Windows and tab pages {{{1
 
 if has('windows')
-  if &tabpagemax < 50
-    set tabpagemax=50
-  endif
+  set splitbelow " Split windows below the current window
+  set splitright " Split windows right of the current window
   set winminheight=0 " Minimal height of a window when it's not the current one
+  if &tabpagemax < 50
+    set tabpagemax=50 " Maximum number of tab pages to be opened
+  endif
 endif
 
 if has('title')
@@ -276,9 +301,10 @@ set nowrap " Don't wrap lines by default
 if has('linebreak')
   " Show line breaks (arrows: 0x21AA or 0x08627)
   "let &showbreak = nr2char(0x2026) " Ellipsis
+  "set cpoptions+=n " Make 'showbreak' appear in between line numbers
 endif
 
-if exists('+colorcolumn')
+if has('syntax') && exists('+colorcolumn')
   set colorcolumn=+1 " Color column relative to textwidth
 endif
 
@@ -302,7 +328,9 @@ endif
 
 set complete-=i " Don't scan current and included files
 set complete+=kspell " Use the currently active spell checking
-" set completeopt+=longest " Only insert the longest common text of the matches
+if has('insert_expand')
+  set completeopt+=longest " Only insert the longest common text of the matches
+endif
 
 " Command line {{{1
 
@@ -310,7 +338,9 @@ if &history < 1000
   set history=1000 " Keep more lines of command line history
 endif
 set report=0 " Always report changed lines (default threshold: 2)
-set showcmd " Display incomplete commands
+if has('cmdline_info')
+  set showcmd " Display incomplete commands
+endif
 " set showmode " Show current mode in command line
 if has('wildmenu')
   " set wildchar=<Tab>
