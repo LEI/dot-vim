@@ -7,26 +7,23 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
-" if v:progname =~? 'evim' | finish | endif
+" Init {{{1
 
-" Bail out if something that ran earlier, e.g. a system wide vimrc, does not
-" want Vim to use these default values.
+" if v:progname =~? 'evim' | finish | endif
+" Bail out if something that ran earlier, e.g. a system wide vimrc
 if exists('skip_defaults_vim')
   finish
 endif
 
-" Plugins {{{1
-
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 " split(&runtimepath, ',')[0] " $HOME . '/.vim'
-call config#Init($VIMHOME, 'config')
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
 endif
 
-" Options {{{1
+" General {{{1
 
 set backspace=indent,eol,start " Allow backspace over everything in insert mode
 
@@ -105,8 +102,6 @@ set shortmess=atI " Avoid hit-enter prompts caused by file messages
 " t  truncate file message at the start when necessary
 " I  don't give the intro message when starting
 
-set nostartofline " Keep the cursor on the same column if possible
-
 set lazyredraw " Redraw only if necessary, faster macros
 
 set exrc " Enable per-directory .vimrc files
@@ -140,7 +135,53 @@ if has('mouse_xterm') && !has('nvim')
   set ttyfast
 endif
 
-" Terminal colors {{{1
+" Cursor {{{1
+
+if has('syntax')
+  set cursorline " Highlight the screen line of the cursor
+endif
+set nostartofline " Keep the cursor on the same column when possible
+set scrolloff=5 " Lines to keep above and below the cursor
+set sidescroll=1 " Lines to scroll horizontally when 'wrap' is set
+set sidescrolloff=5 " Lines to the left and right if 'nowrap' is set
+
+" Change cursor shape depending on current mode
+if has('nvim')
+  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+elseif empty($TMUX)
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  if v:version >= 800
+    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+  endif
+else
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+  if v:version >= 800
+    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+  endif
+endif
+
+" Override cursor highlight group
+function! HighlightCursor() abort
+  if &background ==# 'dark'
+    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
+    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
+  elseif &background ==# 'light'
+    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
+    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
+  endif
+endfunction
+
+augroup Cursor
+  autocmd!
+  autocmd VimEnter,ColorScheme * :call HighlightCursor()
+  " Show cursor line on active window only (or use InsertLeave/InsertEnter)
+  autocmd WinEnter * set cursorline
+  autocmd WinLeave * set nocursorline
+augroup END
+
+" Terminal {{{1
 
 if &term =~# '256color'
   " Disable Background Color Erase (BCE) so that color schemes
@@ -180,7 +221,7 @@ set noerrorbells " Disable audible bell for error messages
 set visualbell " Use visual bell instead of beeping
 set t_vb= " Disable audible and visual bells
 
-" Sessions and views {{{1
+" Sessions {{{1
 
 " Don't save all options and mappings
 set sessionoptions-=options
@@ -229,7 +270,7 @@ if has('persistent_undo') " && exists('g:undodir')
   set nowritebackup
 endif
 
-" Windows and tab pages {{{1
+" Windows {{{1
 
 if has('windows')
   set splitbelow " Split windows below the current window
@@ -251,6 +292,89 @@ if has('title') && has('statusline')
   " set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:~:.:h\")})%)%(\ %a%)
 endif
 
+" Diff mode {{{1
+
+set diffopt+=vertical " Start diff mode with vertical splits
+
+" See the difference between the current buffer and the file it was loaded from
+if !exists(':DiffOrig')
+  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+        \ | wincmd p | diffthis
+endif
+
+" Columns {{{1
+
+set number " Print the line number in front of each line
+if has('linebreak') && exists('+numberwidth')
+  " set numberwidth=4 " Minimal number of columns to use for the line number
+endif
+if exists('+relativenumber')
+  set relativenumber " Show the line number relative to the line with the cursor
+endif
+if has('syntax') && exists('+colorcolumn')
+  set colorcolumn=+1 " Color column relative to textwidth
+endif
+
+" Wrapping {{{1
+
+set nowrap " Don't wrap lines by default
+if has('linebreak')
+  " Show line breaks (arrows: 0x21AA or 0x08627)
+  "let &showbreak = nr2char(0x2026) " Ellipsis
+  "set cpoptions+=n " Make 'showbreak' appear in between line numbers
+endif
+
+" Folding {{{1
+
+if has('folding')
+  set nofoldenable
+  " set foldcolumn=1
+  " set foldlevelstart=10
+  set foldmethod=indent
+  set foldnestmax=3
+endif
+
+" Status line {{{1
+
+set display+=lastline " Display as much as possible of the last line
+try " v:version > 730?
+  set display+=truncate " Display @@@ in the last line if it's truncated
+catch
+endtry
+set laststatus=2 " Always show statusline
+if has('cmdline_info')
+  set ruler " Always show current position
+endif
+if has('statusline')
+  " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+  " set rulerformat=%l,%c%V%=%P
+endif
+
+" Command line {{{1
+
+if &history < 1000
+  set history=1000 " Keep more lines of command line history
+endif
+set report=0 " Always report changed lines (default threshold: 2)
+if has('cmdline_info')
+  set showcmd " Display incomplete commands
+endif
+" set showmode " Show current mode in command line
+if has('wildmenu')
+  " set wildchar=<Tab>
+  set wildmenu " Display completion matches in a status line
+  set wildmode=longest,full " Complete longest common string, then each full match
+  " if exists('&wildignorecase') | set wildignorecase | endif
+endif
+
+" Complete {{{1
+
+set complete-=i " Don't scan current and included files
+set complete+=kspell " Use the currently active spell checking
+if has('insert_expand')
+  set completeopt+=longest " Only insert the longest common text of the matches
+endif
+
 " Searching {{{1
 
 if has('extra_search')
@@ -265,7 +389,7 @@ set ignorecase " Ignore case in search patterns
 set smartcase " Case sensitive when the search contains upper case characters
 set wrapscan " Searches wrap around the end of the file
 
-" Spaces and tabs {{{1
+" Indenting {{{1
 
 set smarttab " Tab and backspace behave accordingly to 'sw', 'ts' or 'sts'
 set autoindent " Copy indent from the current line when starting a new one
@@ -293,77 +417,6 @@ endif
 
 " Default: set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
 " let &fillchars='stl: ,stlnc: '
-
-" Wrapping {{{1
-
-set nowrap " Don't wrap lines by default
-
-if has('linebreak')
-  " Show line breaks (arrows: 0x21AA or 0x08627)
-  "let &showbreak = nr2char(0x2026) " Ellipsis
-  "set cpoptions+=n " Make 'showbreak' appear in between line numbers
-endif
-
-if has('syntax') && exists('+colorcolumn')
-  set colorcolumn=+1 " Color column relative to textwidth
-endif
-
-" Scrolling {{{1
-
-set scrolloff=5 " Lines to keep above and below the cursor
-set sidescroll=1 " Lines to scroll horizontally when 'wrap' is set
-set sidescrolloff=5 " Lines to the left and right if 'nowrap' is set
-
-" Folding {{{1
-
-if has('folding')
-  set nofoldenable
-  " set foldcolumn=1
-  " set foldlevelstart=10
-  set foldmethod=indent
-  set foldnestmax=3
-endif
-
-" Complete {{{1
-
-set complete-=i " Don't scan current and included files
-set complete+=kspell " Use the currently active spell checking
-if has('insert_expand')
-  set completeopt+=longest " Only insert the longest common text of the matches
-endif
-
-" Command line {{{1
-
-if &history < 1000
-  set history=1000 " Keep more lines of command line history
-endif
-set report=0 " Always report changed lines (default threshold: 2)
-if has('cmdline_info')
-  set showcmd " Display incomplete commands
-endif
-" set showmode " Show current mode in command line
-if has('wildmenu')
-  " set wildchar=<Tab>
-  set wildmenu " Display completion matches in a status line
-  set wildmode=longest,full " Complete longest common string, then each full match
-  " if exists('&wildignorecase') | set wildignorecase | endif
-endif
-
-" Status line {{{1
-
-set display+=lastline " Display as much as possible of the last line
-try " v:version > 730?
-  set display+=truncate " Display @@@ in the last line if it's truncated
-catch
-endtry
-set laststatus=2 " Always show statusline
-if has('cmdline_info')
-  set ruler " Always show current position
-endif
-if has('statusline')
-  " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-  " set rulerformat=%l,%c%V%=%P
-endif
 
 " Leader mappings {{{1
 
@@ -509,6 +562,7 @@ augroup END
 
 " 1}}}
 
+call config#Init($VIMHOME, 'config')
 call config#Source($HOME . '/.vimrc.local')
 
 " vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker
