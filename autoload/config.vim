@@ -9,7 +9,6 @@ let g:loaded_config = 1
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-" let g:config_path = get(g:, 'config_path', $VIMHOME . '/config')
 if !exists('$VIMHOME')
   let $VIMHOME = expand('$VIMHOME')
 endif
