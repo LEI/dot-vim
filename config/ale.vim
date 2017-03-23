@@ -6,8 +6,10 @@ endif
 
 Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
-" Shell: bashate, shellcheck
+" https://github.com/showcases/clean-code-linters
 
+" Shell: bashate, shellcheck
+" Golang: go get -u github.com/golang/lint/golint
 " VimL: pip3 install vim-vint
 " Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
 " if executable('go')
