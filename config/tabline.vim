@@ -1,7 +1,9 @@
 " Tabline
 
+if !has('windows')
+  finish
+endif
+
 " Plug 'webdevel/tabulous'
 
-if has('windows')
-  set showtabline=1
-endif
+set showtabline=1
