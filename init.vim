@@ -547,17 +547,17 @@ augroup Config
   autocmd!
   " Reset colors persisting in terminal
   " autocmd VimLeave * :!echo -ne "\033[0m"
-
-  " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
-  " autocmd FocusLost * :set nolazyredraw
-  " autocmd FocusGained * :redrawstatus
-  " autocmd VimResized * :redrawstatus
-
   " autocmd BufReadPost,FileReadPost *.py :silent %!PythonTidy.py
   " autocmd BufReadPost,FileReadPost *.p[lm] :silent %!perltidy -q
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
+  if has('nvim')
+  " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
+  " autocmd FocusLost * :set nolazyredraw
+  " autocmd FocusGained * :redrawstatus
+  " autocmd VimResized * :redrawstatus
+  endif
 augroup END
 
 " 1}}}

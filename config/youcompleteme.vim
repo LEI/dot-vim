@@ -26,30 +26,50 @@ endfunction
 
 Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
 
-augroup YCM
-  autocmd!
-  " autocmd User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
-  " autocmd CompleteDone * pclose
-  " autocmd CursorHold, CursorHoldI * :packadd YouCompleteMe | autocmd! YCM
-  " autocmd CursorHold,CursorHoldI * :call YCMEnable() | :autocmd! YCM
-  autocmd User Config :call YCMEnable() | :autocmd! YCM
-augroup END
-
 " !exists('g:loaded_youcompleteme') | call plug#load('YouCompleteMe') | call youcompleteme#Enable()
 function! YCMEnable() abort
   if exists('g:loaded_youcompleteme')
-    echoerr 'YCM is already loaded'
+    echom 'Already loaded YouCompleteMe'
     return 1
   endif
   if has('vim_starting')
-    echoerr 'YCM not loaded, vim is still starting'
+    echoerr 'Vim is still starting, not loading YouCompleteMe'
     return 0
   endif
+  echo 'Loading YCM...'
   call plug#load('YouCompleteMe')
+  echo ''
   if !exists('g:loaded_youcompleteme')
-    echoerr 'YCM was not loaded'
+    echoerr 'Could not load YouCompleteMe'
     return 0
   endif
   call youcompleteme#Enable()
   return 1
 endfunction
+
+command! -nargs=0 -bar YCMEnable :call YCMEnable()
+
+noremap <unique> <silent> <C-Space> :call YCMEnable()<CR>
+" :iunmap <C-Space><CR>
+inoremap <expr> <unique> <silent> <C-Space> (YCMEnable() ? "" : "\<C-Space>")
+
+function! s:enable() abort
+  let l:loaded = YCMEnable()
+  if l:loaded == 1 && &completefunc ==# 'youcompleteme#Complete'
+    " doautocmd TextChangedI
+    " startinsert / stopinsert
+    " return "\<Esc>\"2dla\<C-R>2"
+    " return "\<Esc>a\<C-X>\<C-U>\<C-P>"
+    call feedkeys( "\<C-X>\<C-U>\<C-P>", 'n' )
+  endif
+  return "\<C-Space>"
+endfunction
+
+augroup YCM
+  autocmd!
+  " autocmd User YouCompleteMe echom 'User YCM'
+  " autocmd User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+  " autocmd CursorHold,CursorHoldI * :call YCMEnable() | :autocmd! YCM
+  " autocmd User Config :redraw | :call YCMEnable() | :autocmd! YCM
+  " autocmd CompleteDone * pclose
+augroup END

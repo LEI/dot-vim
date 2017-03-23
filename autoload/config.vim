@@ -24,9 +24,9 @@ command! -nargs=0 -bar -bang Install PlugInstall<bang>
 command! -nargs=0 -bar Update PlugUpdate
 command! -nargs=0 -bar -bang Update PlugUpdate<bang>
 command! -nargs=0 -bar Upgrade PlugUpgrade | PlugUpdate!
-
-command! -nargs=* -bar -complete=customlist,s:ListEnabled Reload call config#LoadConfig(<f-args>)
-command! -nargs=* -bar -complete=customlist,s:ListDisabled Enable call config#LoadConfig(<f-args>)
+command! -nargs=0 -bar Load call config#Load(<f-args>)
+command! -nargs=* -bar -complete=customlist,s:ListEnabled Reload call config#Load(<f-args>)
+command! -nargs=* -bar -complete=customlist,s:ListDisabled Enable call config#Load(<f-args>)
 " command! -nargs=? -bar LoadEnabled call config#LoadEnabled(<f-args>)
 
 " Automatically install Vim Plug and configure enabled plugins
@@ -42,8 +42,15 @@ function! config#Init(...) abort
   call config#LoadEnabled(l:dir)
 endfunction
 
-" Load a list of paths
+" Source $VIMCONFIG/{name}.vim
 function! config#Load(...) abort
+  let l:files = deepcopy(a:000)
+  call map(l:files, "printf('%s/%s.vim', $VIMCONFIG, v:val)")
+  return config#LoadPath(l:files)
+endfunction
+
+" Load a list of paths
+function! config#LoadPath(...) abort
   let l:files = a:000
   call plug#begin()
   for l:path in l:files
@@ -51,13 +58,6 @@ function! config#Load(...) abort
   endfor
   call plug#end()
   call config#Enable()
-endfunction
-
-" Source $VIMCONFIG/{name}.vim
-function! config#LoadConfig(...) abort
-  let l:files = deepcopy(a:000)
-  call map(l:files, "printf('%s/%s.vim', $VIMCONFIG, v:val)")
-  return config#Load(l:files)
 endfunction
 
 " Source $VIMHOME/{$dir,$dir/init,$dir/*}.vim
@@ -69,12 +69,12 @@ function! config#LoadEnabled(dir) abort
     call config#SourceDir(a:dir, 'config#IsEnabled')
   endif
   call plug#end() " Add plugins to &runtimepath
-  augroup InitConfig
+  augroup EnableConfig
     autocmd!
     " Wait until vim is ready to clone and configure or :PlugInstall will create the first window
     autocmd VimEnter * if get(g:, 'plug_install', 0) | PlugInstall --sync | let g:plug_install = 0 | endif
-        \ | call config#Enable()
-        \ | :autocmd! InitConfig
+    autocmd VimEnter * :call config#Enable()
+    autocmd VimEnter * :autocmd! EnableConfig
   augroup END
 endfunction
 
