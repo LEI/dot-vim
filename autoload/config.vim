@@ -10,8 +10,15 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 " let g:config_path = get(g:, 'config_path', $VIMHOME . '/config')
-let s:rootdir = expand('~/.vim')
-let s:dirname = 'config'
+if !exists('$VIMHOME')
+  let $VIMHOME = expand('$VIMHOME')
+endif
+if empty($VIMHOME)
+  let $VIMHOME = expand('~/.vim')
+endif
+if !exists('$VIMCONFIG') || empty($VIMCONFIG)
+  let $VIMCONFIG = $VIMHOME . '/config'
+endif
 
 command! -nargs=0 -bar Install PlugInstall
 command! -nargs=0 -bar -bang Install PlugInstall<bang>
@@ -19,43 +26,48 @@ command! -nargs=0 -bar Update PlugUpdate
 command! -nargs=0 -bar -bang Update PlugUpdate<bang>
 command! -nargs=0 -bar Upgrade PlugUpgrade | PlugUpdate!
 
-command! -nargs=* -bar -complete=customlist,s:ListEnabled Reload call config#Load(<f-args>)
-command! -nargs=* -bar -complete=customlist,s:ListDisabled Enable call config#Load(<f-args>)
+command! -nargs=* -bar -complete=customlist,s:ListEnabled Reload call config#LoadConfig(<f-args>)
+command! -nargs=* -bar -complete=customlist,s:ListDisabled Enable call config#LoadConfig(<f-args>)
 " command! -nargs=? -bar LoadEnabled call config#LoadEnabled(<f-args>)
 
 " Automatically install Vim Plug and configure enabled plugins
 function! config#Init(...) abort
-  " Set defaults
-  let s:rootdir = a:0 ? a:1 : s:rootdir
-  let s:dirname = a:0 > 1 ? a:2 : s:dirname
+  let l:dir = a:0 ? a:1 : $VIMCONFIG
   " let g:plug_home = a:root . '/plugged'
-  let g:plug_path = s:rootdir . '/autoload/plug.vim'
+  let g:plug_path = $VIMHOME . '/autoload/plug.vim'
   let g:plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   if empty(glob(g:plug_path))
     execute 'silent !curl -sfLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
     let g:plug_install = 1
   endif
-  call config#LoadEnabled(s:dirname)
+  call config#LoadEnabled(l:dir)
 endfunction
 
-" Source ~/.vim/{config}/{name}.vim
+" Load a list of paths
 function! config#Load(...) abort
+  let l:files = a:000
   call plug#begin()
-  for l:name in a:000
-    call config#Source(s:rootdir . '/' . s:dirname . '/' . l:name . '.vim')
+  for l:path in l:files
+    call config#Source(l:path)
   endfor
   call plug#end()
   call config#Enable()
 endfunction
 
-" Source ~/.vim/{config,config/init,config/*}.vim
-function! config#LoadEnabled(name) abort
-  let l:name = s:rootdir . '/' . a:name
+" Source $VIMCONFIG/{name}.vim
+function! config#LoadConfig(...) abort
+  let l:files = deepcopy(a:000)
+  call map(l:files, "printf('%s/%s.vim', $VIMCONFIG, v:val)")
+  return config#Load(l:files)
+endfunction
+
+" Source $VIMHOME/{$dir,$dir/init,$dir/*}.vim
+function! config#LoadEnabled(dir) abort
   call plug#begin() " Start Vim Plug
-  call config#Source(l:name . '.vim')
-  if isdirectory(l:name)
-    call config#Source(l:name . '/init.vim')
-    call config#SourceDir(l:name, 'config#IsEnabled')
+  call config#Source(a:dir . '.vim')
+  if isdirectory(a:dir)
+    call config#Source(a:dir . '/init.vim')
+    call config#SourceDir(a:dir, 'config#IsEnabled')
   endif
   call plug#end() " Add plugins to &runtimepath
   augroup InitConfig
@@ -144,23 +156,24 @@ function! s:source(path) abort
 endfunction
 
 function! s:List(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath(s:rootdir . '/' . s:dirname, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath($VIMCONFIG, a:ArgLead . '*.vim'), "\n")
   " call map(l:list, string(a:fn) . '(v:val)')
   call map(l:list, "fnamemodify(v:val, ':t:r')")
   return l:list
 endfunction
 
 function! s:ListEnabled(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath(s:rootdir . '/' . s:dirname, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath($VIMCONFIG, a:ArgLead . '*.vim'), "\n")
   return s:FilterList(l:list, "get(g:, 'enable_' . v:val, 0) == 1")
 endfunction
 
 function! s:ListDisabled(ArgLead, CmdLine, CursorPos) abort
-  let l:list = split(globpath(s:rootdir . '/' . s:dirname, a:ArgLead . '*.vim'), "\n")
+  let l:list = split(globpath($VIMCONFIG, a:ArgLead . '*.vim'), "\n")
+  call filter(l:list, "v:val !=# $VIMCONFIG . '/init.vim'")
   return s:FilterList(l:list, "get(g:, 'enable_' . v:val, 0) == 0")
 endfunction
 
-function! s:FilterList(list, filter)
+function! s:FilterList(list, filter) abort
   let l:list = deepcopy(a:list)
   call map(l:list, "fnamemodify(v:val, ':t:r')")
   call filter(l:list, a:filter)

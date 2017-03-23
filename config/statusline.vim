@@ -14,7 +14,7 @@ function! StatusLine(...)
   " Paste
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
   " Space
-  let l:s = ' '
+  let l:s.= ' '
   " Mode
   let l:s.= '%(%{winwidth(0) > 60 ? status#mode#name() : ""}' . g:statusline.symbols.sep . '%)'
   " Truncate here

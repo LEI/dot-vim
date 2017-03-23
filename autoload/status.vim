@@ -106,6 +106,10 @@ function! status#Line(...) abort
   return '%<' . l:name . ' %h%m%r%=' . l:info . '%-14.(%l,%c%V%) %P'
 endfunction
 
+function! status#QfTitle() abort
+  return get(w:, 'quickfix_title', '')
+endfunction
+
 " " v:vim_did_enter |!has('vim_starting')
 " let s:enable = get(g:, 'status#enable_at_startup', 1)
 " if s:enable
@@ -129,7 +133,7 @@ augroup StatusGroup
   autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = status#Line('Command Line')
   " autocmd CmdWinLeave * unlet b:is_command_window
 
-  autocmd FileType qf let &l:statusline = status#Line('%f%( %{get(w:, "quickfix_title", '')}%)')
+  autocmd FileType qf let &l:statusline = status#Line('%f%( %{status#QfTitle()}%)')
   autocmd FileType vim-plug let &l:statusline = status#Line('Plugins')
   autocmd FileType taglist let &l:statusline = status#Line(s:Replace_(expand('%')))
 augroup END

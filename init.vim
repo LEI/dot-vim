@@ -18,6 +18,9 @@ endif
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 " split(&runtimepath, ',')[0] " $HOME . '/.vim'
 
+" Initialize plugins
+call config#Init($VIMHOME . '/config')
+
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
   runtime! macros/matchit.vim
@@ -327,11 +330,12 @@ endif
 " Folding {{{1
 
 if has('folding')
-  set nofoldenable
-  " set foldcolumn=1
-  " set foldlevelstart=10
-  set foldmethod=indent
-  set foldnestmax=3
+  set nofoldenable " All folds open, can be toggled with the zi command
+  " set foldcolumn=1 " Width of the column which indicates open and closed folds
+  " set foldlevelstart=10 " Sets 'foldlevel' when starting to edit another buffer
+  set foldmethod=indent " Kind of folding used for the current window, see :h fdm
+  " set foldminlines=0 " Number of screen lines above which a fold can be closed
+  set foldnestmax=3 " Maximum nesting of folds for the 'indent' and 'syntax' methods
 endif
 
 " Status line {{{1
@@ -558,7 +562,6 @@ augroup END
 
 " 1}}}
 
-call config#Init($VIMHOME, 'config')
 call config#Source($HOME . '/.vimrc.local')
 
 " vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker
