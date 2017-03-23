@@ -47,11 +47,11 @@ let g:enable_ctags = 1
 let g:enable_ctrlp = 1
 
 " Completion:
-" let g:enable_youcompleteme = 1
-" let g:enable_ultisnips = g:enable_youcompleteme
-let g:enable_deoplete = has('nvim')
-let g:enable_neocomplete = !has('nvim')
-let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
+let g:enable_youcompleteme = 1
+let g:enable_ultisnips = g:enable_youcompleteme
+" let g:enable_deoplete = has('nvim')
+" let g:enable_neocomplete = !has('nvim')
+" let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 
 " Syntax:
 let g:enable_ale = 1
@@ -60,7 +60,7 @@ let g:enable_ale = 1
 " google/vim-codefmt, vim-scripts/LanguageTool
 
 " Languages:
-let g:enable_tern = 1
+let g:enable_tern = !g:enable_youcompleteme
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 let g:polyglot_disabled = ['tmux']
 let g:jsx_ext_required = 1
