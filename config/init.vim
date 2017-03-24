@@ -15,6 +15,7 @@ Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
 " Plug 'terryma/vim-expand-region' " Visually select increasingly larger regions
 Plug 'tpope/vim-commentary' " Comments (alt: tomtom/tcomment_vim)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
+" Plug 'tpope/vim-rsi' " Readline key bindings
 
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
 let g:enable_textobj = 1
@@ -29,7 +30,8 @@ Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 let g:enable_commentary = 1
 let g:enable_editorconfig = 1
 let g:enable_splitjoin = 1
-let g:enable_tabular = 1
+" let g:enable_tabular = 1
+" plug 'tommcdo/vim-lion' " Align by charactef
 " Plug 'AndrewRadev/sideways.vim'
 " Plug 'mattn/emmet-vim' " Emmet
 
@@ -47,11 +49,12 @@ let g:enable_ctags = 1
 let g:enable_ctrlp = 1
 
 " Completion:
-let g:enable_youcompleteme = 1
-let g:enable_ultisnips = g:enable_youcompleteme
+" let g:enable_youcompleteme = 1
+" let g:enable_ultisnips = g:enable_youcompleteme
 " let g:enable_deoplete = has('nvim')
 " let g:enable_neocomplete = !has('nvim')
 " let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
+Plug 'ajh17/VimCompletesMe'
 
 " Syntax:
 let g:enable_ale = 1
@@ -60,7 +63,7 @@ let g:enable_ale = 1
 " google/vim-codefmt, vim-scripts/LanguageTool
 
 " Languages:
-let g:enable_tern = !g:enable_youcompleteme
+let g:enable_tern = !get(g:, 'enable_youcompleteme', 0)
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 let g:polyglot_disabled = ['tmux']
 let g:jsx_ext_required = 1

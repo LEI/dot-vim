@@ -552,11 +552,15 @@ augroup Config
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
+  if exists('+omnifunc')
+    " Enable syntax completion when &omnifunc is empty
+    autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+  endif
   if has('nvim')
-  " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
-  " autocmd FocusLost * :set nolazyredraw
-  " autocmd FocusGained * :redrawstatus
-  " autocmd VimResized * :redrawstatus
+    " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
+    " autocmd FocusLost * :set nolazyredraw
+    " autocmd FocusGained * :redrawstatus
+    " autocmd VimResized * :redrawstatus
   endif
 augroup END
 
