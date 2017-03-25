@@ -1,6 +1,6 @@
 " Get the current mode and update SatusLine highlight group
 function! status#mode#name(...) abort
-  if !&modifiable
+  if status#Hide('mode')
     return ''
   endif
   let l:mode =  a:0 ? a:1 :mode()

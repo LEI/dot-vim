@@ -5,13 +5,15 @@ let g:enable_colorscheme = 1
 let g:enable_statusline = 1
 let g:enable_tabline = 1
 
-" File Explorer: justinmk/vim-dirvish, Shougo/vimfiler.vim
-Plug 'tpope/vim-vinegar' " Improved netrw directory browser
+" File Explorer: Shougo/vimfiler.vim
+Plug 'justinmk/vim-dirvish' " Path navigator
+" Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Undo History: sjl/gundo.vim, simnalamburt/vim-mundo
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
 
-" Movements: justinmk/vim-sneak, goldfeld/vim-seek, tommcdo/vim-exchange
+" Movements: goldfeld/vim-seek, tommcdo/vim-exchange
+" Plug 'justinmk/vim-sneak'
 " Plug 'terryma/vim-expand-region' " Visually select increasingly larger regions
 Plug 'tpope/vim-commentary' " Comments (alt: tomtom/tcomment_vim)
 Plug 'tpope/vim-surround' " Quoting/parenthesizing
@@ -21,7 +23,10 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 let g:enable_textobj = 1
 let g:enable_unimpaired = 1
 Plug 'keith/investigate.vim' " Look up documentation with gK
+" Plug 'romainl/vim-qf' " Quickfix window commands, settings and mappings
+" Pugg 'romainl/vim-qlist' " Persist 'include-search' and 'definition-search'
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+" Plug 'tpope/vim-characterize' " Unicode character metadata (ga)
 Plug 'tpope/vim-endwise' " Automatic end keywords
 " Plug 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
@@ -34,19 +39,11 @@ let g:enable_splitjoin = 1
 " plug 'tommcdo/vim-lion' " Align by charactef
 " Plug 'AndrewRadev/sideways.vim'
 " Plug 'mattn/emmet-vim' " Emmet
+Plug 'tpope/vim-eunuch' " Better UNIX shell commands
 
 " Settings:
 Plug 'tpope/vim-sleuth' " Automatic indentation detection
 " ciaranm/detectindent, tpope/vim-projectionist...
-
-" Versioning: tpope/vim-git
-let g:enable_fugitive = 1
-" Plug 'gregsexton/gitv' " gitk
-" Plug 'mhinz/vim-signify' " Sign column
-
-" Navigation: spolu/dwm.vim
-let g:enable_ctags = 1
-let g:enable_ctrlp = 1
 
 " Completion:
 " let g:enable_youcompleteme = 1
@@ -55,6 +52,15 @@ let g:enable_ctrlp = 1
 " let g:enable_neocomplete = !has('nvim')
 " let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 Plug 'ajh17/VimCompletesMe'
+
+" Git: tpope/vim-git, gregsexton/gitv
+let g:enable_fugitive = 1
+" Plug 'mhinz/vim-signify' " Sign column
+
+" Navigation: spolu/dwm.vim
+let g:enable_ctags = 1
+let g:enable_ctrlp = 1
+" Plug '(junegunn/fzf.vim'
 
 " Syntax:
 let g:enable_ale = 1
@@ -76,7 +82,6 @@ Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 
 " Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim
 " Plug 'jamessan/vim-gnupg' " Transparent editing of *.gpg, *.pgp and *.asc
-Plug 'tpope/vim-eunuch' " Helpers for UNIX shell commands
 " Plug 'xolox/vim-misc' " Auto-load scripts
 
 " Extras: wikitopian/hardmode, takac/vim-hardtime

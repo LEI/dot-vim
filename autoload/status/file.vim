@@ -2,10 +2,7 @@
 
 " File or buffer type
 function! status#file#type() abort
-  if &filetype ==# ''
-    if &buftype !=# 'nofile'
-      return &buftype
-    endif
+  if status#Hide('fileinfo')
     return ''
   endif
   if &filetype ==# 'netrw' && get(b:, 'netrw_browser_active', 0) == 1
@@ -20,10 +17,7 @@ endfunction
 
 " File encoding and format
 function! status#file#format() abort
-  if &filetype ==# '' && &buftype !=# '' && &buftype !=# 'nofile'
-    return ''
-  endif
-  if &filetype =~# 'netrw' || &buftype =~# 'help\|quickfix'
+  if status#Hide('fileformat')
     return ''
   endif
   if strlen(&fileencoding) > 0

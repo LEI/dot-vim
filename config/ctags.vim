@@ -4,6 +4,9 @@ if !executable('ctags')
   finish
 endif
 
+" Plug 'ludovicchabant/vim-gutentags'
+" Plug 'tomtom/ttags_vim' | Plug 'tomtom/tlib_vim'
+
 nmap <Leader>ct :call ReindexCtags()<CR>
 
 " http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html

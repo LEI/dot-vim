@@ -1,13 +1,15 @@
 " Asynchronous Linter Engine
 
+" https://github.com/showcases/clean-code-linters
+
 if !has('nvim') && v:version < 800
   finish
 endif
 
 Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
-" https://github.com/showcases/clean-code-linters
-
+" JavaScript: disable 'eslint' and 'standard' JavaScript linters
+let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
 " Shell: bashate, shellcheck
 " Golang: go get -u github.com/golang/lint/golint
 " VimL: pip3 install vim-vint
@@ -15,9 +17,6 @@ Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 " if executable('go')
 "   Plug 'haya14busa/go-vimlparser'
 " endif
-
-" Disable 'eslint' and 'standard' JavaScript linters
-let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
 
 let g:ale_lint_on_save = 1
 " Check files on TextChanged event
@@ -109,7 +108,7 @@ augroup ALE
   autocmd!
   " autocmd VimEnter,BufReadPost * call ale#Lint()
   autocmd BufEnter,BufRead * if exists('g:loaded_ale') && !&modified | call ale#Lint() | endif
-  " Open quickfix or loclist
+  " Open quickfix or loclist when one or the other is not empty
   autocmd User ALELint call ALEOpenList()
   " Automatically close corresponding loclist when quitting a window
   autocmd BufHidden,QuitPre * call ALECloseList()

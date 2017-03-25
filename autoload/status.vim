@@ -110,6 +110,46 @@ function! status#QfTitle() abort
   return get(w:, 'quickfix_title', '')
 endfunction
 
+function! status#Hide(...) abort
+  let l:bufvar = a:0 ? a:1 : ''
+  let l:ignore_buftypes = 'help\|quickfix'
+  let l:ignore_filetypes = 'dirvish\|netrw\|taglist\|qf\|vim-plug'
+  " let l:buftypes = 'quickfix'
+  if l:bufvar !=# '' && get(b:, l:bufvar . '_hidden', 0)
+    return ''
+  endif
+  if l:bufvar ==# 'mode'
+    if !&modifiable
+      return ''
+    endif
+  elseif l:bufvar ==# 'branch'
+    if &buftype =~# l:ignore_buftypes
+      return ''
+    endif
+  elseif l:bufvar ==# 'flags'
+    if &filetype =~# l:ignore_filetypes
+      return ''
+    endif
+    " if &filetype ==# '' && &buftype ==# 'nofile'
+    "   return '' " NetrwMessage
+    " endif
+  elseif l:bufvar ==# 'fileinfo'
+    if &filetype ==# ''
+      if &buftype !=# 'nofile'
+        return &buftype
+      endif
+      return ''
+    endif
+  elseif l:bufvar ==# 'fileformat'
+    if &filetype ==# '' && &buftype !=# '' && &buftype !=# 'nofile'
+      return ''
+    endif
+    if &filetype =~# 'netrw' || &buftype =~# l:ignore_buftypes
+      return ''
+    endif
+  endif
+endfunction
+
 " " v:vim_did_enter |!has('vim_starting')
 " let s:enable = get(g:, 'status#enable_at_startup', 1)
 " if s:enable

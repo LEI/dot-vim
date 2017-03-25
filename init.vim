@@ -170,13 +170,14 @@ function! HighlightCursor() abort
   if &background ==# 'dark'
     " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
     highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
-  elseif &background ==# 'light'
+  else "if &background ==# 'light'
     " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
     highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
   endif
 endfunction
 
-augroup Cursor
+" Cursor line highlight follows focus
+augroup CursorFocus
   autocmd!
   autocmd VimEnter,ColorScheme * :call HighlightCursor()
   " Show cursor line on active window only (or use InsertLeave/InsertEnter)
@@ -259,14 +260,10 @@ endif
 
 " Keep undo history across sessions
 " expand(get(g:, 'undodir', '~/.vim/backups'))
-let g:undodir = get(g:, 'undodir', $VIMHOME . '/backups')
 if has('persistent_undo') " && exists('g:undodir')
-  if !isdirectory(g:undodir)
-    call Mkdir(g:undodir)
-  endif
   " Enable undo files
-  let &undodir = g:undodir
   set undofile
+  let &undodir = mkdir#Var('undodir', $VIMHOME . '/backups')
   " Disable swapfiles and backups
   set noswapfile " directory=~/.vim/swap
   set nobackup " backupdir=~/.vim/backup
@@ -429,20 +426,36 @@ let g:mapleader = "\<Space>"
 
 " set pastetoggle=<Leader>p
 
-" Switch between the current and previous buffer
+" Switch between the current and previous buffer :b#<CR>
 nnoremap <Leader><Leader> <C-^>
-" Find a loaded buffer
-nnoremap <leader>b :b */*<C-d>
+" Add files to arglist with wildcards
+nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-d>
+" Start the buffer prompt and display all loaded buffers
+nnoremap <Leader>b :b <C-d>
 " Find a file in current working directory
-nnoremap <leader>e :e **/*
-" Sort selection
-noremap <Leader>s :sort<CR>
+nnoremap <Leader>e :e **/
+" Faster grep (nnoremap <Leader>g :grep<Space>)
+nnoremap <Leader>g :vimgrep<space>
+if exists(':Ilist') " Make :ilist go into a quickfix window
+  nnoremap <Leader>i :Ilist<Space>
+endif
+" Taglist jump command line
+nnoremap <Leader>j :tjump /
+" Run make on the current buffer
+nnoremap <Leader>m :make<CR>
 " Quicker quit
-noremap <Leader>q :q<CR>
+nnoremap <Leader>q :q<CR>
+" Sort selection
+nnoremap <Leader>s :sort<CR>
+" Remove trailing spaces in the current file
+nnoremap <Leader>S :call StripTrailingWhitespace()<CR>
+if exists(':TTags') " List and filter tags
+  nnoremap <Leader>t :TTags<Space>*<Space>*<Space>.<CR>
+endif
 " Save a file
-noremap <Leader>w :w<CR>
+nnoremap <Leader>w :w<CR>
 " Write as root
-noremap <Leader>W :w!!<CR>
+nnoremap <Leader>W :w!!<CR>
 
 " Key bindings {{{1
 
@@ -518,9 +531,6 @@ cnoremap w!! w !sudo tee % > /dev/null
 " so that you can undo CTRL-U after inserting a line break
 inoremap <C-U> <C-G>u<C-U>
 
-" Remove trailing spaces in the current file
-" noremap _$ :call StripTrailingWhitespace()<CR>
-
 " Indent the whole file
 " noremap _= :call Preserve('normal gg=G')<CR>
 
@@ -552,16 +562,22 @@ augroup Config
   " autocmd BufReadPost,FileReadPost *.xml :silent %!xmlpp -t -c -n
   " autocmd BufReadPost,FileReadPost *.[ch] :silent %!indent
   " autocmd BufEnter *.vim.local :setlocal filetype=vim
+
   if exists('+omnifunc')
     " Enable syntax completion when &omnifunc is empty
     autocmd Filetype * if &omnifunc ==# "" | setlocal omnifunc=syntaxcomplete#Complete | endif
   endif
+
   if has('nvim')
     " Fix Neovim Lazy Redraw: https://github.com/neovim/neovim/issues/4884
     " autocmd FocusLost * :set nolazyredraw
     " autocmd FocusGained * :redrawstatus
     " autocmd VimResized * :redrawstatus
   endif
+
+  " Create intermediate directories before writing the bufer
+  " BufNewFile,BufWritePre,FileWritePre pbrisbin/vim-mkdir
+  autocmd BufWritePre * call mkdir#Ask()
 augroup END
 
 " 1}}}

@@ -1,10 +1,7 @@
 " Buffer flags
 function! status#flag#line() abort
-  if &filetype =~# 'netrw\|taglist\|qf\|vim-plug'
+  if status#Hide('flags')
     return ''
-  endif
-  if &filetype ==# '' && &buftype ==# 'nofile'
-    return '' " NetrwMessage
   endif
   if &buftype ==# 'help'
     return 'H'
