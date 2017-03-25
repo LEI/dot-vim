@@ -484,12 +484,6 @@ nnoremap gk k
 " nnoremap <expr> 0 !&wrap ? '0' : 'g0'
 " nnoremap <expr> $ !&wrap ? '$' : 'g$'
 
-" Split navigation shortcuts
-nnoremap <C-H> <C-W>h
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-L> <C-W>l
-
 " Repeat latest linewise character searches (f, t, F or T [count] times)
 noremap <Tab> ;
 
@@ -498,6 +492,16 @@ noremap ; :normal n.<CR>
 
 " Make 'dot' work as expected in visual mode
 vnoremap . :norm.<CR>
+
+" Split navigation shortcuts
+nnoremap <C-H> <C-W>h
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
+
+" Navigate tab pages
+" nnoremap <Left> :tabprevious<CR>
+" nnoremap <Right> :tabnext<CR>
 
 " Bubble single or multiple lines
 noremap <C-Up> ddkP
