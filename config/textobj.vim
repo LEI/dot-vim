@@ -4,7 +4,7 @@
 xnoremap i% GoggV
 omap i% :<C-u>normal vi%<CR>
 
-" Line operator
+" Line operator (kana/vim-textobj-line)
 xnoremap il g_o0
 omap il :<C-u>normal vil<CR>
 xnoremap al $o0
@@ -15,7 +15,6 @@ omap al :<C-u>normal val<CR>
 " Plug 'glts/vim-textobj-comment' | Plug 'kana/vim-textobj-user'
 " Plug 'jceb/vim-textobj-uri' | Plug 'kana/vim-textobj-user'
 " Plug 'kana/vim-textobj-indent' | Plug 'kana/vim-textobj-user'
-" Plug 'kana/vim-textobj-line' | Plug 'kana/vim-textobj-user'
 " Plug 'lucapette/vim-textobj-underscore' | Plug 'kana/vim-textobj-user'
 " Plug 'rhysd/vim-textobj-conflict' | Plug 'kana/vim-textobj-user'
 
