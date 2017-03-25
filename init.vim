@@ -433,7 +433,7 @@ nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-d>
 " Start the buffer prompt and display all loaded buffers
 nnoremap <Leader>b :b <C-d>
 " Find a file in current working directory
-nnoremap <Leader>e :e **/
+nnoremap <Leader>e :e **/*
 " Faster grep (nnoremap <Leader>g :grep<Space>)
 nnoremap <Leader>g :vimgrep<space>
 if exists(':Ilist') " Make :ilist go into a quickfix window

@@ -44,14 +44,15 @@ endfunction
 
 " Source $VIMCONFIG/{name}.vim
 function! config#Load(...) abort
-  let l:files = deepcopy(a:000)
+  " let l:files = deepcopy(a:000)
+  let l:files = a:0 > 1 ? a:000 : (type(a:1) == 1 ? [a:1] : a:1)
   call map(l:files, "printf('%s/%s.vim', $VIMCONFIG, v:val)")
-  return config#LoadPath(l:files)
+  return config#Plug(l:files)
 endfunction
 
 " Load a list of paths
-function! config#LoadPath(...) abort
-  let l:files = a:000
+function! config#Plug(...) abort
+  let l:files = a:0 > 1 ? a:000 : a:1
   call plug#begin()
   for l:path in l:files
     call config#Source(l:path)

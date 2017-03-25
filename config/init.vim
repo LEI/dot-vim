@@ -53,14 +53,14 @@ Plug 'tpope/vim-sleuth' " Automatic indentation detection
 " let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 Plug 'ajh17/VimCompletesMe'
 
-" Git: tpope/vim-git, gregsexton/gitv
+" Versioning: tpope/vim-git, gregsexton/gitv
 let g:enable_fugitive = 1
 " Plug 'mhinz/vim-signify' " Sign column
 
-" Navigation: spolu/dwm.vim
+" Finding:
 let g:enable_ctags = 1
 let g:enable_ctrlp = 1
-" Plug '(junegunn/fzf.vim'
+" Plug 'junegunn/fzf.vim'
 
 " Syntax:
 let g:enable_ale = 1
