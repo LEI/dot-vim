@@ -78,10 +78,11 @@ if !empty(&viminfo)
   set viminfo^=!
 endif
 
-set nrformats-=octal " Disable octal format for number processing using Ctrl-A and Ctrl-X
+set nrformats-=octal " Disable octal format for number processing using CTRL-A and CTRL-X
 
 " set fileformats=unix,dos,mac " Use Unix as the standard file type
 
+" set formatoptions-=o " Disable automatic comments when hitting 'o' or 'O'
 if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j " Delete comment character when joining commented lines
 endif
@@ -445,8 +446,8 @@ nnoremap <Leader>j :tjump /
 nnoremap <Leader>m :make<CR>
 " Quicker quit
 nnoremap <Leader>q :q<CR>
-" Sort selection
-nnoremap <Leader>s :sort<CR>
+" Sort visually selected lines
+vnoremap <Leader>s :sort<CR>
 " Remove trailing spaces in the current file
 nnoremap <Leader>S :call StripTrailingWhitespace()<CR>
 if exists(':TTags') " List and filter tags

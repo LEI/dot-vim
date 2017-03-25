@@ -1,20 +1,19 @@
 " Text Objects
 
-" Plug 'wellle/targets.vim' " Additional text objects
+" Buffer operator (kana/vim-textobj-entire)
+xnoremap i% GoggV
+omap i% :<C-u>normal vi%<CR>
 
-" Line text-objects
+" Line operator
 xnoremap il g_o0
 omap il :<C-u>normal vil<CR>
 xnoremap al $o0
 omap al :<C-u>normal val<CR>
 
-" Buffer text-object
-xnoremap i% GoggV
-omap i% :<C-u>normal vi%<CR>
+" Plug 'wellle/targets.vim' " Additional text objects
 
 " Plug 'glts/vim-textobj-comment' | Plug 'kana/vim-textobj-user'
 " Plug 'jceb/vim-textobj-uri' | Plug 'kana/vim-textobj-user'
-" Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
 " Plug 'kana/vim-textobj-indent' | Plug 'kana/vim-textobj-user'
 " Plug 'kana/vim-textobj-line' | Plug 'kana/vim-textobj-user'
 " Plug 'lucapette/vim-textobj-underscore' | Plug 'kana/vim-textobj-user'
