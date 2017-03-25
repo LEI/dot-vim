@@ -459,10 +459,10 @@ nnoremap <Leader>W :w!!<CR>
 
 " Key bindings {{{1
 
-" Don't use Ex mode, use Q for formatting
+" Use Q for formatting instead of switching to Ex mode
 map Q gq
 
-" Yank from the cursor to the end of the line
+" Yank from the cursor to the end of the line like C, D...
 noremap Y y$
 
 " Visually select the text that was last edited/pasted
@@ -479,8 +479,14 @@ nnoremap gj j
 nnoremap gk k
 
 " Horizontal movements on rows when 'wrap' is set
-nnoremap <expr> 0 !&wrap ? '0' : 'g0'
-nnoremap <expr> $ !&wrap ? '$' : 'g$'
+" nnoremap <expr> 0 !&wrap ? '0' : 'g0'
+" nnoremap <expr> $ !&wrap ? '$' : 'g$'
+
+" Split navigation shortcuts
+nnoremap <C-H> <C-W>h
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
 
 " Repeat latest linewise character searches (f, t, F or T [count] times)
 noremap <Tab> ;
@@ -488,11 +494,8 @@ noremap <Tab> ;
 " Repeat last command on next match
 noremap ; :normal n.<CR>
 
-" Split navigation shortcuts
-nnoremap <C-H> <C-W>h
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-L> <C-W>l
+" Make 'dot' work as expected in visual mode
+vnoremap . :norm.<CR>
 
 " Bubble single or multiple lines
 noremap <C-Up> ddkP
@@ -507,9 +510,6 @@ vnoremap <C-Down> xp`[V`]
 " noremap Q gqap
 " vnoremap Q gv
 
-" Make 'dot' work as expected in visual mode
-vnoremap . :norm.<CR>
-
 " Stop the highlighting for the 'hlsearch' option and redraw the screen
 nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 " if maparg('<C-L>', 'n') ==# ''
@@ -519,13 +519,15 @@ nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><
 " Edit in the same directory as the current file :e %%
 cnoremap <expr> %% getcmdtype() ==# ':' ? fnameescape(expand('%:h')) . '/' : '%%'
 
-" Use <Left> and <Right> keys to move the cursor in ':' command mode
-" instead of selecting a different match, as <Tab> / <S-Tab> does
+" Use left and right arrow keys to move the cursor in command-line completion
+" instead of selecting a different match, as Tab and S-Tab do
 cnoremap <expr> <Left> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
 cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
 
 " Save current file as root with sudo
-cnoremap w!! w !sudo tee % > /dev/null
+if maparg('w!!', 'c') ==# ''
+  cnoremap w!! w !sudo tee % > /dev/null
+endif
 
 " CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break
@@ -575,7 +577,7 @@ augroup Config
     " autocmd VimResized * :redrawstatus
   endif
 
-  " Create intermediate directories before writing the bufer
+  " Create missing intermediate directories before saving a file
   " BufNewFile,BufWritePre,FileWritePre pbrisbin/vim-mkdir
   autocmd BufWritePre * call mkdir#Ask()
 augroup END
