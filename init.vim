@@ -446,10 +446,10 @@ nnoremap <Leader>j :tjump /
 nnoremap <Leader>m :make<CR>
 " Quicker quit
 nnoremap <Leader>q :q<CR>
+" Remove trailing spaces in the current file
+nnoremap <Leader>s :call StripTrailingWhitespace()<CR>
 " Sort visually selected lines
 vnoremap <Leader>s :sort<CR>
-" Remove trailing spaces in the current file
-nnoremap <Leader>S :call StripTrailingWhitespace()<CR>
 if exists(':TTags') " List and filter tags
   nnoremap <Leader>t :TTags<Space>*<Space>*<Space>.<CR>
 endif
