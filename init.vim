@@ -430,13 +430,14 @@ let g:mapleader = "\<Space>"
 " Switch between the current and previous buffer :b#<CR>
 nnoremap <Leader><Leader> <C-^>
 " Add files to arglist with wildcards
-nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-d>
+nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-D>
 " Start the buffer prompt and display all loaded buffers
-nnoremap <Leader>b :b <C-d>
+nnoremap <Leader>b :b **/*<C-D>
 " Find a file in current working directory
 nnoremap <Leader>e :e **/*
-" Faster grep (nnoremap <Leader>g :grep<Space>)
-nnoremap <Leader>g :vimgrep<space>
+" Faster grep
+nnoremap <Leader>g :grep<Space>
+nnoremap <Leader>G :vimgrep<Space>
 if exists(':Ilist') " Make :ilist go into a quickfix window
   nnoremap <Leader>i :Ilist<Space>
 endif
