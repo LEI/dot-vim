@@ -20,7 +20,7 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 " Plug 'tpope/vim-rsi' " Readline key bindings
 
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
-let g:enable_textobj = 1
+" let g:enable_textobj = 1
 let g:enable_unimpaired = 1
 Plug 'keith/investigate.vim' " Look up documentation with gK
 " Plug 'romainl/vim-qf' " Quickfix window commands, settings and mappings

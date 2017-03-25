@@ -7,7 +7,39 @@ endif
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " set statusline=%!status#Line()
 
+" set statusline=%{&paste?'PASTE\ ':''}
+" set statusline+=%<%f\ %m%r%w
+" set statusline+=%{fugitive#statusline()}
+" set statusline+=%=
+" set statusline+=%#ErrorMsg#%(\ %{ale#statusline#Status()}\ %)%*
+" set statusline+=%(\ %{FileInfo()}%)
+" set statusline+=%(\ %{strlen(&ft)?&ft:&bt}%)
+" set statusline+=\ %-14.(%l,%c%V/%L%)\ %P
+
+" function! FileInfo() abort
+"   let l:str = ''
+"   let l:ft = &filetype
+"   let l:bt = &buftype
+"   if !(strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help')
+"     return l:str
+"   endif
+"   let l:fe = strlen(&fileencoding) ? &fileencoding : &encoding
+"   let l:ff = &fileformat
+"   if has('+bomb') && &bomb
+"     let l:fe.= '-bom'
+"   endif
+"   if l:fe !=# 'utf-8' | let l:str.= l:fe | endif
+"   if l:ff !=# 'unix' | let l:str.= '[' . l:ff . ']' | endif
+"   return l:str
+" endfunction
+
 function! StatusLine(...)
+  let g:statusline_func = 'StatusLineBuild'
+  let &g:statusline = status#Line()
+  set noshowmode
+endfunction
+
+function! StatusLineBuild(...)
   let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
   let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
   let l:s = ''
@@ -54,38 +86,8 @@ function! StatusLine(...)
   return l:s
 endfunction
 
-let g:statusline_func = 'StatusLine'
-let &g:statusline = status#Line()
-set noshowmode
-
-" set statusline=%{&paste?'PASTE\ ':''}
-" set statusline+=%<%f\ %m%r%w
-" set statusline+=%{fugitive#statusline()}
-" set statusline+=%=
-" set statusline+=%#ErrorMsg#%(\ %{ale#statusline#Status()}\ %)%*
-" set statusline+=%(\ %{FileInfo()}%)
-" set statusline+=%(\ %{strlen(&ft)?&ft:&bt}%)
-" set statusline+=\ %-14.(%l,%c%V/%L%)\ %P
-
-" function! FileInfo() abort
-"   let l:str = ''
-"   let l:ft = &filetype
-"   let l:bt = &buftype
-"   if !(strlen(l:ft) && l:ft !=# 'netrw' && l:bt !=# 'help')
-"     return l:str
-"   endif
-"   let l:fe = strlen(&fileencoding) ? &fileencoding : &encoding
-"   let l:ff = &fileformat
-"   if has('+bomb') && &bomb
-"     let l:fe.= '-bom'
-"   endif
-"   if l:fe !=# 'utf-8' | let l:str.= l:fe | endif
-"   if l:ff !=# 'unix' | let l:str.= '[' . l:ff . ']' | endif
-"   return l:str
-" endfunction
-
 " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
-function! HighlightStatusLine() abort
+function! StatusLineColor() abort
   if &background ==# 'dark'
     highlight StatusLineReverse term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
@@ -110,6 +112,6 @@ endfunction
 augroup StatusLine
   autocmd!
   " Override cursor and status line highlight groups when color scheme changes
-  autocmd User Config :call HighlightStatusLine()
-  autocmd ColorScheme * :call HighlightStatusLine()
+  autocmd User Config :call StatusLineColor()
+  autocmd ColorScheme * :call StatusLineColor()
 augroup END
