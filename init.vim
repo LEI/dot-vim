@@ -18,8 +18,10 @@ endif
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 " split(&runtimepath, ',')[0] " $HOME . '/.vim'
 
+" Install Vim Plug
+call config#Init()
 " Initialize plugins
-call config#Init($VIMHOME . '/config')
+call config#Enable() " $VIMHOME . '/config'
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''

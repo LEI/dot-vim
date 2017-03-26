@@ -20,7 +20,7 @@ nnoremap <silent> <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 
 augroup Solarized
   autocmd!
-  autocmd User Config if exists('*Solarized8') | call Solarized8() | endif
+  autocmd User Config call Solarized8()
 augroup END
 
 " call Solarized8('solarized8', 'dark')
@@ -39,11 +39,10 @@ function! Solarized8(...) abort
         \ . (strlen(l:bg) ? '_' . l:bg : '')
         \ . (strlen(l:theme) ? '_' . l:theme : '')
   " try
-  let &background = l:bg
-  execute 'colorscheme'  l:colors_name
+    let &background = l:bg
+    execute 'colorscheme'  l:colors_name
   " catch /E185:/
   "   echoerr 'Cannot find color scheme: ' . l:colors_name
-  "   colorscheme default
   " endtry
 endfunction
 
