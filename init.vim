@@ -350,7 +350,7 @@ endif
 if has('reltime')
   set incsearch " Do incremental searching when it's possible to timeout
 endif
-" set gdefault " Reverse global flag (always apply to all, except if /g)
+set gdefault " Reverse global flag (always apply to all, except if /g)
 set ignorecase " Ignore case in search patterns
 " set magic " Changes the special characters that can be used in search patterns
 set smartcase " Case sensitive when the search contains upper case characters
