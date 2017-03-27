@@ -7,57 +7,6 @@ endif
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " set statusline=%!status#Line()
 
-function! StatusLine(...)
-  let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
-  let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
-  let l:s = ''
-  " Paste
-  let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*'
-  " Space
-  let l:s.= ' '
-  " Mode
-  let l:s.= '%(%{winwidth(0) > 60 ? status#mode#name() : ""}' . g:statusline.symbols.sep . '%)'
-  " Truncate here
-  let l:s.= '%<'
-  " Git branch
-  let l:s.= '%(%{winwidth(0) > 70 ? status#branch#name() : ""}' . g:statusline.symbols.sep . '%)'
-  " Buffer name
-  let l:s.= l:name
-  " Flags [%W%H%R%M]
-  let l:s.= '%( [%{status#flag#line()}]%)'
-  " Break
-  let l:s.= '%='
-  " Extra markers
-  let l:s.= l:info
-  " Warnings
-  let l:s.= '%#StatusLineWarn#%(' " WarningMsg
-  let l:s.= '%( %{status#warn#indent()}%)' " &bt nofile, nowrite
-  let l:s.= '%( %{empty(&bt) ? status#warn#trailing() : ""}%)'
-  let l:s.= ' %)%*'
-  " Errors
-  let l:s.= '%#StatusLineError#%(' " ErrorMsg
-  let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#QflistStatus("qf: ") : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#LoclistStatus() : ""}%)'
-  let l:s.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
-  let l:s.= ' %)%*'
-  " Plugins
-  let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
-  " Space
-  let l:s.= ' '
-  " File type
-  let l:s.= '%(%{winwidth(0) > 40 ? status#file#type() : ""}' . g:statusline.symbols.sep . '%)'
-  " File encoding
-  let l:s.= '%(%{winwidth(0) > 50 ? status#file#format() : ""}' . g:statusline.symbols.sep . '%)'
-  " Default ruler
-  let l:s.= '%-14.(%l,%c%V/%L%) %P '
-  return l:s
-endfunction
-
-let g:statusline_func = 'StatusLine'
-let &g:statusline = status#Line()
-set noshowmode
-
 " set statusline=%{&paste?'PASTE\ ':''}
 " set statusline+=%<%f\ %m%r%w
 " set statusline+=%{fugitive#statusline()}
@@ -84,8 +33,39 @@ set noshowmode
 "   return l:str
 " endfunction
 
+function! StatusLineBuild(...)
+  let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
+  let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
+  let l:s = '' " Start
+  let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*' " Paste
+  let l:s.= ' ' " Space
+  let l:s.= '%(%{winwidth(0) > 60 ? status#mode#name() : ""}' . g:statusline.symbols.sep . '%)' " Mode
+  let l:s.= '%<' " Truncate here
+  let l:s.= '%(%{winwidth(0) > 70 ? status#branch#name() : ""}' . g:statusline.symbols.sep . '%)' " Git branch
+  let l:s.= l:name " Buffer name
+  let l:s.= '%( [%{status#flag#line()}]%)' " Flags [%W%H%R%M]
+  let l:s.= '%=' " Break
+  let l:s.= l:info " Extra markers
+  let l:s.= '%#StatusLineWarn#%(' " WarningMsg
+  let l:s.= '%( %{status#warn#indent()}%)' " &bt nofile, nowrite
+  let l:s.= '%( %{empty(&bt) ? status#warn#trailing() : ""}%)'
+  let l:s.= ' %)%*'
+  let l:s.= '%#StatusLineError#%(' " ErrorMsg
+  let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#QflistStatus("qf: ") : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#LoclistStatus() : ""}%)'
+  let l:s.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
+  let l:s.= ' %)%*'
+  let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
+  let l:s.= ' ' " Space
+  let l:s.= '%(%{winwidth(0) > 40 ? status#file#type() : ""}' . g:statusline.symbols.sep . '%)' " File type
+  let l:s.= '%(%{winwidth(0) > 50 ? status#file#format() : ""}' . g:statusline.symbols.sep . '%)' " File encoding
+  let l:s.= '%-14.(%l,%c%V/%L%) %P ' " Default ruler
+  return l:s
+endfunction
+
 " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
-function! HighlightStatusLine() abort
+function! StatusLineColor() abort
   if &background ==# 'dark'
     highlight StatusLineReverse term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
@@ -109,7 +89,11 @@ endfunction
 
 augroup StatusLine
   autocmd!
-  " Override cursor and status line highlight groups when color scheme changes
-  autocmd User Config :call HighlightStatusLine()
-  autocmd ColorScheme * :call HighlightStatusLine()
+  " Override status line highlight groups when color scheme changes
+  autocmd User Config :call StatusLineColor()
+  autocmd ColorScheme * :call StatusLineColor()
 augroup END
+
+let g:statusline_func = 'StatusLineBuild'
+let &g:statusline = status#Line()
+set noshowmode

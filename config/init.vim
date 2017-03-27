@@ -20,7 +20,7 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 " Plug 'tpope/vim-rsi' " Readline key bindings
 
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
-let g:enable_textobj = 1
+" let g:enable_textobj = 1
 let g:enable_unimpaired = 1
 Plug 'keith/investigate.vim' " Look up documentation with gK
 " Plug 'romainl/vim-qf' " Quickfix window commands, settings and mappings
@@ -31,19 +31,17 @@ Plug 'tpope/vim-endwise' " Automatic end keywords
 " Plug 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 
-" Editing:
-let g:enable_commentary = 1
+" Editing: mattn/emmet-vim
 let g:enable_editorconfig = 1
-" let g:enable_splitjoin = 1
-" let g:enable_tabular = 1
 " plug 'tommcdo/vim-lion' " Align by charactef
 " Plug 'AndrewRadev/sideways.vim'
-" Plug 'mattn/emmet-vim' " Emmet
+" Plug 'AndrewRadev/splitjoin.vim'
+" plug 'tommcdo/vim-lion' " Align by charactef
 Plug 'tpope/vim-eunuch' " Better UNIX shell commands
 
-" Settings:
+" Settings: ciaranm/detectindent, tpope/vim-projectionist
+" let g:enable_editorconfig = 1
 Plug 'tpope/vim-sleuth' " Automatic indentation detection
-" ciaranm/detectindent, tpope/vim-projectionist...
 
 " Completion:
 " let g:enable_youcompleteme = 1
@@ -53,31 +51,35 @@ Plug 'tpope/vim-sleuth' " Automatic indentation detection
 " let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
 Plug 'ajh17/VimCompletesMe'
 
-" Versioning: tpope/vim-git, gregsexton/gitv
-let g:enable_fugitive = 1
-" Plug 'mhinz/vim-signify' " Sign column
-
-" Finding:
+" Search:
 let g:enable_ctags = 1
 let g:enable_ctrlp = 1
 " Plug 'junegunn/fzf.vim'
 
-" Syntax:
+" Syntax Check:
 let g:enable_ale = 1
 " let g:enable_neomake = 1
 " scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim
 " google/vim-codefmt, vim-scripts/LanguageTool
 
 " Languages:
-let g:enable_ternjs = !get(g:, 'enable_youcompleteme', 0)
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 let g:polyglot_disabled = ['tmux']
 let g:jsx_ext_required = 1
 
+" Runtime:
+let g:enable_git = 1
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
+
+" Golang:
 " Plug 'fatih/vim-go', {'for': 'go'}
+
+" JavaScript:
+let g:enable_ternjs = !get(g:, 'enable_youcompleteme', 0)
 " Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
 " Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
+
+" PHP:
 " Plug 'spf13/PIV', {'for': 'php'}
 
 " Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim

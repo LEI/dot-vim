@@ -18,8 +18,10 @@ endif
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 " split(&runtimepath, ',')[0] " $HOME . '/.vim'
 
+" Install Vim Plug
+call config#Init()
 " Initialize plugins
-call config#Init($VIMHOME . '/config')
+call config#Enable() " $VIMHOME . '/config'
 
 " Load matchit.vim
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
@@ -45,11 +47,11 @@ if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 
-if &t_Co > 2 || has('gui_running') " has('syntax')
+if has('syntax') && &t_Co > 2 || has('gui_running')
+  " let g:c_comment_string = 1 " Highlight strings inside C comments
   if !exists('g:syntax_on')
     syntax enable
   endif
-  " let c_comment_string=1 " Highlight strings inside C comments
 endif
 
 if has('syntax')
@@ -148,43 +150,6 @@ set nostartofline " Keep the cursor on the same column when possible
 set scrolloff=5 " Lines to keep above and below the cursor
 set sidescroll=1 " Lines to scroll horizontally when 'wrap' is set
 set sidescrolloff=5 " Lines to the left and right if 'nowrap' is set
-
-" Change cursor shape depending on current mode
-if has('nvim')
-  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
-elseif empty($TMUX)
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  if v:version >= 800
-    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-  endif
-else
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-  if v:version >= 800
-    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-  endif
-endif
-
-" Override cursor highlight group
-function! HighlightCursor() abort
-  if &background ==# 'dark'
-    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
-    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
-  else "if &background ==# 'light'
-    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
-    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
-  endif
-endfunction
-
-" Cursor line highlight follows focus
-augroup CursorFocus
-  autocmd!
-  autocmd VimEnter,ColorScheme * :call HighlightCursor()
-  " Show cursor line on active window only (or use InsertLeave/InsertEnter)
-  autocmd WinEnter * set cursorline
-  autocmd WinLeave * set nocursorline
-augroup END
 
 " Terminal {{{1
 
@@ -385,7 +350,7 @@ endif
 if has('reltime')
   set incsearch " Do incremental searching when it's possible to timeout
 endif
-" set gdefault " Reverse global flag (always apply to all, except if /g)
+set gdefault " Reverse global flag (always apply to all, except if /g)
 set ignorecase " Ignore case in search patterns
 " set magic " Changes the special characters that can be used in search patterns
 set smartcase " Case sensitive when the search contains upper case characters
@@ -430,13 +395,14 @@ let g:mapleader = "\<Space>"
 " Switch between the current and previous buffer :b#<CR>
 nnoremap <Leader><Leader> <C-^>
 " Add files to arglist with wildcards
-nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-d>
+nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-D>
 " Start the buffer prompt and display all loaded buffers
-nnoremap <Leader>b :b <C-d>
+nnoremap <Leader>b :b **/*<C-D>
 " Find a file in current working directory
 nnoremap <Leader>e :e **/*
-" Faster grep (nnoremap <Leader>g :grep<Space>)
-nnoremap <Leader>g :vimgrep<space>
+" Faster grep
+nnoremap <Leader>g :grep<Space>
+nnoremap <Leader>G :vimgrep<Space>
 if exists(':Ilist') " Make :ilist go into a quickfix window
   nnoremap <Leader>i :Ilist<Space>
 endif
@@ -483,12 +449,6 @@ nnoremap gk k
 " nnoremap <expr> 0 !&wrap ? '0' : 'g0'
 " nnoremap <expr> $ !&wrap ? '$' : 'g$'
 
-" Split navigation shortcuts
-nnoremap <C-H> <C-W>h
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-L> <C-W>l
-
 " Repeat latest linewise character searches (f, t, F or T [count] times)
 noremap <Tab> ;
 
@@ -497,6 +457,19 @@ noremap ; :normal n.<CR>
 
 " Make 'dot' work as expected in visual mode
 vnoremap . :norm.<CR>
+
+" Repeat macro over all selected lines
+" vnoremap @ :norm@
+
+" Split navigation shortcuts
+nnoremap <C-H> <C-W>h
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
+
+" Navigate tab pages
+" nnoremap <Left> :tabprevious<CR>
+" nnoremap <Right> :tabnext<CR>
 
 " Bubble single or multiple lines
 noremap <C-Up> ddkP
@@ -530,6 +503,19 @@ if maparg('w!!', 'c') ==# ''
   cnoremap w!! w !sudo tee % > /dev/null
 endif
 
+" Allow the use of 'dot' with 'k', e.g. indenting 3>k
+" onoremap k 'V' . v:count1 . 'k' . v:operator
+
+" Buffer operator (kana/vim-textobj-entire)
+xnoremap i% GoggV
+omap i% :<C-u>normal vi%<CR>
+
+" Line operator (kana/vim-textobj-line)
+xnoremap il g_o0
+omap il :<C-u>normal vil<CR>
+xnoremap al $o0
+omap al :<C-u>normal val<CR>
+
 " CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break
 inoremap <C-U> <C-G>u<C-U>
@@ -537,7 +523,7 @@ inoremap <C-U> <C-G>u<C-U>
 " Indent the whole file
 " noremap _= :call Preserve('normal gg=G')<CR>
 
-" Make last typed word uppercase by typing ';u'
+" Make last typed word uppercase (inoremap <C-U> <Esc>viwUea)
 " inoremap <Plug>UpCase <Esc>hgUawea
 " imap ;u <Plug>UpCase
 
