@@ -2,9 +2,12 @@
 
 " File or buffer type
 function! status#file#type() abort
-  if status#Hide('fileinfo')
-    return ''
-  endif
+    if &filetype ==# ''
+      if &buftype !=# 'nofile'
+        return &buftype
+      endif
+      return ''
+    endif
   if &filetype ==# 'netrw' && get(b:, 'netrw_browser_active', 0) == 1
     let l:netrw_direction = (g:netrw_sort_direction =~# 'n' ? '+' : '-')
     return &filetype . '[' . g:netrw_sort_by . l:netrw_direction . ']'

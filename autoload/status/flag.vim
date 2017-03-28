@@ -3,6 +3,7 @@ function! status#flag#line() abort
   if status#Hide('flags')
     return ''
   endif
+  " echom 'FT ->' &filetype
   if &buftype ==# 'help'
     return 'H'
   endif

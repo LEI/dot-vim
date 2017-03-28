@@ -116,36 +116,30 @@ function! status#Hide(...) abort
   let l:ignore_filetypes = 'dirvish\|netrw\|taglist\|qf\|vim-plug'
   " let l:buftypes = 'quickfix'
   if l:bufvar !=# '' && get(b:, l:bufvar . '_hidden', 0)
-    return ''
+    return 1
   endif
   if l:bufvar ==# 'mode'
     if !&modifiable
-      return ''
+      return 1
     endif
   elseif l:bufvar ==# 'branch'
     if &buftype =~# l:ignore_buftypes
-      return ''
+      return 1
     endif
   elseif l:bufvar ==# 'flags'
     if &filetype =~# l:ignore_filetypes
-      return ''
+      return 1
     endif
     " if &filetype ==# '' && &buftype ==# 'nofile'
     "   return '' " NetrwMessage
     " endif
-  elseif l:bufvar ==# 'fileinfo'
-    if &filetype ==# ''
-      if &buftype !=# 'nofile'
-        return &buftype
-      endif
-      return ''
-    endif
+  " elseif l:bufvar ==# 'fileinfo'
   elseif l:bufvar ==# 'fileformat'
     if &filetype ==# '' && &buftype !=# '' && &buftype !=# 'nofile'
-      return ''
+      return 1
     endif
     if &filetype =~# 'netrw' || &buftype =~# l:ignore_buftypes
-      return ''
+      return 1
     endif
   endif
 endfunction
