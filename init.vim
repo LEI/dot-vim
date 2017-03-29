@@ -1,5 +1,7 @@
 " Vim
 
+" https://github.com/robertmeta/vimfiles/blob/master/vimrc
+
 " zi Folding on/off
 " zR Open all
 " zM Close all
@@ -352,7 +354,7 @@ if has('reltime')
 endif
 set gdefault " Reverse global flag (always apply to all, except if /g)
 set ignorecase " Ignore case in search patterns
-" set magic " Changes the special characters that can be used in search patterns
+set magic " Changes the special characters that can be used in search patterns
 set smartcase " Case sensitive when the search contains upper case characters
 set wrapscan " Searches wrap around the end of the file
 
@@ -527,10 +529,20 @@ inoremap <C-U> <C-G>u<C-U>
 " inoremap <Plug>UpCase <Esc>hgUawea
 " imap ;u <Plug>UpCase
 
+" Completion mappings
+" inoremap <silent> ;f <C-x><C-f>
+" inoremap <silent> ;i <C-x><C-i>
+" inoremap <silent> ;l <C-x><C-l>
+" inoremap <silent> ;n <C-x><C-n>
+" inoremap <silent> ;o <C-x><C-o>
+" inoremap <silent> ;p <C-x><C-p>
+" inoremap <silent> ;t <C-x><C-]>
+
 " Abbreviations {{{1
 
 " Insert today's date
-iabbrev <expr> ddate strftime("%b %d - %a")
+iabbrev <expr> ddate strftime('%b %d - %a')
+" iabbrev <expr> dts strftime('%c')
 
 " Commands {{{1
 
@@ -540,7 +552,7 @@ iabbrev <expr> ddate strftime("%b %d - %a")
 " command! -nargs=0 HexDump :%!xxd
 " command! -nargs=0 HexRest :%!xxd -r
 
-" Autocommands {{{1
+" Auto commands {{{1
 
 augroup Config
   autocmd!
