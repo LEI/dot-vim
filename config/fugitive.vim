@@ -13,7 +13,7 @@ Plug 'tpope/vim-git' " Latest git runtime files
 "   finish
 " endif
 
-augroup VimFugitive
+augroup Fugitive
   autocmd!
   " Auto-clean git objects buffers
   autocmd BufReadPost fugitive://* set bufhidden=delete

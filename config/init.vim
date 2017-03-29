@@ -68,7 +68,7 @@ let g:polyglot_disabled = ['tmux']
 let g:jsx_ext_required = 1
 
 " Runtime:
-let g:enable_git = 1
+let g:enable_fugitive = 1
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 
 " Golang:
