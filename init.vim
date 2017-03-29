@@ -403,8 +403,9 @@ nnoremap <Leader>b :b **/*<C-D>
 " Find a file in current working directory
 nnoremap <Leader>e :e **/*
 " Faster grep
-nnoremap <Leader>g :grep<Space>
-nnoremap <Leader>G :vimgrep<Space>
+nnoremap <Leader>g :noautocmd grep<Space>
+" Grep last search term similar files
+nnoremap <Leader>* :noautocmd Grep <C-R>/ *<C-R>=(expand('%:e')==''?'':'.'.expand('%:e'))
 if exists(':Ilist') " Make :ilist go into a quickfix window
   nnoremap <Leader>i :Ilist<Space>
 endif
@@ -546,11 +547,13 @@ iabbrev <expr> ddate strftime('%b %d - %a')
 
 " Commands {{{1
 
-" Enable soft wrap (break lines without breaking words)
-" command! -nargs=* Wrap setlocal wrap linebreak nolist
+command! -nargs=+ Grep execute 'silent grep! <args>'
 
 " command! -nargs=0 HexDump :%!xxd
 " command! -nargs=0 HexRest :%!xxd -r
+
+" Enable soft wrap (break lines without breaking words)
+" command! -nargs=* Wrap setlocal wrap linebreak nolist
 
 " Auto commands {{{1
 

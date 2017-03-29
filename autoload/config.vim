@@ -50,7 +50,9 @@ function! config#Load(...) abort
   for l:path in l:files
     call config#Source(l:path)
   endfor
-  call config#End()
+  " Install?
+  call config#DoAutocmd()
+  " call plug#end()
 endfunction
 
 " Source $VIMHOME/{$dir,$dir/init,$dir/*}.vim
@@ -63,29 +65,25 @@ function! config#Enable(...) abort
     call config#SourceDir(l:dir, 'config#IsEnabled')
   endif
   call plug#end() " Add plugins to &runtimepath
-  augroup ConfigEnable
+  augroup UserConfig
     autocmd!
     " Wait until vim is ready to clone and configure or :PlugInstall will create the first window
     autocmd VimEnter * if get(g:, 'plug_install', 0) | PlugInstall --sync | let g:plug_install = 0 | endif
-    autocmd VimEnter * :call config#End()
-    autocmd VimEnter * :autocmd! ConfigEnable
+    autocmd VimEnter * call config#DoAutocmd()
+    " FIXME: Clear User Config auto commands
+    autocmd VimEnter * autocmd! User Config
+    autocmd VimEnter * autocmd! UserConfig
   augroup END
 endfunction
 
-function! config#End() abort
+function! config#DoAutocmd() abort
   if !exists('#User#Config')
     return 0
   endif
-  augroup UserConfig
-    autocmd!
-    " Clear User Config autocommands
-    autocmd User Config :autocmd! User Config
-  augroup END
   doautocmd User Config
   " augroup UserConfigDone
   "   autocmd! User Config
   " augroup END
-  call plug#end()
 endfunction
 
 " Check g:enable_{name}
