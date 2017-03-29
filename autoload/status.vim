@@ -7,6 +7,8 @@ if exists('g:loaded_statusline')
 endif
 
 let g:loaded_statusline = 1
+let g:status#ignore_buftypes = 'help\|quickfix'
+let g:status#ignore_filetypes = 'dirvish\|netrw\|taglist\|qf\|vim-plug'
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -112,22 +114,20 @@ endfunction
 
 function! status#Hide(...) abort
   let l:bufvar = a:0 ? a:1 : ''
-  let l:ignore_buftypes = 'help\|quickfix'
-  let l:ignore_filetypes = 'dirvish\|netrw\|taglist\|qf\|vim-plug'
   " let l:buftypes = 'quickfix'
   if l:bufvar !=# '' && get(b:, l:bufvar . '_hidden', 0)
     return 1
   endif
   if l:bufvar ==# 'mode'
-    if !&modifiable
+    if &filetype =~# g:status#ignore_filetypes " && !&modifiable
       return 1
     endif
   elseif l:bufvar ==# 'branch'
-    if &buftype =~# l:ignore_buftypes
+    if &buftype =~# g:status#ignore_buftypes
       return 1
     endif
   elseif l:bufvar ==# 'flags'
-    if &filetype =~# l:ignore_filetypes
+    if &filetype =~# g:status#ignore_filetypes
       return 1
     endif
     " if &filetype ==# '' && &buftype ==# 'nofile'
@@ -138,7 +138,7 @@ function! status#Hide(...) abort
     if &filetype ==# '' && &buftype !=# '' && &buftype !=# 'nofile'
       return 1
     endif
-    if &filetype =~# 'netrw' || &buftype =~# l:ignore_buftypes
+    if &filetype =~# 'netrw' || &buftype =~# g:status#ignore_buftypes
       return 1
     endif
   endif
@@ -164,15 +164,16 @@ augroup StatusGroup
   " Update whitespace warnings (add InsertLeave?)
   autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
-  autocmd CmdWinEnter * let b:branch_hidden = 1 | let &l:statusline = status#Line('Command Line')
-  " autocmd CmdWinLeave * unlet b:is_command_window
+  autocmd CmdWinEnter * let g:statusline.winnr = winnr() | let b:branch_hidden = 1
+        \ | let &l:statusline = status#Line('Command Line')
+  autocmd CmdWinLeave * let g:statusline.winnr = winnr() - 1
 
   autocmd FileType qf let &l:statusline = status#Line('%f%( %{status#QfTitle()}%)')
   autocmd FileType vim-plug let &l:statusline = status#Line('Plugins')
-  autocmd FileType taglist let &l:statusline = status#Line(s:Replace_(expand('%')))
+  autocmd FileType taglist let &l:statusline = status#Line(s:replace_(expand('%')))
 augroup END
 
-function! s:Replace_(string) abort
+function! s:replace_(string) abort
   let l:str = a:string
   if matchstr(l:str, '__.*__') ==# ''
     return l:str

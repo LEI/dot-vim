@@ -1,10 +1,10 @@
 " Get the current mode and update SatusLine highlight group
 function! status#mode#name(...) abort
-  if status#Hide('mode')
+  if status#Hide('mode') || &filetype =~# g:status#ignore_filetypes
     return ''
   endif
   let l:mode =  a:0 ? a:1 :mode()
-  if g:statusline.winnr != winnr()
+  if g:statusline.winnr != winnr() " && get(b:, 'mode_show', 0) != 1
     let l:mode = 'nc'
   endif
   " if l:mode ==# 'n'
