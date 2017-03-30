@@ -5,13 +5,6 @@ let g:enable_colorscheme = 1
 let g:enable_statusline = 1
 let g:enable_tabline = 1
 
-" File Explorer: Shougo/vimfiler.vim
-Plug 'justinmk/vim-dirvish' " Path navigator
-" Plug 'tpope/vim-vinegar' " Improved netrw directory browser
-
-" Undo History: sjl/gundo.vim, simnalamburt/vim-mundo
-Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
-
 " Movements: goldfeld/vim-seek, tommcdo/vim-exchange
 " Plug 'justinmk/vim-sneak'
 " Plug 'terryma/vim-expand-region' " Visually select increasingly larger regions
@@ -31,17 +24,23 @@ Plug 'tpope/vim-endwise' " Automatic end keywords
 " Plug 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 
+" Settings: ciaranm/detectindent, tpope/vim-projectionist
+" let g:enable_editorconfig = 1
+Plug 'tpope/vim-sleuth' " Automatic indentation detection
+
+" File Explorer: Shougo/vimfiler.vim
+Plug 'justinmk/vim-dirvish' " Path navigator
+" Plug 'tpope/vim-vinegar' " Improved netrw directory browser
+
+" Undo History: sjl/gundo.vim, simnalamburt/vim-mundo
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
+
 " Editing: mattn/emmet-vim
-let g:enable_editorconfig = 1
 " plug 'tommcdo/vim-lion' " Align by charactef
 " Plug 'AndrewRadev/sideways.vim'
 " Plug 'AndrewRadev/splitjoin.vim'
 " plug 'tommcdo/vim-lion' " Align by charactef
 Plug 'tpope/vim-eunuch' " Better UNIX shell commands
-
-" Settings: ciaranm/detectindent, tpope/vim-projectionist
-" let g:enable_editorconfig = 1
-Plug 'tpope/vim-sleuth' " Automatic indentation detection
 
 " Completion:
 " let g:enable_youcompleteme = 1
