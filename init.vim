@@ -402,10 +402,10 @@ nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-D>
 nnoremap <Leader>b :b **/*<C-D>
 " Find a file in current working directory
 nnoremap <Leader>e :e **/*
-" Faster grep
-nnoremap <Leader>g :noautocmd grep<Space>
+" Faster grep :noautocmd
+nnoremap <Leader>g :grep<Space>
 " Grep last search term similar files
-nnoremap <Leader>* :noautocmd Grep <C-R>/ *<C-R>=(expand('%:e')==''?'':'.'.expand('%:e'))
+" nnoremap <Leader>G :Grep <C-R>=(v:searchforward?@/:@?) *<C-R>=(expand('%:e')==''?'':'.'.expand('%:e'))
 if exists(':Ilist') " Make :ilist go into a quickfix window
   nnoremap <Leader>i :Ilist<Space>
 endif
