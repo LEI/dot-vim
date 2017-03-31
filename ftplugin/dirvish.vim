@@ -1,4 +1,4 @@
 " Dirvish
 
-" Sort folders at the top (FIXME: alphabetical order)
-sort r /[^\/]$/
+" Sort folders at the top
+" sort r /[^\/]$/
