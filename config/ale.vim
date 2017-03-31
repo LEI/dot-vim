@@ -18,11 +18,12 @@ let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
 "   Plug 'haya14busa/go-vimlparser'
 " endif
 
-let g:ale_lint_on_save = 1
-" Check files on TextChanged event
-let g:ale_lint_on_text_changed = 0
 " Apply linters on BufEnter and BufRead
 let g:ale_lint_on_enter = 0
+" Run the linters whenever a file is saved
+let g:ale_lint_on_save = 1
+" Check files on TextChanged event (always, insert, normal or never)
+let g:ale_lint_on_text_changed = 'never'
 
 let g:ale_lint_delay = 300
 
