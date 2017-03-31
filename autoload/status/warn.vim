@@ -13,15 +13,16 @@ endfunction
 
 function! s:MixedIndent()
   " Find spaces that arent used as alignment in the first indent column
-  let l:s = search('^ \{' . &tabstop . ',}[^\t]', 'nw')
+  " let l:et = &expandtab ? 'spaces' : 'tabs' " &et / &noet
+  " let l:s = search('^ \{' . &tabstop . ',}[^\t]', 'nw')
+  let l:s = search('^ ', 'nw')
   let l:t = search('^\t', 'nw')
-  let l:et = (&expandtab ? '\s' : '\t') " &et / &noet
   if l:s != 0 && l:t != 0
-    return 'mixed-' . l:et . printf('[%s]', &expandtab ? l:t : l:s)
+    return printf('mixed[%s]', &expandtab ? l:t : l:s)
   elseif l:s != 0 && !&expandtab
-    return l:et . printf('[%s]', l:s)
+    return printf('&noet[%s]', l:s)
   elseif l:t != 0 && &expandtab
-    return l:et . printf('[%s]', l:t)
+    return printf('&et[%s]', l:t)
   endif
   return ''
 endfunction

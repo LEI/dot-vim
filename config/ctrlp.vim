@@ -4,7 +4,7 @@
 "   finish
 " endif
 
-Plug 'ctrlpvim/ctrlp.vim' " , {'on': 'CtrlP'}
+Plug 'ctrlpvim/ctrlp.vim' ", {'on': 'CtrlP'}
 " Plug 'tacahiroy/ctrlp-funky'
 
 " https://github.com/skwp/dotfiles/blob/master/vim/settings/ctrlp.vim
@@ -17,9 +17,9 @@ let g:ctrlp_status_func = {'main': 'status#extension#ctrlp#Main', 'prog': 'statu
 " if has('multi_byte') && &encoding ==# 'utf-8'
 "   let g:ctrlp_line_prefix = nr2char(9654) . ' '
 " endif
-
 " let g:ctrlp_map = '<leader>f'
 " let g:ctrlp_match_window = 'bottom,order:ttb'
+" let g:ctrlp_show_hidden = 1
 " let g:ctrlp_working_path_mode = ''
 
 if executable('ag')
@@ -30,7 +30,7 @@ if executable('ag')
   let g:ctrlp_use_caching = 0
 else
   " Exclude .gitignore patterns
-  let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+  let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -co --exclude-standard']
 endif
 
 " augroup CtrlP
