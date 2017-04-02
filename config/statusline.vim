@@ -5,7 +5,7 @@ if !has('statusline')
 endif
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" set statusline=%!status#Line()
+" set statusline=%!statusline#String()
 
 " set statusline=%{&paste?'PASTE\ ':''}
 " set statusline+=%<%f\ %m%r%w
@@ -39,27 +39,27 @@ function! StatusLineBuild(...)
   let l:s = '' " Start
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*' " Paste
   let l:s.= ' ' " Space
-  let l:s.= '%(%{winwidth(0) > 60 ? status#mode#name() : ""}' . g:statusline.symbols.sep . '%)' " Mode
+  let l:s.= '%(%{winwidth(0) > 60 ? statusline#core#mode() : ""}' . g:statusline.symbols.sep . '%)' " Mode
   let l:s.= '%<' " Truncate here
-  let l:s.= '%(%{winwidth(0) > 70 ? status#branch#name() : ""}' . g:statusline.symbols.sep . '%)' " Git branch
+  let l:s.= '%(%{winwidth(0) > 70 ? statusline#branch#name() : ""}' . g:statusline.symbols.sep . '%)' " Git branch
   let l:s.= l:name " Buffer name
-  let l:s.= '%( [%{status#flag#line()}]%)' " Flags [%W%H%R%M]
+  let l:s.= '%( [%{statusline#core#flags()}]%)' " Flags [%W%H%R%M]
   let l:s.= '%=' " Break
   let l:s.= l:info " Extra markers
   let l:s.= '%#StatusLineWarn#%(' " WarningMsg
-  let l:s.= '%( %{status#warn#indent()}%)' " &bt nofile, nowrite
-  let l:s.= '%( %{empty(&bt) ? status#warn#trailing() : ""}%)'
+  let l:s.= '%( %{statusline#warn#indent()}%)' " &bt nofile, nowrite
+  let l:s.= '%( %{empty(&bt) ? statusline#warn#trailing() : ""}%)'
   let l:s.= ' %)%*'
   let l:s.= '%#StatusLineError#%(' " ErrorMsg
   let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#QflistStatus("qf: ") : ""}%)'
-  let l:s.= '%( %{exists("*neomake#Make") ? neomake#status#line#LoclistStatus() : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#statusline#line#QflistStatus("qf: ") : ""}%)'
+  let l:s.= '%( %{exists("*neomake#Make") ? neomake#statusline#line#LoclistStatus() : ""}%)'
   let l:s.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
   let l:s.= ' %)%*'
   let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
   let l:s.= ' ' " Space
-  let l:s.= '%(%{winwidth(0) > 40 ? status#file#type() : ""}' . g:statusline.symbols.sep . '%)' " File type
-  let l:s.= '%(%{winwidth(0) > 50 ? status#file#format() : ""}' . g:statusline.symbols.sep . '%)' " File encoding
+  let l:s.= '%(%{winwidth(0) > 40 ? statusline#core#type() : ""}' . g:statusline.symbols.sep . '%)' " File type
+  let l:s.= '%(%{winwidth(0) > 50 ? statusline#core#format() : ""}' . g:statusline.symbols.sep . '%)' " File encoding
   let l:s.= '%-14.(%l,%c%V/%L%) %P ' " Default ruler
   return l:s
 endfunction
@@ -94,6 +94,7 @@ augroup StatusLine
   autocmd ColorScheme * :call StatusLineColor()
 augroup END
 
+" Build status line
 let g:statusline_func = 'StatusLineBuild'
-let &g:statusline = status#Line()
+let &g:statusline = statusline#String()
 set noshowmode

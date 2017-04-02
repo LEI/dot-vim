@@ -1,14 +1,14 @@
 " Status line
 
-" set statusline=%!status#Line()
+" set statusline=%!statusline#String()
 
 if exists('g:loaded_statusline')
   finish
 endif
 
 let g:loaded_statusline = 1
-let g:status#ignore_buftypes = 'help\|quickfix'
-let g:status#ignore_filetypes = 'dirvish\|netrw\|taglist\|qf\|vim-plug'
+let g:statusline_ignore_buftypes = 'help\|quickfix'
+let g:statusline_ignore_filetypes = 'dirvish\|netrw\|taglist\|qf\|vim-plug'
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -96,7 +96,7 @@ highlight link StatusLineWarn WarningMsg
 " }}}
 
 " Build status line
-function! status#Line(...) abort
+function! statusline#String(...) abort
   let l:func = get(g:, 'statusline_func', '')
   " echom (l:func !=# '') . '/' . exists('*' . l:func)
   if l:func !=# '' && exists('*' . l:func)
@@ -108,26 +108,26 @@ function! status#Line(...) abort
   return '%<' . l:name . ' %h%m%r%=' . l:info . '%-14.(%l,%c%V%) %P'
 endfunction
 
-function! status#QfTitle() abort
+function! statusline#QfTitle() abort
   return get(w:, 'quickfix_title', '')
 endfunction
 
-function! status#Hide(...) abort
+function! statusline#Hide(...) abort
   let l:bufvar = a:0 ? a:1 : ''
   " let l:buftypes = 'quickfix'
   if l:bufvar !=# '' && get(b:, l:bufvar . '_hidden', 0)
     return 1
   endif
   if l:bufvar ==# 'mode'
-    if &filetype =~# g:status#ignore_filetypes " && !&modifiable
+    if &filetype =~# g:statusline_ignore_filetypes " && !&modifiable
       return 1
     endif
   elseif l:bufvar ==# 'branch'
-    if &buftype =~# g:status#ignore_buftypes
+    if &buftype =~# g:statusline_ignore_buftypes
       return 1
     endif
   elseif l:bufvar ==# 'flags'
-    if &filetype =~# g:status#ignore_filetypes
+    if &filetype =~# g:statusline_ignore_filetypes
       return 1
     endif
     " if &filetype ==# '' && &buftype ==# 'nofile'
@@ -138,39 +138,40 @@ function! status#Hide(...) abort
     if &filetype ==# '' && &buftype !=# '' && &buftype !=# 'nofile'
       return 1
     endif
-    if &filetype =~# 'netrw' || &buftype =~# g:status#ignore_buftypes
+    if &filetype =~# 'netrw' || &buftype =~# g:statusline_ignore_buftypes
       return 1
     endif
   endif
 endfunction
 
 " " v:vim_did_enter |!has('vim_starting')
-" let s:enable = get(g:, 'status#enable_at_startup', 1)
+" let s:enable = get(g:, 'statusline#enable_at_startup', 1)
 " if s:enable
-"   call status#Colors()
-"   " call status#ctrlp#Enable()
+"   call statusline#Colors()
+"   " call statusline#ctrlp#Enable()
 " endif
 
 augroup StatusGroup
   autocmd!
-  " autocmd ColorScheme * call status#Colors()
-  autocmd InsertEnter * call status#mode#highlight(v:insertmode)
-  autocmd InsertChange * call status#mode#highlight(v:insertmode)
-  autocmd InsertLeave * call status#mode#highlight()
+  " autocmd ColorScheme * call statusline#Colors()
+  autocmd InsertEnter * call statusline#core#highlight(v:insertmode)
+  autocmd InsertChange * call statusline#core#highlight(v:insertmode)
+  autocmd InsertLeave * call statusline#core#highlight()
 
-  " autocmd WinEnter,FileType,BufWinEnter * let &l:statusline = status#Line()
+  " autocmd WinEnter,FileType,BufWinEnter * let &l:statusline = statusline#String()
   autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
 
   " Update whitespace warnings (add InsertLeave?)
   autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
   autocmd CmdWinEnter * let g:statusline.winnr = winnr() | let b:branch_hidden = 1
-        \ | let &l:statusline = status#Line('Command Line')
+        \ | let &l:statusline = statusline#String('Command Line')
   autocmd CmdWinLeave * let g:statusline.winnr = winnr() - 1
 
-  autocmd FileType qf let &l:statusline = status#Line('%f%( %{status#QfTitle()}%)')
-  autocmd FileType vim-plug let &l:statusline = status#Line('Plugins')
-  autocmd FileType taglist let &l:statusline = status#Line(s:replace_(expand('%')))
+  " FIXME autocmd QuickFixCmdPost
+  autocmd FileType qf let &l:statusline = statusline#String('%f%( %{statusline#QfTitle()}%)')
+  autocmd FileType taglist let &l:statusline = statusline#String(s:replace_(expand('%')))
+  autocmd FileType vim-plug let &l:statusline = statusline#String('Plugins')
 augroup END
 
 function! s:replace_(string) abort
@@ -184,7 +185,7 @@ function! s:replace_(string) abort
 endfunction
 
 " Default: %<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-command! -nargs=* -bar CursorStl let &g:statusline = status#Line('%f', '%([%b 0x%B]%)')
+command! -nargs=* -bar CursorStl let &g:statusline = statusline#String('%f', '%([%b 0x%B]%)')
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

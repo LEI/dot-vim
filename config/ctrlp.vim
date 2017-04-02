@@ -11,7 +11,7 @@ Plug 'ctrlpvim/ctrlp.vim' ", {'on': 'CtrlP'}
 " https://github.com/thoughtbot/dotfiles/blob/master/vimrc
 " https://github.com/ggreer/the_silver_searcher
 
-let g:ctrlp_status_func = {'main': 'status#extension#ctrlp#Main', 'prog': 'status#extension#ctrlp#Prog'}
+let g:ctrlp_status_func = {'main': 'statusline#ctrlp#Main', 'prog': 'statusline#ctrlp#Prog'}
 
 " let g:ctrlp_line_prefix = '> '
 " if has('multi_byte') && &encoding ==# 'utf-8'

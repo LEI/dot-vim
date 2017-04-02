@@ -1,7 +1,7 @@
 " Whitespace warnings
 
 " Indentation warning
-function! status#warn#indent() abort
+function! statusline#warn#indent() abort
   if !&modifiable || &paste " Ignore &et warnings in paste mode
     return ''
   endif
@@ -28,7 +28,7 @@ function! s:MixedIndent()
 endfunction
 
 " Trailing whitespaces
-function! status#warn#trailing() abort
+function! statusline#warn#trailing() abort
   if !&modifiable
     return ''
   endif

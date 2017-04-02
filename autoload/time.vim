@@ -4,11 +4,10 @@ if exists('g:loaded_time')
   finish
 endif
 
-let s:dir = expand('<sfile>:p:h') " Not working for symlinks
-
 let g:loaded_time = 1
+let g:time_zone = get(g:, 'time_zone', strlen($TZ) ? $TZ : 'Europe/Paris')
 
-let g:timezone = get(g:, 'timezone', strlen($TZ) ? $TZ : 'Europe/Paris')
+let s:dir = expand('<sfile>:p:h') " Not working for symlinks
 
 function! time#IsDay()
   if executable('php')
@@ -34,7 +33,7 @@ endfunction
 function! s:php_daytime()
   let l:file = s:dir . '/time/daytime.php'
   if filereadable(l:file)
-    let l:cmd = 'php ' . l:file . ' ' . g:timezone
+    let l:cmd = 'php ' . l:file . ' ' . g:time_zone
     return system(l:cmd)
   endif
 endfunction

@@ -65,10 +65,18 @@ command! -n=0 -bar Lp :ALEPreviousWrap
 
 let g:ale_loclist_height = get(g:, 'ale_loclist_height', 5)
 
-function! ALEOpenList(...) abort
+function! s:ALECheckBuffer(...) abort
   if !exists('g:loaded_ale')
-    finish
+    return 0
   endif
+  if exists('*getcmdwintype') && strlen(getcmdwintype()) > 0
+    return 0
+  endif
+  return 1
+endfunction
+
+" FIXME CmdWin lopen -> E11
+function! s:ALEOpenList(...) abort
   let l:winnr = a:0 ? a:1 : 0
   let l:list = []
   if g:ale_set_quickfix
@@ -91,10 +99,7 @@ function! ALEOpenList(...) abort
   endif
 endfunction
 
-function! ALECloseList() abort
-  if !exists('g:loaded_ale')
-    finish
-  endif
+function! s:ALECloseList() abort
   if &filetype ==# 'qf'
     return
   endif
@@ -108,11 +113,11 @@ endfunction
 augroup ALE
   autocmd!
   " autocmd VimEnter,BufReadPost * call ale#Lint()
-  autocmd BufEnter,BufRead * if exists('g:loaded_ale') && !&modified | call ale#Lint() | endif
+  autocmd BufEnter,BufRead * if s:ALECheckBuffer() && !&modified | call ale#Lint() | endif
   " Open quickfix or loclist when one or the other is not empty
-  autocmd User ALELint call ALEOpenList()
+  autocmd User ALELint if s:ALECheckBuffer() | call s:ALEOpenList() | endif
   " Automatically close corresponding loclist when quitting a window
-  autocmd BufHidden,QuitPre * call ALECloseList()
+  autocmd BufHidden,QuitPre * if s:ALECheckBuffer() | call s:ALECloseList() | endif
 
   " autocmd QuickFixCmdPost [^l]* cwindow
   " autocmd QuickFixCmdPost    l* lwindow
