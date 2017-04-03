@@ -4,6 +4,6 @@
 " sort r /[^\/]$/
 
 " Trigger hidden buffer manually (noautocmd is used)
-if exists('#BufHidden#*')
+if bufnr('$') > 1 && exists('#BufHidden#*')
   doautocmd BufHidden *
 endif

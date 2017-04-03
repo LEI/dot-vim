@@ -111,12 +111,12 @@ endfunction
 
 augroup ALE
   autocmd!
-  " " Run the linters on enter
-  " autocmd BufEnter,BufReadPost * call Lint()
-  " " Open the quickfix or location list after linting
-  " autocmd User ALELint call OpenList()
-  " " Automatically close the corresponding list when hiding a buffer
-  " autocmd BufHidden * call CloseList()
+  " Run the linters on enter
+  "autocmd BufEnter,BufReadPost * call Lint()
+  " Open the quickfix or location list after linting
+  autocmd User ALELint call OpenList()
+  " Automatically close the corresponding list when hiding a buffer
+  autocmd BufHidden * call CloseList()
 
   " autocmd CmdWinEnter * let b:command_line = 1
   " autocmd CmdWinLeave * unlet b:command_line
