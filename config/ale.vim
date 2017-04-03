@@ -63,26 +63,15 @@ endif
 command! -n=0 -bar Ln :ALENextWrap
 command! -n=0 -bar Lp :ALEPreviousWrap
 
-function! s:cmdwin()
-  if exists('*getcmdwintype') && strlen(getcmdwintype()) > 0
-    return 1
-  endif
-  return 0
-endfunction
-
-function! Lint()
-  " if !exists('g:loaded_ale') || exists('b:command_line')
-  "   return 0
-  " endif
-  if !&modified " && !s:cmdwin()
-    call ale#Lint()
+function! s:close()
+  if g:ale_set_quickfix " && qf#IsQfWindowOpen()
+    cclose " call qf#toggle#ToggleQfWindow(1)
+  elseif g:ale_set_loclist " && qf#IsLocWindowOpen(l:winnr)
+    lclose " call qf#toggle#ToggleLocWindow(1)
   endif
 endfunction
 
 function! OpenList(...)
-  if s:cmdwin()
-    return
-  endif
   let l:winnr = a:0 ? a:1 : winnr()
   if g:ale_set_quickfix && len(getqflist()) > 0
     if exists('*qf#OpenQuickfix') " !qf#IsQfWindowOpen()
@@ -97,7 +86,7 @@ function! OpenList(...)
       lopen 5
     endif
   else
-    call CloseList(l:winnr)
+    call s:close()
   endif
   " If focus changed, jump to the last window
   if l:winnr !=# winnr()
@@ -106,28 +95,22 @@ function! OpenList(...)
 endfunction
 
 function! CloseList(...)
+  " let l:winnr = a:0 ? a:1 :winnr()
   if &filetype ==# 'qf' || winnr('$') == 2
     return
   endif
-  let l:winnr = a:0 ? a:1 :winnr()
-  if g:ale_set_quickfix " && qf#IsQfWindowOpen()
-    cclose " call qf#toggle#ToggleQfWindow(1)
-  elseif g:ale_set_loclist " && qf#IsLocWindowOpen(l:winnr)
-    lclose " call qf#toggle#ToggleLocWindow(1)
-  endif
+  call s:close()
 endfunction
 
 augroup ALE
   autocmd!
   " Run the linters on enter
-  "autocmd BufEnter,BufReadPost * call Lint()
+  "autocmd BufEnter,BufReadPost * call ale#Lint()
   " Open the quickfix or location list after linting
   autocmd User ALELint call OpenList()
   " Automatically close the corresponding list when hiding a buffer
   autocmd BufHidden * call CloseList()
 
-  " autocmd CmdWinEnter * let b:command_line = 1
-  " autocmd CmdWinLeave * unlet b:command_line
   " autocmd QuickFixCmdPost [^l]* cwindow
   " autocmd QuickFixCmdPost    l* lwindow
   " autocmd QuickFixCmdPost * botright cwindow 5

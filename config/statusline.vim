@@ -6,9 +6,6 @@ endif
 
 Plug 'LEI/vim-statusline'
 
-let g:statusline = get(g:, 'statusline', {})
-let g:statusline.func = {'left': 'StatusLineLeft', 'right': 'StatusLineRight'}
-
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " set statusline=%!statusline#Build()
 
@@ -104,3 +101,6 @@ augroup StatusLine
   " Build status line on startup
   autocmd User Config :StatusLineBuild | set noshowmode
 augroup END
+
+let g:statusline = get(g:, 'statusline', {})
+let g:statusline = {'left': function('StatusLineLeft'), 'right': function('StatusLineRight')}
