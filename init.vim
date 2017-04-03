@@ -9,82 +9,34 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
-" Init {{{1
-
-" if v:progname =~? 'evim' | finish | endif
-" Bail out if something that ran earlier, e.g. a system wide vimrc
-if exists('skip_defaults_vim')
-  finish
-endif
-
-let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 " split(&runtimepath, ',')[0] " $HOME . '/.vim'
+let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
+
+" Vim defaults
+call config#Source($VIMHOME . '/defaults.vim')
 
 " Install Vim Plug
 call config#Init()
 " Initialize plugins
 call config#Enable() " $VIMHOME . '/config'
 
-" Load matchit.vim
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &runtimepath) ==# ''
-  runtime! macros/matchit.vim
-endif
-
 " General {{{1
-
-set backspace=indent,eol,start " Allow backspace over everything in insert mode
-
-if !has('nvim')
-  set esckeys " Recognize escape immediately
-endif
-
-set timeout
-set timeoutlen=1000
-if !has('nvim')
-  set ttimeout " Time out for key codes
-  set ttimeoutlen=100 " Wait up to 100ms after Esc for special keys
-endif
 
 if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
-endif
-
-if has('syntax') && &t_Co > 2 || has('gui_running')
-  " let g:c_comment_string = 1 " Highlight strings inside C comments
-  if !exists('g:syntax_on')
-    syntax enable
-  endif
 endif
 
 if has('syntax')
   set synmaxcol=420 " Limit syntax highlighting for long lines
 endif
 
-if has('autocmd')
-  filetype plugin indent on " Enable file type detection
-endif
-
-if has('langmap') && exists('+langremap')
-  " Prevent that the langmap option applies to characters that result from a mapping
-  " If set (default), this may break plugins but it's backward compatible
-  set nolangremap
-endif
-
 if has('path_extra')
   setglobal tags-=./tags tags-=./tags; tags^=./tags; " Filenames for the tag command
-endif
-
-if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
-  set shell=/bin/bash
 endif
 
 if !empty(&viminfo)
   set viminfo^=!
 endif
-
-set nrformats-=octal " Disable octal format for number processing using CTRL-A and CTRL-X
-
-" set fileformats=unix,dos,mac " Use Unix as the standard file type
 
 " set formatoptions-=o " Disable automatic comments when hitting 'o' or 'O'
 if v:version > 703 || v:version == 703 && has('patch541')
@@ -327,6 +279,10 @@ endif
 set report=0 " Always report changed lines (default threshold: 2)
 if has('cmdline_info')
   set showcmd " Display incomplete commands
+
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
 endif
 " set showmode " Show current mode in command line
 if has('wildmenu')
@@ -346,12 +302,6 @@ endif
 
 " Searching {{{1
 
-if has('extra_search')
-  set hlsearch " Keep all matches highlighted when there is a previous search
-endif
-if has('reltime')
-  set incsearch " Do incremental searching when it's possible to timeout
-endif
 set gdefault " Reverse global flag (always apply to all, except if /g)
 set ignorecase " Ignore case in search patterns
 set magic " Changes the special characters that can be used in search patterns
@@ -518,10 +468,6 @@ xnoremap il g_o0
 omap il :<C-u>normal vil<CR>
 xnoremap al $o0
 omap al :<C-u>normal val<CR>
-
-" CTRL-U in insert mode deletes a lot: use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break
-inoremap <C-U> <C-G>u<C-U>
 
 " Indent the whole file
 " noremap _= :call Preserve('normal gg=G')<CR>
