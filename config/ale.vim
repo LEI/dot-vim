@@ -66,12 +66,12 @@ command! -n=0 -bar Lp :ALEPreviousWrap
 let g:ale_loclist_height = get(g:, 'ale_loclist_height', 5)
 
 function! s:ALECheckBuffer(...) abort
-  if !exists('g:loaded_ale')
+  if !exists('g:loaded_ale') || exists('b:command_line')
     return 0
   endif
-  if exists('*getcmdwintype') && strlen(getcmdwintype()) > 0
-    return 0
-  endif
+  " if exists('*getcmdwintype') && strlen(getcmdwintype()) > 0
+  "   return 0
+  " endif
   return 1
 endfunction
 
@@ -118,6 +118,9 @@ augroup ALE
   autocmd User ALELint if s:ALECheckBuffer() | call s:ALEOpenList() | endif
   " Automatically close corresponding loclist when quitting a window
   autocmd BufHidden,QuitPre * if s:ALECheckBuffer() | call s:ALECloseList() | endif
+
+  autocmd CmdWinEnter * let b:command_line = 1
+  autocmd CmdWinLeave * unlet b:command_line
 
   " autocmd QuickFixCmdPost [^l]* cwindow
   " autocmd QuickFixCmdPost    l* lwindow
