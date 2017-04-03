@@ -1,6 +1,6 @@
 " Status line
 
-" set statusline=%!statusline#String()
+" set statusline=%!statusline#Build()
 
 if exists('g:loaded_statusline')
   finish
@@ -14,7 +14,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let g:statusline = get(g:, 'statusline', {})
-call extend(g:statusline, {'modes': {}, 'symbols': {}}, 'keep')
+call extend(g:statusline, {'func': {}, 'modes': {}, 'symbols': {}}, 'keep')
 
 " Active window number
 let g:statusline.winnr = winnr()
@@ -96,16 +96,24 @@ highlight link StatusLineWarn WarningMsg
 " }}}
 
 " Build status line
-function! statusline#String(...) abort
-  let l:func = get(g:, 'statusline_func', '')
-  " echom (l:func !=# '') . '/' . exists('*' . l:func)
-  if l:func !=# '' && exists('*' . l:func)
-    return call(l:func, a:000)
-  endif
-  " Default status line
+function! statusline#Build(...) abort
   let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
-  let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
-  return '%<' . l:name . ' %h%m%r%=' . l:info . '%-14.(%l,%c%V%) %P'
+  let l:info = a:0 > 1 ? a:2 : '' " get(g:statusline, 'right', '')
+  " let l:func = get(g:, 'statusline_func', '')
+  " if l:func !=# '' && exists('*' . l:func)
+  "   return call(l:func, a:000)
+  " endif
+  if exists('g:statusline.func.left') && exists('*' . g:statusline.func.left)
+    let l:left = {g:statusline.func.left}(l:name)
+  else
+    let l:left = '%<' . l:name . ' %h%m%r'
+  endif
+  if exists('g:statusline.func.right') && exists('*' . g:statusline.func.right)
+    let l:right = {g:statusline.func.right}(l:info)
+  else
+    let l:right = l:info . '%-14.(%l,%c%V%) %P'
+  endif
+  return l:left . '%=' . l:right
 endfunction
 
 function! statusline#QfTitle() abort
@@ -158,20 +166,20 @@ augroup StatusGroup
   autocmd InsertChange * call statusline#core#highlight(v:insertmode)
   autocmd InsertLeave * call statusline#core#highlight()
 
-  " autocmd WinEnter,FileType,BufWinEnter * let &l:statusline = statusline#String()
+  " autocmd WinEnter,FileType,BufWinEnter * let &l:statusline = statusline#Build()
   autocmd BufAdd,BufEnter,WinEnter * let g:statusline.winnr = winnr()
 
   " Update whitespace warnings (add InsertLeave?)
   autocmd BufWritePost,CursorHold * unlet! b:statusline_indent | unlet! b:statusline_trailing
 
   autocmd CmdWinEnter * let g:statusline.winnr = winnr() | let b:branch_hidden = 1
-        \ | let &l:statusline = statusline#String('Command Line')
+        \ | let &l:statusline = statusline#Build('Command Line')
   autocmd CmdWinLeave * let g:statusline.winnr = winnr() - 1
 
   " FIXME autocmd QuickFixCmdPost
-  autocmd FileType qf let &l:statusline = statusline#String('%f%( %{statusline#QfTitle()}%)')
-  autocmd FileType taglist let &l:statusline = statusline#String(s:replace_(expand('%')))
-  autocmd FileType vim-plug let &l:statusline = statusline#String('Plugins')
+  autocmd FileType qf let &l:statusline = statusline#Build('%f%( %{statusline#QfTitle()}%)')
+  autocmd FileType taglist let &l:statusline = statusline#Build(s:replace_(expand('%')))
+  autocmd FileType vim-plug let &l:statusline = statusline#Build('Plugins')
 augroup END
 
 function! s:replace_(string) abort
@@ -185,7 +193,7 @@ function! s:replace_(string) abort
 endfunction
 
 " Default: %<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-command! -nargs=* -bar CursorStl let &g:statusline = statusline#String('%f', '%([%b 0x%B]%)')
+command! -nargs=* -bar CursorStl let &g:statusline = statusline#Build('%f', '%([%b 0x%B]%)')
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

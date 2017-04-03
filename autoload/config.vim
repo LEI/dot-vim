@@ -45,14 +45,14 @@ endfunction
 function! config#Load(...) abort
   " let l:files = deepcopy(a:000)
   " let l:files = a:0 > 1 ? a:000 : a:1
+  " call plug#begin()
   let l:files = a:0 > 1 ? a:000 : (type(a:1) == 1 ? [a:1] : a:1)
   call map(l:files, "printf('%s/%s.vim', $VIMCONFIG, v:val)")
   for l:path in l:files
     call config#Source(l:path)
   endfor
-  " Install?
   call config#DoAutocmd()
-  " call plug#end()
+  call plug#end()
 endfunction
 
 " Source $VIMHOME/{$dir,$dir/init,$dir/*}.vim

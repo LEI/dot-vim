@@ -1,5 +1,10 @@
 " Utility functions
 
+" Change a window minimum and maximum height
+function! AdjustWindowHeight(minheight, maxheight) abort " line('$') + 1
+  execute max([min([line('$'), a:maxheight]), a:minheight]) . 'wincmd _'
+endfunction
+
 " Consume the space typed after an abbreviation
 function! Eatchar(pat)
   let l:c = nr2char(getchar(0))

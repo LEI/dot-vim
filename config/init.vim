@@ -13,10 +13,10 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 " Plug 'tpope/vim-rsi' " Readline key bindings
 
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
+let g:enable_qf = 1
 " let g:enable_textobj = 1
 let g:enable_unimpaired = 1
 Plug 'keith/investigate.vim' " Look up documentation with gK
-" Plug 'romainl/vim-qf' " Quickfix window commands, settings and mappings
 " Pugg 'romainl/vim-qlist' " Persist 'include-search' and 'definition-search'
 " Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 " Plug 'tpope/vim-characterize' " Unicode character metadata (ga)

@@ -19,7 +19,7 @@ let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
 " endif
 
 " Apply linters on BufEnter and BufRead
-let g:ale_lint_on_enter = 0
+let g:ale_lint_on_enter = 1
 " Run the linters whenever a file is saved
 let g:ale_lint_on_save = 1
 " Check files on TextChanged event (always, insert, normal or never)
@@ -63,67 +63,64 @@ endif
 command! -n=0 -bar Ln :ALENextWrap
 command! -n=0 -bar Lp :ALEPreviousWrap
 
-let g:ale_loclist_height = get(g:, 'ale_loclist_height', 5)
-
-function! s:ALECheckBuffer(...) abort
-  if !exists('g:loaded_ale') || exists('b:command_line')
-    return 0
+function! s:cmdwin()
+  if exists('*getcmdwintype') && strlen(getcmdwintype()) > 0
+    return 1
   endif
-  " if exists('*getcmdwintype') && strlen(getcmdwintype()) > 0
+  return 0
+endfunction
+
+function! Lint()
+  " if !exists('g:loaded_ale') || exists('b:command_line')
   "   return 0
   " endif
-  return 1
-endfunction
-
-" FIXME CmdWin lopen -> E11
-function! s:ALEOpenList(...) abort
-  let l:winnr = a:0 ? a:1 : 0
-  let l:list = []
-  if g:ale_set_quickfix
-    let l:cmd = 'copen'
-    let l:list = getqflist()
-  elseif g:ale_set_loclist
-    let l:cmd = 'lopen'
-    let l:list = getloclist(l:winnr)
-  endif
-  if len(l:list) > 0
-    execute l:cmd . ' ' . g:ale_loclist_height
-    " If focus changed, jump to the last window
-    if l:winnr !=# winnr()
-      wincmd p
-    endif
-  elseif g:ale_set_quickfix
-    cclose
-  elseif g:ale_set_loclist
-    lclose
+  if !&modified " && !s:cmdwin()
+    call ale#Lint()
   endif
 endfunction
 
-function! s:ALECloseList() abort
+function! OpenList(...)
+  if s:cmdwin()
+    return
+  endif
+  let l:winnr = a:0 ? a:1 : winnr()
+  if g:ale_set_quickfix && !qf#IsQfWindowOpen()
+    call qf#OpenQuickfix()
+  elseif g:ale_set_loclist && !qf#IsLocWindowOpen(l:winnr)
+    call qf#OpenLoclist()
+  endif
+  " If focus changed, jump to the last window
+  if l:winnr !=# winnr()
+    wincmd p
+  endif
+endfunction
+
+function! CloseList(...)
   if &filetype ==# 'qf'
     return
   endif
-  if g:ale_set_quickfix
-    cclose
-  elseif g:ale_set_loclist
-    lclose
+  let l:winnr = a:0 ? a:1 :winnr()
+  if g:ale_set_quickfix && qf#IsQfWindowOpen()
+    " cclose
+    call qf#toggle#ToggleQfWindow(1)
+  elseif g:ale_set_loclist && qf#IsLocWindowOpen(l:winnr)
+    " lclose
+    call qf#toggle#ToggleLocWindow(1)
   endif
 endfunction
 
 augroup ALE
   autocmd!
-  " autocmd VimEnter,BufReadPost * call ale#Lint()
-  autocmd BufEnter,BufRead * if s:ALECheckBuffer() && !&modified | call ale#Lint() | endif
-  " Open quickfix or loclist when one or the other is not empty
-  autocmd User ALELint if s:ALECheckBuffer() | call s:ALEOpenList() | endif
-  " Automatically close corresponding loclist when quitting a window
-  autocmd BufHidden,QuitPre * if s:ALECheckBuffer() | call s:ALECloseList() | endif
+  " " Run the linters on enter
+  " autocmd BufEnter,BufReadPost * call Lint()
+  " " Open the quickfix or location list after linting
+  " autocmd User ALELint call OpenList()
+  " " Automatically close the corresponding list when hiding a buffer
+  " autocmd BufHidden * call CloseList()
 
-  autocmd CmdWinEnter * let b:command_line = 1
-  autocmd CmdWinLeave * unlet b:command_line
-
+  " autocmd CmdWinEnter * let b:command_line = 1
+  " autocmd CmdWinLeave * unlet b:command_line
   " autocmd QuickFixCmdPost [^l]* cwindow
   " autocmd QuickFixCmdPost    l* lwindow
-
   " autocmd QuickFixCmdPost * botright cwindow 5
 augroup END

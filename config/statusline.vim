@@ -5,7 +5,7 @@ if !has('statusline')
 endif
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" set statusline=%!statusline#String()
+" set statusline=%!statusline#Build()
 
 " set statusline=%{&paste?'PASTE\ ':''}
 " set statusline+=%<%f\ %m%r%w
@@ -33,9 +33,8 @@ endif
 "   return l:str
 " endfunction
 
-function! StatusLineBuild(...)
+function! StatusLineLeft(...) abort
   let l:name = a:0 && strlen(a:1) > 0 ? a:1 : '%f'
-  let l:info = a:0 > 1 ? a:2 : get(g:statusline, 'right', '')
   let l:s = '' " Start
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*' " Paste
   let l:s.= ' ' " Space
@@ -44,8 +43,13 @@ function! StatusLineBuild(...)
   let l:s.= '%(%{winwidth(0) > 70 ? statusline#branch#name() : ""}' . g:statusline.symbols.sep . '%)' " Git branch
   let l:s.= l:name " Buffer name
   let l:s.= '%( [%{statusline#core#flags()}]%)' " Flags [%W%H%R%M]
-  let l:s.= '%=' " Break
-  let l:s.= l:info " Extra markers
+  " let l:s.= '%=' " Break
+  return l:s
+endfunction
+
+function! StatusLineRight(...) abort
+  let l:info = a:0 > 1 ? a:2 : '' " get(g:statusline, 'right', '')
+  let l:s = l:info " Extra markers
   let l:s.= '%#StatusLineWarn#%(' " WarningMsg
   let l:s.= '%( %{statusline#warn#indent()}%)' " &bt nofile, nowrite
   let l:s.= '%( %{empty(&bt) ? statusline#warn#trailing() : ""}%)'
@@ -95,6 +99,7 @@ augroup StatusLine
 augroup END
 
 " Build status line
-let g:statusline_func = 'StatusLineBuild'
-let &g:statusline = statusline#String()
+let g:statusline = get(g:, 'statusline', {})
+let g:statusline.func = {'left': 'StatusLineLeft', 'right': 'StatusLineRight'}
+let &g:statusline = statusline#Build()
 set noshowmode
