@@ -16,7 +16,7 @@ endfunction
 augroup NumbersExclude
   autocmd!
   autocmd CmdWinEnter * call s:disable_numbers()
-        \ | setlocal signcolumn=no
+        " \ | setlocal signcolumn=no
   autocmd FileType * if index(g:numbers_exclude, &filetype) != -1
         \ | call s:disable_numbers()
         \ | endif

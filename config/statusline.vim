@@ -4,6 +4,11 @@ if !has('statusline')
   finish
 endif
 
+Plug 'LEI/vim-statusline'
+
+let g:statusline = get(g:, 'statusline', {})
+let g:statusline.func = {'left': 'StatusLineLeft', 'right': 'StatusLineRight'}
+
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " set statusline=%!statusline#Build()
 
@@ -38,11 +43,11 @@ function! StatusLineLeft(...) abort
   let l:s = '' " Start
   let l:s.= '%#StatusLineReverse#%( %{&paste && g:statusline.winnr == winnr() ? "PASTE" : ""} %)%*' " Paste
   let l:s.= ' ' " Space
-  let l:s.= '%(%{winwidth(0) > 60 ? statusline#core#mode() : ""}' . g:statusline.symbols.sep . '%)' " Mode
+  let l:s.= '%(%{winwidth(0) > 60 ? statusline#core#Mode() : ""}' . g:statusline.symbols.sep . '%)' " Mode
   let l:s.= '%<' " Truncate here
-  let l:s.= '%(%{winwidth(0) > 70 ? statusline#branch#name() : ""}' . g:statusline.symbols.sep . '%)' " Git branch
+  let l:s.= '%(%{winwidth(0) > 70 ? statusline#branch#Name() : ""}' . g:statusline.symbols.sep . '%)' " Git branch
   let l:s.= l:name " Buffer name
-  let l:s.= '%( [%{statusline#core#flags()}]%)' " Flags [%W%H%R%M]
+  let l:s.= '%( [%{statusline#core#Flags()}]%)' " Flags [%W%H%R%M]
   " let l:s.= '%=' " Break
   return l:s
 endfunction
@@ -51,8 +56,8 @@ function! StatusLineRight(...) abort
   let l:info = a:0 > 1 ? a:2 : '' " get(g:statusline, 'right', '')
   let l:s = l:info " Extra markers
   let l:s.= '%#StatusLineWarn#%(' " WarningMsg
-  let l:s.= '%( %{statusline#warn#indent()}%)' " &bt nofile, nowrite
-  let l:s.= '%( %{empty(&bt) ? statusline#warn#trailing() : ""}%)'
+  let l:s.= '%( %{statusline#warn#Indent()}%)' " &bt nofile, nowrite
+  let l:s.= '%( %{empty(&bt) ? statusline#warn#Trailing() : ""}%)'
   let l:s.= ' %)%*'
   let l:s.= '%#StatusLineError#%(' " ErrorMsg
   let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
@@ -62,14 +67,14 @@ function! StatusLineRight(...) abort
   let l:s.= ' %)%*'
   let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
   let l:s.= ' ' " Space
-  let l:s.= '%(%{winwidth(0) > 40 ? statusline#core#type() : ""}' . g:statusline.symbols.sep . '%)' " File type
-  let l:s.= '%(%{winwidth(0) > 50 ? statusline#core#format() : ""}' . g:statusline.symbols.sep . '%)' " File encoding
+  let l:s.= '%(%{winwidth(0) > 40 ? statusline#core#Type() : ""}' . g:statusline.symbols.sep . '%)' " File type
+  let l:s.= '%(%{winwidth(0) > 50 ? statusline#core#Format() : ""}' . g:statusline.symbols.sep . '%)' " File encoding
   let l:s.= '%-14.(%l,%c%V/%L%) %P ' " Default ruler
   return l:s
 endfunction
 
 " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
-function! StatusLineColor() abort
+function! StatusLineHighlight() abort
   if &background ==# 'dark'
     highlight StatusLineReverse term=reverse ctermfg=14 ctermbg=0
     " highlight StatusLineNormal ctermfg=0 ctermbg=4
@@ -94,12 +99,8 @@ endfunction
 augroup StatusLine
   autocmd!
   " Override status line highlight groups when color scheme changes
-  autocmd User Config :call StatusLineColor()
-  autocmd ColorScheme * :call StatusLineColor()
+  autocmd ColorScheme * :call StatusLineHighlight()
+  autocmd User Config :call StatusLineHighlight()
+  " Build status line on startup
+  autocmd User Config :StatusLineBuild | set noshowmode
 augroup END
-
-" Build status line
-let g:statusline = get(g:, 'statusline', {})
-let g:statusline.func = {'left': 'StatusLineLeft', 'right': 'StatusLineRight'}
-let &g:statusline = statusline#Build()
-set noshowmode

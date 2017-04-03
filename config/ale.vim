@@ -84,10 +84,20 @@ function! OpenList(...)
     return
   endif
   let l:winnr = a:0 ? a:1 : winnr()
-  if g:ale_set_quickfix && !qf#IsQfWindowOpen()
-    call qf#OpenQuickfix()
-  elseif g:ale_set_loclist && !qf#IsLocWindowOpen(l:winnr)
-    call qf#OpenLoclist()
+  if g:ale_set_quickfix && len(getqflist()) > 0
+    if exists('*qf#OpenQuickfix') " !qf#IsQfWindowOpen()
+      call qf#OpenQuickfix()
+    else
+      copen 5
+    endif
+  elseif g:ale_set_loclist && len(getloclist(l:winnr)) > 0
+    if exists('*qf#OpenLoclist') " !qf#IsLocWindowOpen(l:winnr)
+      call qf#OpenLoclist()
+    else
+      lopen 5
+    endif
+  else
+    call CloseList(l:winnr)
   endif
   " If focus changed, jump to the last window
   if l:winnr !=# winnr()
@@ -96,16 +106,14 @@ function! OpenList(...)
 endfunction
 
 function! CloseList(...)
-  if &filetype ==# 'qf'
+  if &filetype ==# 'qf' || winnr('$') == 2
     return
   endif
   let l:winnr = a:0 ? a:1 :winnr()
-  if g:ale_set_quickfix && qf#IsQfWindowOpen()
-    " cclose
-    call qf#toggle#ToggleQfWindow(1)
-  elseif g:ale_set_loclist && qf#IsLocWindowOpen(l:winnr)
-    " lclose
-    call qf#toggle#ToggleLocWindow(1)
+  if g:ale_set_quickfix " && qf#IsQfWindowOpen()
+    cclose " call qf#toggle#ToggleQfWindow(1)
+  elseif g:ale_set_loclist " && qf#IsLocWindowOpen(l:winnr)
+    lclose " call qf#toggle#ToggleLocWindow(1)
   endif
 endfunction
 
