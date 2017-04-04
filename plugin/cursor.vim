@@ -1,4 +1,5 @@
 " Cursor shape and color
+" jszakmeister/vim-togglecursor
 
 " Change cursor shape depending on current mode
 if has('nvim')
