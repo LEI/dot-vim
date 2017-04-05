@@ -124,8 +124,8 @@ endif
 let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
       \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
 " has('nvim') || v:version > 740 || v:version == 740 && has('patch1799')
-" NVIM_TUI_ENABLE_TRUE_COLOR?
-if (has('nvim') || has('patch-7.4.1778')) && get(g:, 'term_true_color', 0)
+if (has('nvim') || has('patch-7.4.1778')) && g:term_true_color
+  " if has('nvim') | let $NVIM_TUI_ENABLE_TRUE_COLOR = 1 | endif
   set termguicolors
   " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
   " let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"

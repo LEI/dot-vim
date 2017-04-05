@@ -98,9 +98,9 @@ endfunction
 
 augroup StatusLine
   autocmd!
-  " Override status line highlight groups when color scheme changes
-  autocmd ColorScheme * :call StatusLineHighlight()
-  autocmd User Config :call StatusLineHighlight()
   " Build status line on startup
   autocmd User Config let &g:statusline = statusline#Build() | set noshowmode
+  " Override status line highlight groups when color scheme changes
+  autocmd VimEnter,ColorScheme * :call StatusLineHighlight()
+  " autocmd User Config :call StatusLineHighlight()
 augroup END

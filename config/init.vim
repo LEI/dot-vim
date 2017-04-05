@@ -29,7 +29,7 @@ Plug 'tpope/vim-repeat' " Enable repeating supported plugin maps
 Plug 'tpope/vim-sleuth' " Automatic indentation detection
 
 " File Explorer: Shougo/vimfiler.vim
-Plug 'justinmk/vim-dirvish' " Path navigator
+let g:enable_dirvish = 1
 " Plug 'tpope/vim-vinegar' " Improved netrw directory browser
 
 " Undo History: sjl/gundo.vim, simnalamburt/vim-mundo
