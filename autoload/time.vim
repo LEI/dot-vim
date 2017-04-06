@@ -11,10 +11,10 @@ let s:dir = expand('<sfile>:p:h') " Not working for symlinks
 
 function! time#IsDay()
   if executable('php')
-    return s:php_daytime()
+    return s:IsDayTime_PHP()
   endif
   if exists('*strftime')
-    return s:daytime()
+    return s:IsDayTime()
   endif
   return -1
 endfunction
@@ -23,14 +23,14 @@ function! time#IsNight()
   return !time#IsDay()
 endfunction
 
-function! s:daytime()
+function! s:IsDayTime()
   let l:time = strftime('%H%M')
   let l:sunrise = 700
   let l:sunset = 2000
   return l:time > l:sunrise && l:time < l:sunset
 endfunction
 
-function! s:php_daytime()
+function! s:IsDayTime_PHP()
   let l:file = s:dir . '/time/daytime.php'
   if filereadable(l:file)
     let l:cmd = 'php ' . l:file . ' ' . g:time_zone
