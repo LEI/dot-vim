@@ -103,4 +103,6 @@ augroup StatusLine
   " Override status line highlight groups when color scheme changes
   autocmd VimEnter,ColorScheme * :call StatusLineHighlight()
   " autocmd User Config :call StatusLineHighlight()
+
+  autocmd FileType man echom expand('%')
 augroup END

@@ -63,7 +63,14 @@ endif
 command! -n=0 -bar Ln :ALENextWrap
 command! -n=0 -bar Lp :ALEPreviousWrap
 
+function! s:IsCmdWin()
+  return exists('*getcmdwintype') && !empty(getcmdwintype())
+endfunction
+
 function! s:close()
+  if s:IsCmdWin()
+    return
+  endif
   if g:ale_set_quickfix " && qf#IsQfWindowOpen()
     cclose " call qf#toggle#ToggleQfWindow(1)
   elseif g:ale_set_loclist " && qf#IsLocWindowOpen(l:winnr)
@@ -96,7 +103,7 @@ endfunction
 
 function! CloseList(...)
   " let l:winnr = a:0 ? a:1 :winnr()
-  if &filetype ==# 'qf' || winnr('$') == 2
+  if &filetype ==# 'qf' " || winnr('$') == 2
     return
   endif
   call s:close()

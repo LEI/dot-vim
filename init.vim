@@ -162,11 +162,10 @@ else
   " https://github.com/farmergreg/vim-lastplace
   function! RestoreCursorPosition()
     if &filetype ==# 'gitcommit'
-      return 0
+      return 1
     endif
     if line("'\"") > 0 && line("'\"") <= line('$')
       normal! g`"
-      return 1
     endif
   endfunction
   augroup RestoreCursorPosition
