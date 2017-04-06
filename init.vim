@@ -1,4 +1,4 @@
-" Vim
+" Vim / Nvim
 
 " https://github.com/robertmeta/vimfiles/blob/master/vimrc
 
@@ -15,10 +15,8 @@ let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 " Vim defaults
 call config#Source($VIMHOME . '/defaults.vim')
 
-" Install Vim Plug
-call config#Init()
 " Initialize plugins
-call config#Enable() " $VIMHOME . '/config'
+call config#Plug()
 
 " General {{{1
 
@@ -530,6 +528,7 @@ augroup END
 
 " 1}}}
 
+" Local settings
 call config#Source($HOME . '/.vimrc.local')
 
 " vim: et sts=2 sw=2 ts=2 foldenable foldmethod=marker

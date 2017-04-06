@@ -1,4 +1,4 @@
-" Graphical vim options
+" Gvim
 
 " jordwalke/VimBox
 

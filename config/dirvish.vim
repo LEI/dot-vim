@@ -10,7 +10,7 @@ if !has('conceal') " v:version <= 730
   let g:dirvish_relative_paths = 1
 endif
 
-function s:DirvishFileType() abort
+function! s:DirvishFileType() abort
   " Map t to open in new tab
   nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
   xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
