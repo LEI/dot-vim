@@ -189,13 +189,6 @@ function! s:ListDisabled(ArgLead, CmdLine, CursorPos) abort
   return s:GlobPath($VIMCONFIG, a:ArgLead, g:config_expr_name, l:exclude_init, l:exclude_enabled)
 endfunction
 
-" function! s:FilterList(list, filter) abort
-"   let l:list = deepcopy(a:list)
-"   call map(l:list, "fnamemodify(v:val, ':t:r')")
-"   call filter(l:list, a:filter)
-"   return l:list
-" endfunction
-
 command! -nargs=0 -bar Install PlugInstall
 command! -nargs=0 -bar -bang Install PlugInstall<bang>
 command! -nargs=0 -bar Update PlugUpdate
@@ -204,7 +197,6 @@ command! -nargs=0 -bar Upgrade PlugUpgrade | PlugUpdate!
 command! -nargs=0 -bar Load call config#Load(<f-args>)
 command! -nargs=* -bar -complete=customlist,s:ListEnabled Reload call config#Load(<f-args>)
 command! -nargs=* -bar -complete=customlist,s:ListDisabled Enable call config#Load(<f-args>)
-" command! -nargs=? -bar LoadEnabled call config#LoadEnabled(<f-args>)
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
