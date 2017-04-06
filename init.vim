@@ -121,9 +121,9 @@ endif
 
 " Enable true color if supported (:h xterm-true-color)
 " http://sunaku.github.io/tmux-24bit-color.html#usage
-let g:term_true_color = $COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
-      \ || $TERM_PROGRAM ==# 'iTerm.app' " $TERM ==# 'rxvt-unicode-256color'
-if has('termguicolors') && get(g:, 'true_color', 0) && g:term_true_color
+if has('termguicolors') && get(g:, 'true_color', 0)
+      \ && ($COLORTERM ==# 'truecolor' || $COLORTERM =~# '24bit'
+      \ || $TERM_PROGRAM ==# 'iTerm.app') " $TERM ==# 'rxvt-unicode-256color'
   " if has('nvim') | let $NVIM_TUI_ENABLE_TRUE_COLOR = 1 | endif
   set termguicolors
   " let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"

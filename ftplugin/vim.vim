@@ -7,3 +7,7 @@ endif
 
 " setlocal foldenable
 " setlocal foldmethod=marker
+
+" Amount of indent for a continuation line
+" FIXME after FileType * (vim-sleuth)
+" let g:vim_indent_cont = &shiftwidth * 3
