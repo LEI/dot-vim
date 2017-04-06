@@ -452,7 +452,7 @@ cnoremap <expr> <Left> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
 cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
 
 " Save current file as root with sudo
-if maparg('w!!', 'c') ==# ''
+if mapcheck('w!!', 'c') ==# '' " && !hasmapto('...', 'c')
   cnoremap w!! w !sudo tee % > /dev/null
 endif
 

@@ -1,13 +1,41 @@
 " Dirvish
 
-Plug 'justinmk/vim-dirvish' " Path navigator
+Plug 'justinmk/vim-dirvish'
 
-" let g:dirvish_mode = 1 " ':sort r /[^\/]$/'
-" 1: 'suffixes' and 'wildignore' determine sorting and visibility.
-" 2: Shows all files, in the order returned by |glob()|.
-" ':{excmd}': Ex command |:execute|d after listing files.
+" Sort folders at the top
+" let g:dirvish_mode = ':sort r /[^\/]$/'
 
 " Paths relative to the current directory
 if !has('conceal') " v:version <= 730
   let g:dirvish_relative_paths = 1
 endif
+
+function s:DirvishFileType() abort
+  " Map t to open in new tab
+  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+  xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+
+  " Map gr to reload the Dirvish buffer (or use R)
+  nnoremap <silent><buffer> gr :<C-U>Dirvish %<CR>
+
+  " Map gh to hide dot-prefixed files
+  nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d<cr>
+
+  " Enable :Gstatus
+  if exists('g:loaded_fugitive')
+    call fugitive#detect(@%)
+  endif
+
+  " Trigger hidden buffer auto command manually (close qf/loc list if needed)
+  if bufnr('$') > 1 && exists('#BufHidden#*')
+    doautocmd BufHidden *
+  endif
+endfunction
+
+augroup Dirvish
+  autocmd!
+  " Hide 'No matching autocommands'
+  autocmd BufNew * silent echo
+  " Override mappings, options and settings
+  autocmd FileType dirvish call s:DirvishFileType()
+augroup END
