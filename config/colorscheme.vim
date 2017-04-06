@@ -13,28 +13,29 @@
 " Plug 'whatyouhide/vim-gotham'
 
 Plug 'lifepillar/vim-solarized8'
+let g:true_color = 1
 
 nnoremap <silent> <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
 nnoremap <silent> <F5> :call ToggleBackground()<CR>
 nnoremap <silent> <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 
-" call Solarized8('solarized8', 'dark')
-" call Solarized8('solarized8', 'light', 'flat')
 augroup Solarized
   autocmd!
-  " autocmd User Config call Solarized8()
-  autocmd VimEnter * call Solarized8()
+  " autocmd User Config call ColorScheme()
+  autocmd VimEnter * call ColorScheme('solarized8', 'dark')
 augroup END
 
-function! Solarized8(...) abort
+function! ColorScheme(...) abort
   let l:colors = a:0 ? a:1 : 'solarized8'
   let l:bg = a:0 > 1 ? a:2 : ''
   let l:theme = a:0 > 2 ? a:3 : ''
-  let l:daytime = time#IsDay()
-  if l:daytime != -1
-    let l:bg = l:daytime ? 'light' : 'dark'
-  elseif l:bg ==# ''
-    let l:bg = &background
+  if l:bg ==# ''
+    let l:daytime = time#IsDay()
+    if l:daytime != -1
+      let l:bg = l:daytime ? 'light' : 'dark'
+    else
+      let l:bg = &background
+    endif
   endif
   let l:colors_name = l:colors
         \ . (strlen(l:bg) ? '_' . l:bg : '')
