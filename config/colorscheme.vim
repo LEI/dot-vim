@@ -22,7 +22,7 @@ nnoremap <silent> <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 augroup Solarized
   autocmd!
   " autocmd User Config call ColorScheme()
-  autocmd VimEnter * call ColorScheme('solarized8', 'dark')
+  autocmd VimEnter * call ColorScheme()
 augroup END
 
 function! ColorScheme(...) abort
