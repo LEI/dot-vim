@@ -47,7 +47,7 @@ function! config#Init(...) abort
   endif
   augroup UserConfig
     autocmd!
-    autocmd VimEnter * call s:OnVimEnter()
+    autocmd VimEnter * call s:Init()
     " FIXME: User Config autocommands not cleared with 'autocmd! User Config'
     autocmd VimEnter * autocmd! UserConfig
     autocmd VimEnter * augroup! UserConfig
@@ -82,7 +82,7 @@ function! config#SourceDir(...) abort
   return call(function('s:SourceDir'), a:000)
 endfunction
 
-function! s:OnVimEnter() abort
+function! s:Init() abort
   " Wait until vim is ready to clone and configure or :PlugInstall will create the first window
   if get(s:, 'do_install', 0) == 1
     PlugInstall --sync
