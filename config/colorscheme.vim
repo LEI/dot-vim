@@ -3,12 +3,13 @@
 " set background=dark
 " colorscheme spacegray
 
+" Plug 'NLKNguyen/papercolor-theme'
 " Plug 'ajh17/Spacegray.vim'
 " Plug 'chriskempson/base16-vim'
 " Plug 'jonathanfilip/vim-lucius'
 " Plug 'jordwalke/flatlandia'
 " Plug 'kristijanhusak/vim-hybrid-material'
-" Plug 'NLKNguyen/papercolor-theme'
+" Plug 'rakr/vim-one'
 " Plug 'raphamorim/lucario'
 " Plug 'whatyouhide/vim-gotham'
 
