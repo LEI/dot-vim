@@ -48,7 +48,7 @@ Plug 'tpope/vim-eunuch' " Better UNIX shell commands
 " let g:enable_deoplete = has('nvim')
 " let g:enable_neocomplete = !has('nvim')
 " let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
-Plug 'ajh17/VimCompletesMe'
+Plug 'ajh17/VimCompletesMe' " https://robots.thoughtbot.com/vim-you-complete-me
 
 " Search:
 let g:enable_ctags = 1
