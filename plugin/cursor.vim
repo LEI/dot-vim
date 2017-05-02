@@ -3,7 +3,8 @@
 
 " Change cursor shape depending on current mode
 if has('nvim')
-  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+  " let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+  " set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 elseif empty($TMUX)
   let &t_SI = "\<Esc>]50;CursorShape=1\x7"
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
