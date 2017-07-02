@@ -4,7 +4,8 @@ if !has('statusline')
   finish
 endif
 
-Plug 'git@github.com:LEI/vim-statusline'
+" git@github.com:
+Plug 'LEI/vim-statusline'
 
 let g:statusline = get(g:, 'statusline', {})
 let g:statusline = {'left': 'StatusLineLeft', 'right': 'StatusLineRight'}
