@@ -77,6 +77,7 @@ Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 let g:enable_ternjs = !get(g:, 'enable_youcompleteme', 0)
 " Plug 'jelera/vim-javascript-syntax', {'for': 'javascript'}
 " Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
+Plug 'posva/vim-vue' ", {'for': 'vue.*'} & npm i -g eslint eslint-plugin-vue
 
 " PHP:
 " Plug 'spf13/PIV', {'for': 'php'}
