@@ -36,7 +36,7 @@ endfunction
 
 " Automatically install Vim Plug and configure enabled plugins
 function! config#Init(...) abort
-  if v:vim_did_enter
+  if exists('v:vim_did_enter') && v:vim_did_enter
     echoerr 'Vim already started!'
     return 1
   endif
