@@ -7,6 +7,7 @@ link:
   - "ftplugin:.vim"
   - "plugin:.vim"
 exec: |
+  #!/bin/bash
   if ! test -f "$HOME/.vimrc" || ! grep -Fxq 'source $HOME/.vim/init.vim' "$HOME/.vimrc"; then
     echo 'source $HOME/.vim/init.vim' >> "$HOME/.vimrc";
   fi
