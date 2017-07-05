@@ -1,12 +1,13 @@
-link:
-  # - "[^.]*:.vim"
-  # - "autoload/*:.vim/autoload"
-  - "*.vim:.vim"
-  - "autoload:.vim"
-  - "config:.vim"
-  - "ftdetect:.vim"
-  - "ftplugin:.vim"
-  - "plugin:.vim"
-line:
-  ".vimrc": "source $HOME/.vim/init.vim"
-  ".gvimrc": "source $HOME/.vim/ginit.vim"
+role:
+  link:
+    # - "[^.]*:.vim"
+    # - "autoload/*:.vim/autoload"
+    - "*.vim:.vim"
+    - "autoload:.vim"
+    - "config:.vim"
+    - "ftdetect:.vim"
+    - "ftplugin:.vim"
+    - "plugin:.vim"
+  line:
+    ".vimrc": "source $HOME/.vim/init.vim"
+    ".gvimrc": "source $HOME/.vim/ginit.vim"
