@@ -7,12 +7,6 @@ link:
   - "ftdetect:.vim"
   - "ftplugin:.vim"
   - "plugin:.vim"
-exec:
-  - |
-    if ! test -f "$HOME/.vimrc" || ! grep -Fxq 'source $HOME/.vim/init.vim' "$HOME/.vimrc"; then
-      echo 'source $HOME/.vim/init.vim' >> "$HOME/.vimrc";
-    fi;
-  - |
-    if ! test -f "$HOME/.gvimrc" || ! grep -Fxq 'source $HOME/.vim/ginit.vim' "$HOME/.gvimrc"; then
-      echo 'source $HOME/.vim/ginit.vim' >> "$HOME/.gvimrc";
-    fi;
+line:
+  ".vimrc": "source $HOME/.vim/init.vim"
+  ".gvimrc": "source $HOME/.vim/ginit.vim"
