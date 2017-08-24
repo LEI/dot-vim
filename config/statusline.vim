@@ -8,7 +8,7 @@ endif
 Plug 'LEI/vim-statusline'
 
 let g:statusline = get(g:, 'statusline', {})
-let g:statusline = {'left': 'StatusLineLeft', 'right': 'StatusLineRight'}
+call extend(g:statusline, {'left': 'StatusLineLeft', 'right': 'StatusLineRight', 'symbols': {'sep': ' '}}, 'force')
 
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " set statusline=%!statusline#Build()
