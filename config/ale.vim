@@ -32,7 +32,7 @@ let g:ale_lint_delay = 300
 "let g:ale_set_quickfix = 1
 
 " Show loclist or quickfix when a file contains warnigns or errors
-let g:ale_open_list = 0
+let g:ale_open_list = 1
 "let g:ale_keep_list_window_open = 1
 
 let g:ale_warn_about_trailing_whitespace = 1
@@ -63,62 +63,62 @@ endif
 command! -n=0 -bar Ln :ALENextWrap
 command! -n=0 -bar Lp :ALEPreviousWrap
 
-function! s:IsCmdWin()
-  return exists('*getcmdwintype') && !empty(getcmdwintype())
-endfunction
+" function! s:IsCmdWin()
+"   return exists('*getcmdwintype') && !empty(getcmdwintype())
+" endfunction
 
-function! s:close()
-  if s:IsCmdWin()
-    return
-  endif
-  if g:ale_set_quickfix " && qf#IsQfWindowOpen()
-    cclose " call qf#toggle#ToggleQfWindow(1)
-  elseif g:ale_set_loclist " && qf#IsLocWindowOpen(l:winnr)
-    lclose " call qf#toggle#ToggleLocWindow(1)
-  endif
-endfunction
+" function! s:close()
+"   if s:IsCmdWin()
+"     return
+"   endif
+"   if g:ale_set_quickfix " && qf#IsQfWindowOpen()
+"     cclose " call qf#toggle#ToggleQfWindow(1)
+"   elseif g:ale_set_loclist " && qf#IsLocWindowOpen(l:winnr)
+"     lclose " call qf#toggle#ToggleLocWindow(1)
+"   endif
+" endfunction
 
-function! OpenList(...)
-  let l:winnr = a:0 ? a:1 : winnr()
-  if g:ale_set_quickfix && len(getqflist()) > 0
-    if exists('*qf#OpenQuickfix') " !qf#IsQfWindowOpen()
-      call qf#OpenQuickfix()
-    else
-      copen 5
-    endif
-  elseif g:ale_set_loclist && len(getloclist(l:winnr)) > 0
-    if exists('*qf#OpenLoclist') " !qf#IsLocWindowOpen(l:winnr)
-      call qf#OpenLoclist()
-    else
-      lopen 5
-    endif
-  else
-    call s:close()
-  endif
-  " If focus changed, jump to the last window
-  if l:winnr !=# winnr()
-    wincmd p
-  endif
-endfunction
+" function! OpenList(...)
+"   let l:winnr = a:0 ? a:1 : winnr()
+"   if g:ale_set_quickfix && len(getqflist()) > 0
+"     if exists('*qf#OpenQuickfix') " !qf#IsQfWindowOpen()
+"       call qf#OpenQuickfix()
+"     else
+"       copen 5
+"     endif
+"   elseif g:ale_set_loclist && len(getloclist(l:winnr)) > 0
+"     if exists('*qf#OpenLoclist') " !qf#IsLocWindowOpen(l:winnr)
+"       call qf#OpenLoclist()
+"     else
+"       lopen 5
+"     endif
+"   else
+"     call s:close()
+"   endif
+"   " If focus changed, jump to the last window
+"   if l:winnr !=# winnr()
+"     wincmd p
+"   endif
+" endfunction
 
-function! CloseList(...)
-  " let l:winnr = a:0 ? a:1 :winnr()
-  if &filetype ==# 'qf' " || winnr('$') == 2
-    return
-  endif
-  call s:close()
-endfunction
+" function! CloseList(...)
+"   " let l:winnr = a:0 ? a:1 :winnr()
+"   if &filetype ==# 'qf' " || winnr('$') == 2
+"     return
+"   endif
+"   call s:close()
+" endfunction
 
-augroup ALE
-  autocmd!
-  " Run the linters on enter
-  "autocmd BufEnter,BufReadPost * call ale#Lint()
-  " Open the quickfix or location list after linting
-  autocmd User ALELint call OpenList()
-  " Automatically close the corresponding list when hiding a buffer
-  autocmd BufHidden * call CloseList()
+" augroup ALE
+"   autocmd!
+"   " Run the linters on enter
+"   "autocmd BufEnter,BufReadPost * call ale#Lint()
+"   " Open the quickfix or location list after linting
+"   autocmd User ALELint call OpenList()
+"   " Automatically close the corresponding list when hiding a buffer
+"   autocmd BufHidden * call CloseList()
 
-  " autocmd QuickFixCmdPost [^l]* cwindow
-  " autocmd QuickFixCmdPost    l* lwindow
-  " autocmd QuickFixCmdPost * botright cwindow 5
-augroup END
+"   " autocmd QuickFixCmdPost [^l]* cwindow
+"   " autocmd QuickFixCmdPost    l* lwindow
+"   " autocmd QuickFixCmdPost * botright cwindow 5
+" augroup END
