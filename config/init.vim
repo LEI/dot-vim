@@ -18,7 +18,7 @@ let g:enable_qf = 1
 let g:enable_unimpaired = 1
 Plug 'keith/investigate.vim' " Look up documentation with gK
 " Pugg 'romainl/vim-qlist' " Persist 'include-search' and 'definition-search'
-" Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
+Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 " Plug 'tpope/vim-characterize' " Unicode character metadata (ga)
 Plug 'tpope/vim-endwise' " Automatic end keywords
 " Plug 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)

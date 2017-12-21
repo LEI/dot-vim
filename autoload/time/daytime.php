@@ -1,6 +1,7 @@
 <?php
 
 $timezone = 'Europe/Paris';
+date_default_timezone_set($timezone);
 
 if (PHP_SAPI === 'cli') {
     if (count($argv) > 2) throw new \Exception('Too many arguments');
@@ -18,8 +19,8 @@ function isDayTime($dt, $lat, $lon) {
     return $timestamp > $sunrise && $timestamp < $sunset;
 }
 
-function main($tzName) {
-    $tz = new DateTimeZone($tzName);
+function main($timezone) {
+    $tz = new DateTimeZone($timezone);
     $now = new DateTime('now', $tz);
     $loc = $tz->getLocation();
     $lat = $loc['latitude'];
