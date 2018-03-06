@@ -131,6 +131,10 @@ if has('termguicolors') && get(g:, 'true_color', 0)
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   endif
+else " if v:version < 800
+  " Terminal's 16 ANSI colors must match the Solarized palette:
+  " https://github.com/lifepillar/vim-solarized8#but-my-terminal-has-only-256-colors
+  let g:solarized_use16 = 1
 endif
 
 " set t_AB=^[[48;5;%dm

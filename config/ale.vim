@@ -9,7 +9,9 @@ endif
 Plug 'w0rp/ale', {'as': 'async-lint-engine'}
 
 " JavaScript: disable 'eslint' and 'standard' JavaScript linters
-let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
+"let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
+let g:ale_linters = {'javascript': ['eslint', 'flow', 'jscs', 'xo']}
+" let g:ale_linters = {'javascript': ['flow', 'jscs', 'standard', 'xo']}
 " Shell: bashate, shellcheck
 " Golang: go get -u github.com/golang/lint/golint
 " VimL: pip3 install vim-vint

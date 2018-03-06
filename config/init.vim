@@ -95,3 +95,4 @@ Plug 'posva/vim-vue' ", {'for': 'vue.*'} & npm i -g eslint eslint-plugin-vue
 " Plug 'metakirby5/codi.vim' " Interactive scratchpad
 " Plug 'mhinz/vim-startify' " Start screen
 " Plug 'vim-scripts/dbext.vim' " Database access
+" Plug 'ap/vim-css-color' " Color preview

@@ -24,6 +24,11 @@ augroup Solarized
   autocmd!
   " autocmd User Config call ColorScheme()
   autocmd VimEnter * call ColorScheme()
+
+  " Quickfix PHP indentation issue (caused by 'hi clear' in colorscheme)
+  " Similar to https://github.com/2072/PHP-Indenting-for-VIm/issues/52
+  autocmd VimEnter * highlight link PhpParent Normal
+
 augroup END
 
 function! ColorScheme(...) abort
