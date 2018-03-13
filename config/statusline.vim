@@ -64,7 +64,7 @@ function! StatusLineRight(...) abort
   let l:s.= '%( %{exists("g:loaded_syntastic_plugin") ? SyntasticStatuslineFlag() : ""}%)'
   let l:s.= '%( %{exists("*neomake#Make") ? neomake#statusline#line#QflistStatus("qf: ") : ""}%)'
   let l:s.= '%( %{exists("*neomake#Make") ? neomake#statusline#line#LoclistStatus() : ""}%)'
-  let l:s.= '%( %{exists("g:loaded_ale") ? ALEGetStatusLine() : ""}%)'
+  let l:s.= '%( %{exists("g:loaded_ale") ? ALEStatus() : ""}%)'
   let l:s.= ' %)%*'
   let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
   let l:s.= ' ' " Space

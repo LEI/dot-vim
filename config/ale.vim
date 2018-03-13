@@ -40,19 +40,43 @@ let g:ale_lint_on_text_changed = 'never'
 
 let g:ale_warn_about_trailing_whitespace = 1
 
-let g:ale_sign_error = 'x' " >>
-let g:ale_sign_warning = '!' " --
-let g:ale_statusline_format = ['x %d', '! %d', ''] " ['%d error(s)', '%d warning(s)', 'OK']
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let g:ale_sign_error =  nr2char(0xD7)
-  let g:ale_sign_warning = '!'
-  let g:ale_statusline_format = [nr2char(0x2A09) . ' %d', '! %d', '']
-endif
-
 " Change the format for echo messages
 "let g:ale_echo_msg_error_str = 'E'
 "let g:ale_echo_msg_warning_str = 'W'
 "let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+let g:ale_sign_error = 'x' " >>
+let g:ale_sign_warning = '!' " --
+if has('multi_byte') && &encoding ==# 'utf-8'
+  let g:ale_sign_error =  nr2char(0x2A09) " nr2char(0xD7)
+  let g:ale_sign_warning = '!'
+endif
+
+function! ALEStatus() abort
+  let l:str = ''
+  let l:counts = ale#statusline#Count(bufnr(''))
+
+  if l:counts.total == 0
+    return l:str
+  endif
+
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+
+  if l:all_errors > 0
+    let l:str.= l:all_errors . ' ' . g:ale_sign_error
+  endif
+
+  if l:all_errors > 0 && l:all_non_errors > 0
+    let l:str.= ' '
+  endif
+
+  if l:all_non_errors > 0
+    let l:str.= l:all_non_errors . ' ' . g:ale_sign_warning
+  endif
+
+  return l:str
+endfunction
 
 " Disable default colors
 "highlight clear ALEErrorSign
