@@ -25,11 +25,9 @@ let g:ale_linters = {'javascript': ['eslint', 'flow', 'jscs', 'xo']}
 "let g:ale_set_quickfix = 1
 
 " Show loclist or quickfix when a file contains warnigns or errors
-let g:ale_open_list = 1
+let g:ale_open_list = 0
 "let g:ale_keep_list_window_open = 1
 let g:ale_list_window_size = 5
-
-let g:ale_lint_delay = 300
 
 " Apply linters on BufEnter and BufRead
 let g:ale_lint_on_enter = 1
@@ -37,6 +35,8 @@ let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 " Check files on TextChanged event (always, insert, normal or never)
 let g:ale_lint_on_text_changed = 'never'
+" Milliseconds delay after the text is changed
+let g:ale_lint_delay = 300
 
 let g:ale_warn_about_trailing_whitespace = 1
 
