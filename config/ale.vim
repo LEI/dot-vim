@@ -20,6 +20,12 @@ let g:ale_linters = {'javascript': ['eslint', 'flow', 'jscs', 'xo']}
 "   Plug 'haya14busa/go-vimlparser'
 " endif
 
+let g:ale_fixers = {'php': ['phpcbf']}
+let g:ale_fix_on_save = 1
+
+" Bind F8 to fixing problems with ALE
+"nmap <F8> <Plug>(ale_fix)
+
 " Use quickfix list instead of loclist
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
