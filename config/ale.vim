@@ -20,8 +20,24 @@ let g:ale_linters = {'javascript': ['eslint', 'flow', 'jscs', 'xo']}
 "   Plug 'haya14busa/go-vimlparser'
 " endif
 
-let g:ale_fixers = {'php': ['phpcbf']}
+" Define fixers per filetype (json, less, md -> prettier)
+let g:ale_fixers = {
+      \   'css': ['prettier'],
+      \   'javascript': ['eslint'],
+      \   'php': ['phpcbf'],
+      \ }
+
+" Fix files automatically on save
 let g:ale_fix_on_save = 1
+
+" Do not lint or fix minified files.
+let g:ale_pattern_options = {
+      \   '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
+      \   '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
+      \ }
+
+" Required if g:ale_pattern_options is configured outside of vimrc
+let g:ale_pattern_options_enabled = 1
 
 " Bind F8 to fixing problems with ALE
 "nmap <F8> <Plug>(ale_fix)
