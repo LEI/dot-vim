@@ -24,7 +24,7 @@ Source `~/.vim/init.vim` from `~/.vimrc`
 
     echo 'source ~/.vim/init.vim' >> "$HOME/.vimrc"
 
-For Gvim:
+Gvim
 
     echo 'source ~/.vim/ginit.vim' >> "$HOME/.gvimrc"
 
