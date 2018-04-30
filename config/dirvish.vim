@@ -11,6 +11,8 @@ if !has('conceal') " v:version <= 730
 endif
 
 function! s:DirvishFileType() abort
+  " silent! unmap <buffer> <C-p>
+
   " Map t to open in new tab
   nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
   xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>

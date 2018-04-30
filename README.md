@@ -8,9 +8,25 @@
 
 ## Manual installation
 
+Clone and change directory
+
+    git clone https://github.com/LEI/dot-vim.git ~/.dot/vim && cd $_
+
+Create the directory `~/.vim`
+
     mkdir -p "$HOME/.vim"
-    ln -isv "$DOT/{*.vim,autoload,config,ftdetect,ftplugin,plugin}" "$HOME/.vim"
-    echo 'source ~/.vim/init.vim' >> "$HOME/.vim/vimrc"
+
+Link files to home directory
+
+    ln -isv "~/.dot/vim/{*.vim,autoload,config,ftdetect,ftplugin,plugin}" "$HOME/.vim"
+
+Source `~/.vim/init.vim` from `~/.vimrc`
+
+    echo 'source ~/.vim/init.vim' >> "$HOME/.vimrc"
+
+For Gvim:
+
+    echo 'source ~/.vim/ginit.vim' >> "$HOME/.gvimrc"
 
 ## Resources
 
