@@ -1,6 +1,12 @@
 ---
-
 role:
+  pkg:
+    - curl
+    # - name: git
+    #   os: ["!debian"]
+    # - name: git-core
+    #   os: ["debian"]
+    - vim
   link:
     # - "[^.]*:.vim"
     # - "autoload/*:.vim/autoload"
