@@ -2,10 +2,7 @@
 role:
   pkg:
     - curl
-    # - name: git
-    #   os: ["!debian"]
-    # - name: git-core
-    #   os: ["debian"]
+    - git
     - vim
   link:
     # - "[^.]*:.vim"
