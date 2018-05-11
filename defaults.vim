@@ -55,3 +55,5 @@ endif
 if &shell =~# 'fish$' && (v:version < 704 || v:version == 704 && !has('patch276'))
   set shell=/bin/bash
 endif
+
+" let $BASH_ENV = "~/.bash.d/aliases/main.bash"

@@ -63,7 +63,7 @@ let g:enable_ale = 1
 
 " Languages:
 Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
-let g:polyglot_disabled = ['tmux']
+let g:polyglot_disabled = ['tmux', 'graphql']
 let g:jsx_ext_required = 1
 
 " Runtime:
