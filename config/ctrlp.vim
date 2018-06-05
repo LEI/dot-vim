@@ -33,8 +33,8 @@ else
   let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -co --exclude-standard']
 endif
 
-" Fix broken CtrlP shortcut
-autocmd FileType dirvish nnoremap <buffer><silent> <C-p> :CtrlP<CR>
+" " Fix broken CtrlP shortcut (done in config/dirvish.vim)
+" autocmd FileType dirvish nnoremap <buffer><silent> <C-p> :CtrlP<CR>
 
 " augroup CtrlP
 "   autocmd!

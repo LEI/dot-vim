@@ -11,7 +11,11 @@ if !has('conceal') " v:version <= 730
 endif
 
 function! s:DirvishFileType() abort
-  " silent! unmap <buffer> <C-p>
+  " if get(g:, 'loaded_ctrlp', 0) == 1
+  " endif
+
+  " Allow CtrlP mapping
+  silent! unmap <buffer> <C-p>
 
   " Map t to open in new tab
   nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>

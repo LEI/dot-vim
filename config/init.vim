@@ -52,8 +52,8 @@ Plug 'ajh17/VimCompletesMe' " https://robots.thoughtbot.com/vim-you-complete-me
 
 " Search:
 let g:enable_ctags = 1
-let g:enable_ctrlp = 1
-" Plug 'junegunn/fzf.vim'
+" let g:enable_ctrlp = 1
+let g:enable_fzf = 1
 
 " Syntax Check:
 let g:enable_ale = 1
