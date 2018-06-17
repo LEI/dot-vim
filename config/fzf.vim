@@ -7,14 +7,15 @@ if isdirectory('/usr/local/opt/fzf')
 elseif isdirectory('~/.fzf')
   " If installed using git
   Plug '~/.fzf'
-else
+else " install --xdg?
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 endif
 
 Plug 'junegunn/fzf.vim'
 
 if executable('ag')
-  let s:ag_args = '--nogroup --nocolor --files-with-matches --hidden --ignore .git'
+  let s:ag_args = '--hidden --ignore .git --files-with-matches'
+  " --nogroup --nocolor
   command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, s:ag_args, <bang>0)
 endif
 
