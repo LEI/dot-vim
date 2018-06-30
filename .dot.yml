@@ -2,7 +2,7 @@
 role:
   pkg:
     - curl
-    - fzf # $(brew --prefix)/opt/fzf/install
+    # - fzf # $(brew --prefix)/opt/fzf/install
     - git
     - vim
   link:
