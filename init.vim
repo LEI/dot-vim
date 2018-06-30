@@ -9,6 +9,8 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
+" Explicitly set nocompatible to handle -u without -N?
+
 " split(&runtimepath, ',')[0] " $HOME . '/.vim'
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 
