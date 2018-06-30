@@ -15,7 +15,7 @@ Plug 'tpope/vim-surround' " Quoting/parenthesizing
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
 let g:enable_qf = 1
 " let g:enable_textobj = 1
-let g:enable_unimpaired = 1
+"let g:enable_unimpaired = 1
 Plug 'keith/investigate.vim' " Look up documentation with gK
 " Pugg 'romainl/vim-qlist' " Persist 'include-search' and 'definition-search'
 Plug 'tpope/vim-abolish' " Search, substitute and abbreviate variants
@@ -66,10 +66,6 @@ Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 let g:polyglot_disabled = ['tmux', 'graphql']
 let g:jsx_ext_required = 1
 
-" Runtime:
-let g:enable_fugitive = 1
-Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-
 " Golang:
 " Plug 'fatih/vim-go', {'for': 'go'}
 
@@ -81,6 +77,14 @@ Plug 'posva/vim-vue' ", {'for': 'vue.*'} & npm i -g eslint eslint-plugin-vue
 
 " PHP:
 " Plug 'spf13/PIV', {'for': 'php'}
+
+" Runtime:
+let g:enable_fugitive = 1
+Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
+if executable('tmux') " len($TMUX)
+  " Fixes autoread in terminal running tmux
+  Plug 'tmux-plugins/vim-tmux-focus-events'
+endif
 
 " Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim
 " Plug 'jamessan/vim-gnupg' " Transparent editing of *.gpg, *.pgp and *.asc
