@@ -66,6 +66,9 @@ Plug 'sheerun/vim-polyglot' " Syntax and indentation language pack
 let g:polyglot_disabled = ['tmux', 'graphql']
 let g:jsx_ext_required = 1
 
+" SQL:
+" Plug 'vim-scripts/SQLUtilities'
+
 " Golang:
 " Plug 'fatih/vim-go', {'for': 'go'}
 
@@ -77,6 +80,18 @@ Plug 'posva/vim-vue' ", {'for': 'vue.*'} & npm i -g eslint eslint-plugin-vue
 
 " PHP:
 " Plug 'spf13/PIV', {'for': 'php'}
+
+" Project:
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-projectionist'
+if executable('composer')
+   " Use :Dispatch to run composer dump-autoload
+  Plug 'noahfrederick/vim-composer' " :Composer
+endif
+if executable('laravel')
+  " Vim dispatch enables :Console for artisan tinker
+  Plug 'noahfrederick/vim-laravel' " :Artisan
+endif
 
 " Runtime:
 let g:enable_fugitive = 1

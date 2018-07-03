@@ -14,9 +14,20 @@ endif
 Plug 'junegunn/fzf.vim'
 
 if executable('ag')
-  let s:ag_args = '--hidden --ignore .git --files-with-matches'
-  " --nogroup --nocolor
-  command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, s:ag_args, <bang>0)
+  " let s:ag_args = '--hidden --ignore .git'
+  " --nogroup --nocolor " --files-with-matches
+  " command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, s:ag_args, <bang>0)
+  command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(<q-args>,
+    \   <bang>0 ? fzf#vim#with_preview('up:60%')
+    \           : fzf#vim#with_preview('right:50%', '?'),
+    \   <bang>0)
+  " right:50%:hidden
+  " command! -bang Colors
+  "   \ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
+  command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+  " GitFiles
 endif
 
 " Use the correct file source, based on context
