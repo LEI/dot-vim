@@ -23,20 +23,15 @@ if !exists('$VIMCONFIG') || empty($VIMCONFIG)
   let $VIMCONFIG = $VIMHOME . '/config'
 endif
 
-let g:pack_dir = 'config'
+let g:pack_dir = get(g:, 'pack_dir', 'config')
 let g:pack_path = get(g:, 'minpac_path', $VIMHOME . '/pack/' . g:pack_dir)
-let g:minpac_opts = {'package_name': g:pack_dir}
-" 'dir' Base directory. Default: the first directory of the 'packpath' option.
-" 'package_name' Package name. Default: 'minpac'
-" 'git' Git command. Default: 'git'
-" 'depth' Default clone depth. Default: 1
-" 'jobs' Maximum job numbers. If <= 0, unlimited. Default: 8
-" 'verbose' Verbosity level (0 to 3). Default: 1
+let g:minpac_opts = {'package_name': g:pack_dir} " 'verbose': 0
 
 let g:minpac_path = get(g:, 'minpac_path', g:pack_path . '/opt/minpac')
 let g:minpac_url = get(g:, 'minpac_url', 'https://github.com/k-takata/minpac.git')
 
-let g:plug_path = get(g:, 'plug_path', $VIMHOME . '/autoload/plug.vim')
+" let g:plug_path = get(g:, 'plug_path', $VIMHOME . '/autoload/plug.vim')
+let g:plug_path = get(g:, g:pack_path . '/opt/vim-plug/autoload/plug.vim')
 let g:plug_url = get(g:, 'plug_url', 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
 " let g:plug_pac = get(g:, 'plug_home', $VIMHOME . '/pack/plug/opt/autoload/plug.vim')
 let g:plug_home = get(g:, 'plug_home', g:pack_path . '/opt')
@@ -55,16 +50,19 @@ function! config#Start(...) abort
       call s:Clone(g:minpac_url, g:minpac_path)
       let s:do_install = 1
     endif
+    if !isdirectory(g:minpac_path)
+      let s:do_install = 0
+      return 0
+    endif
     packadd minpac
     " silent! exists('*minpac#init')
     call minpac#init(g:minpac_opts)
     call config#LoadDir()
     if get(s:, 'do_install', 0) == 1
-      " silent?
       call minpac#update()
     endif
     " Load optional plugins (packloadall)
-    for l:name in minpac#getpackages('', 'opt', '', 1)
+    for l:name in minpac#getpackages(g:pack_dir, 'opt', '', 1)
       execute 'packadd' l:name
     endfor
   else
@@ -132,6 +130,19 @@ function! s:Init() abort
   call s:DoAutoCmd()
 endfunction
 
+function! s:Clone(url, path) abort
+  let l:fmt = 'git clone --depth 1 %s %s' " --quiet 2>&1
+  let l:cmd = printf(l:fmt, a:url, a:path)
+  let l:out = systemlist(l:cmd)
+  if v:shell_error
+    " echo substitute(l:out, '\n$', '', '')
+    for l:l in l:out
+      echoerr l:l
+    endfor
+  endif
+  return v:shell_error
+endfunction
+
 " Add package (based on Plug command)
 function! s:Pack(repo, ...) abort
   if a:0 > 1
@@ -154,7 +165,10 @@ function! s:Pack(repo, ...) abort
     if s:is_local(l:repo)
       if !isdirectory(l:dir)
         echom 'ln -s ' . l:repo . ' ' . l:dir
-        execute 'silent !ln -s ' . l:repo . ' ' . l:dir
+        let l:out = system(printf('ln -s %s %s', l:repo, l:dir))
+        if v:shell_error
+          echoerr l:out
+        endif
       endif
       let l:opts.frozen = get(l:opts, 'frozen', 1)
     else
@@ -162,9 +176,6 @@ function! s:Pack(repo, ...) abort
       " let l:fmt = get(g:, 'plug_url_format', 'https://git::@github.com/%s.git')
       " let l:fmt = get(l:opts, 'fmt', l:fmt)
       " let l:url = printf(l:fmt, l:repo)
-      " if !isdirectory(l:dir)
-      "   call s:Clone(l:url, l:dir)
-      " endif
       " " WARN: vim-plug = uri, minap = url
       " " let l:opts.url = get(l:opts, 'url', l:url)
     endif
@@ -186,17 +197,13 @@ function! s:Pack(repo, ...) abort
     " endif
     " echo minpac#getpluginfo(l:name)
   else
-    Plug l:repo l:opts
+    " Plug l:repo l:opts
+    call plug#(l:repo, l:opts)
   endif
   " try
   " catch
   "   return s:err(v:exception)
   " endtry
-endfunction
-
-function! s:Clone(url, path) abort
-  echom 'Cloning ' . a:url . ' into ' . a:path
-  execute 'silent !git clone --quiet ' . a:url . ' ' . a:path
 endfunction
 
 function! s:Load(...) abort
@@ -320,7 +327,7 @@ function! s:is_local(repo)
 endfunction
 
 function! s:define_commands() abort
-  if g:use_minpac " packadd minpac
+  if g:use_minpac
     command! -nargs=* -bar PackUpdate packadd minpac | call minpac#update(<f-args>)
     command! -nargs=* -bar PackClean packadd minpac | call minpac#clean(<f-args>)
 

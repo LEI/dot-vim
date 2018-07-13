@@ -41,7 +41,13 @@ Gvim
 
 ## Usage
 
-### [Vim Plug](https://github.com/junegunn/vim-plug)
+### Plugins
+
+#### [minpac](https://github.com/k-takata/minpac) (Vim 8)
+
+    :call minpac#update()
+
+#### [vim-plug](https://github.com/junegunn/vim-plug) `v:version < 800`
 
 Install plugins
 

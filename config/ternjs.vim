@@ -18,7 +18,7 @@ endif
 " tr  :TernRefs
 " tR  :TernRename
 
-if v:version >= 800
+if get(g:, 'use_minpac', v:version >= 800) == 1
   function! TernInstall(hooktype, name)
     " let l:info = minpac#getpluginfo(a:name)
     if a:hooktype == 'post-update'
