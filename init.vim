@@ -20,7 +20,7 @@ let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 call config#Source($VIMHOME . '/defaults.vim')
 
 " Initialize plugins
-call config#Start()
+call config#Init()
 
 " General {{{1
 

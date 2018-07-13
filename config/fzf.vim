@@ -8,7 +8,7 @@ elseif isdirectory('~/.fzf')
   " If installed using git
   Pack '~/.fzf'
 else " install --xdg?
-  Pack 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Pack 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '!./install --all' }
 endif
 
 Pack 'junegunn/fzf.vim'
