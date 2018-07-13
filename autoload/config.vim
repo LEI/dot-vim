@@ -56,10 +56,17 @@ function! config#Start(...) abort
       let s:do_install = 1
     endif
     packadd minpac
-    " if exists('*minpac#init')
-      call minpac#init(g:minpac_opts)
-      call config#LoadDir()
-    " endif
+    " silent! exists('*minpac#init')
+    call minpac#init(g:minpac_opts)
+    call config#LoadDir()
+    if get(s:, 'do_install', 0) == 1
+      " silent?
+      call minpac#update()
+    endif
+    " Load optional plugins (packloadall)
+    for l:name in minpac#getpackages('', 'opt', '', 1)
+      execute 'packadd' l:name
+    endfor
   else
     if empty(glob(g:plug_path))
       execute 'silent !curl -sfLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
@@ -120,6 +127,7 @@ function! s:Init() abort
   if get(s:, 'do_install', 0) == 1
     InstallSync
   endif
+  " packloadall
   " Execute autocommands once the plugins are available
   call s:DoAutoCmd()
 endfunction
@@ -169,13 +177,13 @@ function! s:Pack(repo, ...) abort
     " Update &packpath
     call minpac#add(l:repo, l:opts)
     " Install plugin if missing
-    if !isdirectory(l:dir)
-      call minpac#update(l:name)
-    endif
+    " if !isdirectory(l:dir)
+    "   call minpac#update(l:name)
+    " endif
     " Load opt plugin (TODO: test start type)
-    if l:opts.type == 'opt'
-      execute 'packadd' l:name
-    endif
+    " if l:opts.type == 'opt'
+    "   execute 'packadd' l:name
+    " endif
     " echo minpac#getpluginfo(l:name)
   else
     Plug l:repo l:opts
@@ -313,15 +321,15 @@ endfunction
 
 function! s:define_commands() abort
   if g:use_minpac " packadd minpac
-    command! -nargs=0 -bar PackUpdate call minpac#update()
-    command! -nargs=0 -bar PackClean call minpac#clean()
+    command! -nargs=* -bar PackUpdate packadd minpac | call minpac#update(<f-args>)
+    command! -nargs=* -bar PackClean packadd minpac | call minpac#clean(<f-args>)
 
-    command! -nargs=0 -bar Install PackUpdate
-    command! -nargs=0 -bar -bang Install PackUpdate
-    command! -nargs=0 -bar Update PackUpdate
-    command! -nargs=0 -bar -bang Update PackUpdate
-    command! -nargs=0 -bar Upgrade PackUpdate
-    command! -nargs=0 -bar InstallSync PackUpdate
+    command! -nargs=* -bar Install PackUpdate
+    command! -nargs=* -bar -bang Install PackUpdate
+    command! -nargs=* -bar Update PackUpdate
+    command! -nargs=* -bar -bang Update PackUpdate
+    command! -nargs=* -bar Upgrade PackUpdate
+    command! -nargs=* -bar InstallSync PackUpdate
   else
     command! -nargs=0 -bar Install PlugInstall
     command! -nargs=0 -bar -bang Install PlugInstall<bang>

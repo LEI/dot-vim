@@ -18,10 +18,19 @@ endif
 " tr  :TernRefs
 " tR  :TernRename
 
-function! TernInstall(info)
-  if a:info.status ==# 'installed' || a:info.force
-    !npm install
-  endif
-endfunction
+if v:version >= 800
+  function! TernInstall(hooktype, name)
+    " let l:info = minpac#getpluginfo(a:name)
+    if a:hooktype == 'post-update'
+      silent !npm install
+    endif
+  endfunction
+else
+  function! TernInstall(info)
+    if a:info.status ==# 'installed' || a:info.force
+      !npm install
+    endif
+  endfunction
+endif
 
 Pack 'ternjs/tern_for_vim', {'do': function('TernInstall'), 'for': 'javascript'}
