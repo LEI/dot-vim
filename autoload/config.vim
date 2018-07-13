@@ -162,11 +162,16 @@ function! s:Pack(repo, ...) abort
     endif
     let l:opts.name = get(l:opts, 'name', l:name)
     let l:opts.type = get(l:opts, 'type', 'opt')
+
     " echom 'minpac add ' . l:repo
     " echo l:opts
 
     " Update &packpath
     call minpac#add(l:repo, l:opts)
+    " Install plugin if missing
+    if !isdirectory(l:dir)
+      call minpac#update(l:name)
+    endif
     " Load opt plugin (TODO: test start type)
     if l:opts.type == 'opt'
       execute 'packadd' l:name
