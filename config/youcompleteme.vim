@@ -24,7 +24,7 @@ function! YCMInstall(info)
   endif
 endfunction
 
-Plug 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
+Pack 'Valloric/YouCompleteMe', {'do': function('YCMInstall'), 'on': []}
 
 " !exists('g:loaded_youcompleteme') | call plug#load('YouCompleteMe') | call youcompleteme#Enable()
 function! YCMEnable() abort

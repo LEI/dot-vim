@@ -4,6 +4,6 @@ if !has('windows')
   finish
 endif
 
-Plug 'webdevel/tabulous'
+Pack 'webdevel/tabulous'
 
 set showtabline=1

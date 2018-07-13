@@ -4,7 +4,7 @@ if !has('nvim') || v:version < 704 || v:version == 704 && !has('patch503')
   finish
 endif
 
-Plug 'neomake/neomake'
+Pack 'neomake/neomake'
 
 " let g:neomake_vim_enabled_makers = ['vimlint']
 " let g:neomake_vim_vimlint_exe = g:plug_home . '/vim-vimlint/bin/vimlint.sh'

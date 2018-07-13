@@ -4,7 +4,7 @@ if !has('lua')
   finish
 endif
 
-Plug 'Shougo/neocomplete.vim' | Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Pack 'Shougo/neocomplete.vim' | Pack 'Shougo/vimproc.vim', {'do' : 'make'}
 let g:neocomplete#enable_at_startup = 1
 
 " Should be set before

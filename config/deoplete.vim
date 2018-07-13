@@ -8,7 +8,7 @@ if !has('nvim') || !has('python3')
   finish
 endif
 
-Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+Pack 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 let g:deoplete#enable_at_startup = 1
 
 " Should be set before

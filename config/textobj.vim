@@ -1,17 +1,17 @@
 " Text Objects
 
-Plug 'wellle/targets.vim' " Additional text objects
+Pack 'wellle/targets.vim' " Additional text objects
 
-" Plug 'bkad/CamelCaseMotion' " CamelCase and snake_case
-" Plug 'coderifous/textobj-word-column.vim' " Word-based columns
-" Plug 'michaeljsmith/vim-indent-object' " Indent level
-" Plug 'vim-scripts/argtextobj.vim' " Arguments
+" Pack 'bkad/CamelCaseMotion' " CamelCase and snake_case
+" Pack 'coderifous/textobj-word-column.vim' " Word-based columns
+" Pack 'michaeljsmith/vim-indent-object' " Indent level
+" Pack 'vim-scripts/argtextobj.vim' " Arguments
 
-" Plug 'glts/vim-textobj-comment' | Plug 'kana/vim-textobj-user'
-" Plug 'jceb/vim-textobj-uri' | Plug 'kana/vim-textobj-user'
-" Plug 'kana/vim-textobj-indent' | Plug 'kana/vim-textobj-user'
-" Plug 'lucapette/vim-textobj-underscore' | Plug 'kana/vim-textobj-user'
-" Plug 'rhysd/vim-textobj-conflict' | Plug 'kana/vim-textobj-user'
+" Pack 'glts/vim-textobj-comment' | Pack 'kana/vim-textobj-user'
+" Pack 'jceb/vim-textobj-uri' | Pack 'kana/vim-textobj-user'
+" Pack 'kana/vim-textobj-indent' | Pack 'kana/vim-textobj-user'
+" Pack 'lucapette/vim-textobj-underscore' | Pack 'kana/vim-textobj-user'
+" Pack 'rhysd/vim-textobj-conflict' | Pack 'kana/vim-textobj-user'
 
 " for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '%', '`' ]
 "   execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'

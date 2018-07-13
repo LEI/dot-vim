@@ -6,7 +6,7 @@ if !has('nvim') && v:version < 800
   finish
 endif
 
-Plug 'w0rp/ale', {'as': 'async-lint-engine'}
+Pack 'w0rp/ale', {'as': 'async-lint-engine'}
 
 " JavaScript: disable 'eslint' and 'standard' JavaScript linters
 "let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
@@ -15,9 +15,9 @@ let g:ale_linters = {'javascript': ['eslint', 'flow', 'jscs', 'xo']}
 " Shell: bashate, shellcheck
 " Golang: go get -u github.com/golang/lint/golint
 " VimL: pip3 install vim-vint
-" Plug 'syngan/vim-vimlint' | Plug 'ynkdir/vim-vimlparser'
+" Pack 'syngan/vim-vimlint' | Pack 'ynkdir/vim-vimlparser'
 " if executable('go')
-"   Plug 'haya14busa/go-vimlparser'
+"   Pack 'haya14busa/go-vimlparser'
 " endif
 
 " Define fixers per filetype (json, less, md -> prettier)

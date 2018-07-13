@@ -24,4 +24,4 @@ function! TernInstall(info)
   endif
 endfunction
 
-Plug 'ternjs/tern_for_vim', {'do': function('TernInstall'), 'for': 'javascript'}
+Pack 'ternjs/tern_for_vim', {'do': function('TernInstall'), 'for': 'javascript'}

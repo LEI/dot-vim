@@ -3,15 +3,15 @@
 
 if isdirectory('/usr/local/opt/fzf')
   " If installed using Homebrew
-  Plug '/usr/local/opt/fzf'
+  Pack '/usr/local/opt/fzf'
 elseif isdirectory('~/.fzf')
   " If installed using git
-  Plug '~/.fzf'
+  Pack '~/.fzf'
 else " install --xdg?
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Pack 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 endif
 
-Plug 'junegunn/fzf.vim'
+Pack 'junegunn/fzf.vim'
 
 if executable('ag')
   " let s:ag_args = '--hidden --ignore .git'

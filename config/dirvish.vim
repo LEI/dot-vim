@@ -1,6 +1,6 @@
 " Dirvish
 
-Plug 'justinmk/vim-dirvish'
+Pack 'justinmk/vim-dirvish'
 
 " Sort folders at the top
 " let g:dirvish_mode = ':sort r /[^\/]$/'

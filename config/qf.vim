@@ -1,6 +1,6 @@
 " Quickfix window commands, settings and mappings
 
-Plug 'romainl/vim-qf' ", {'for': 'qf'}
+Pack 'romainl/vim-qf' ", {'for': 'qf'}
 
 " Information displayed in the 'statusline'
 " let g:qf_statusline = {}

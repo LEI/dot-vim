@@ -6,7 +6,7 @@ endif
 
 " g:did_plugin_ultisnips
 
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Pack 'SirVer/ultisnips' | Pack 'honza/vim-snippets'
 
 " Snippet search path
 " let g:UltiSnipsSnippetsDir = '~/.vim/snippets/'

@@ -4,7 +4,7 @@ if v:version < 704
   finish
 endif
 
-Plug 'Shougo/neosnippet' | Plug 'Shougo/neosnippet-snippets'
+Pack 'Shougo/neosnippet' | Pack 'Shougo/neosnippet-snippets'
 
 " Conceal snippet markers
 if has('conceal')

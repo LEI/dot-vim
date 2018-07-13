@@ -3,17 +3,17 @@
 " set background=dark
 " colorscheme spacegray
 
-" Plug 'ajh17/Spacegray.vim'
-" Plug 'chriskempson/base16-vim'
-" Plug 'jonathanfilip/vim-lucius'
-" Plug 'jordwalke/flatlandia'
-" Plug 'kristijanhusak/vim-hybrid-material'
-" Plug 'NLKNguyen/papercolor-theme'
-" Plug 'rakr/vim-one'
-" Plug 'raphamorim/lucario'
-" Plug 'whatyouhide/vim-gotham'
+" Pack 'ajh17/Spacegray.vim'
+" Pack 'chriskempson/base16-vim'
+" Pack 'jonathanfilip/vim-lucius'
+" Pack 'jordwalke/flatlandia'
+" Pack 'kristijanhusak/vim-hybrid-material'
+" Pack 'NLKNguyen/papercolor-theme'
+" Pack 'rakr/vim-one'
+" Pack 'raphamorim/lucario'
+" Pack 'whatyouhide/vim-gotham'
 
-Plug 'lifepillar/vim-solarized8'
+Pack 'lifepillar/vim-solarized8'
 let g:true_color = 1
 
 nnoremap <silent> <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>

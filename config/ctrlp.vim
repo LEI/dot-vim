@@ -4,8 +4,8 @@
 "   finish
 " endif
 
-Plug 'ctrlpvim/ctrlp.vim' ", {'on': 'CtrlP'}
-" Plug 'tacahiroy/ctrlp-funky'
+Pack 'ctrlpvim/ctrlp.vim' ", {'on': 'CtrlP'}
+" Pack 'tacahiroy/ctrlp-funky'
 
 " https://github.com/skwp/dotfiles/blob/master/vim/settings/ctrlp.vim
 " https://github.com/thoughtbot/dotfiles/blob/master/vimrc

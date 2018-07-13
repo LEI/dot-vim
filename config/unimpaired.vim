@@ -1,6 +1,6 @@
 " Unimpaired
 
-Plug 'tpope/vim-unimpaired'
+Pack 'tpope/vim-unimpaired'
 
 " Remap unimpaired shortcuts to ( and )
 for s:c in map(range(65,90) + range(97,122),'nr2char(v:val)')

@@ -2,7 +2,7 @@
 
 " editorconfig/editorconfig-vim (official, requires python)
 " sgur/vim-editorconfig (breaks vim-sleuth)
-Plug 'dahu/EditorConfig'
+Pack 'dahu/EditorConfig'
 
 " augroup EditorConfig
 "   autocmd!

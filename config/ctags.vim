@@ -4,8 +4,8 @@ if !executable('ctags')
   finish
 endif
 
-" Plug 'ludovicchabant/vim-gutentags'
-" Plug 'tomtom/ttags_vim' | Plug 'tomtom/tlib_vim'
+" Pack 'ludovicchabant/vim-gutentags'
+" Pack 'tomtom/ttags_vim' | Pack 'tomtom/tlib_vim'
 
 nmap <Leader>ct :call ReindexCtags()<CR>
 
@@ -34,7 +34,7 @@ function! ReindexCtags()
   " mv "$dir/$$.tags" "$dir/tags"
 endfunction
 
-" Plug: 'majutsushi/tagbar'
+" Pack 'majutsushi/tagbar'
 " nmap <F8> :TagbarToggle<CR>
 " set tags=tags;/
 " " Proportions
@@ -43,8 +43,8 @@ endfunction
 " " Used in lightline.vim
 " let g:tagbar_status_func = 'TagbarStatusFunc'
 
-" Plug: 'vim-scripts/taglist.vim'
+" Pack 'vim-scripts/taglist.vim'
 " Exclude Javascript files in :Rtags via rails.vim due to warnings when parsing
 " let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 
-" Plug 'tomtom/ttags_vim'
+" Pack 'tomtom/ttags_vim'

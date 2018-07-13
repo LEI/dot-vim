@@ -9,7 +9,9 @@
 " zj Down to the start of the next
 " zk Up to the end of the previous
 
-" Explicitly set nocompatible to handle -u without -N?
+if &compatible
+  set nocompatible
+endif
 
 " split(&runtimepath, ',')[0] " $HOME . '/.vim'
 let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
@@ -18,7 +20,7 @@ let $VIMHOME = fnamemodify(expand('<sfile>'), ':h')
 call config#Source($VIMHOME . '/defaults.vim')
 
 " Initialize plugins
-call config#Plug()
+call config#Start()
 
 " General {{{1
 

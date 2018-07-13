@@ -5,7 +5,7 @@ if !has('statusline')
 endif
 
 " git@github.com:
-Plug 'LEI/vim-statusline'
+Pack 'LEI/vim-statusline'
 
 let g:statusline = get(g:, 'statusline', {})
 call extend(g:statusline, {'left': 'StatusLineLeft', 'right': 'StatusLineRight', 'symbols': {'sep': ' '}}, 'force')
