@@ -6,6 +6,8 @@ endif
 
 let g:loaded_config = 1
 
+let g:vim8 = v:version >= 800
+
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
@@ -21,7 +23,7 @@ if !exists('$VIMCONFIG') || empty($VIMCONFIG)
   let $VIMCONFIG = $VIMHOME . '/config'
 endif
 
-let s:manager = v:version >= 800 ? 'minpac' : 'plug'
+let s:manager = g:vim8 ? 'minpac' : 'plug'
 
 let g:pack_dir = get(g:, 'pack_dir', 'config')
 let g:pack_path = get(g:, 'minpac_path', $VIMHOME . '/pack/' . g:pack_dir)

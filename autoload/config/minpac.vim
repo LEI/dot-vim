@@ -87,9 +87,9 @@ function! config#minpac#add(repo, ...) abort
       if !isdirectory(l:dir)
       echom 'ln -s ' . l:repo . ' ' . l:dir
       let l:out = system(printf('ln -s %s %s', l:repo, l:dir))
-      if v:shell_error
-          echoerr l:out
-      endif
+        if v:shell_error
+            echoerr l:out
+        endif
       endif
       let l:opts.frozen = get(l:opts, 'frozen', 1)
   else
