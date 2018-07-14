@@ -7,7 +7,6 @@ if !has('nvim') && v:version < 800
 endif
 
 Pack 'w0rp/ale'
-" , {'as': 'async-lint-engine'}
 
 " JavaScript: disable 'eslint' and 'standard' JavaScript linters
 "let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}

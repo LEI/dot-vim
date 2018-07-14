@@ -34,7 +34,7 @@ endif
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)
 function! ContextualFZF()
     " Determine if inside a git repo
-    silent exec "!git rev-parse --show-toplevel"
+    silent exec '!git rev-parse --show-toplevel'
     redraw!
 
     if v:shell_error
@@ -78,9 +78,12 @@ let g:fzf_colors =
   \ 'header':  ['fg', 'Comment'] }
 
 " Hide statusline
-autocmd! FileType fzf
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+augroup fzf
+  autocmd!
+  autocmd! FileType fzf
+  autocmd  FileType fzf set laststatus=0 noshowmode noruler
+    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+augroup END
 
 " " Custom statusline
 " function! s:fzf_statusline()

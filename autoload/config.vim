@@ -73,7 +73,7 @@ function! config#LoadDir(...) abort
   let l:dir = a:0 ? a:1 : $VIMCONFIG
   call s:Source(l:dir . '.vim')
   if isdirectory(l:dir)
-    let l:list = s:GlobPath(l:dir)
+    let l:list = config#globpath(l:dir)
     call s:Source(l:dir . '/init.vim')
     call s:SourceDir(l:dir, g:config_expr_enabled)
   endif
@@ -97,7 +97,7 @@ function! s:Load(...) abort
     call s:Source(l:path)
   endfor
   call s:DoAutoCmd()
-  if !g:use_minpac
+  if s:manager ==# 'plug'
     " Update &rtp
     call plug#end()
   endif
@@ -168,7 +168,7 @@ function! s:SourceFile(path) abort
   execute 'source' a:path
 endfunction
 
-function! s:GlobPath(...) abort
+function! config#globpath(...) abort
   if a:0 == 0
     echoerr 'Argument missing: path required'
     return 1
@@ -187,13 +187,13 @@ endfunction
 
 function! s:ListEnabled(ArgLead, CmdLine, CursorPos) abort
   let l:only_enabled = "get(g:, 'enable_' . v:val, 0) == 1"
-  return s:GlobPath($VIMCONFIG, a:ArgLead, g:config_expr_name, l:only_enabled)
+  return config#globpath($VIMCONFIG, a:ArgLead, g:config_expr_name, l:only_enabled)
 endfunction
 
 function! s:ListDisabled(ArgLead, CmdLine, CursorPos) abort
   let l:exclude_init = "v:val !=# 'init'"
   let l:exclude_enabled = "get(g:, 'enable_' . v:val, 0) == 0"
-  return s:GlobPath($VIMCONFIG, a:ArgLead, g:config_expr_name, l:exclude_init, l:exclude_enabled)
+  return config#globpath($VIMCONFIG, a:ArgLead, g:config_expr_name, l:exclude_init, l:exclude_enabled)
 endfunction
 
 command! -nargs=+ -bar Pack call config#(<args>)

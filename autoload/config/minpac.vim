@@ -17,6 +17,8 @@ let s:TYPE = {
 \   'funcref': type(function('call'))
 \ }
 
+let s:enabled = []
+
 function! s:trim(str)
   return substitute(a:str, '[\/]\+$', '', '')
 endfunction
@@ -57,9 +59,14 @@ function! config#minpac#init() abort
   call config#LoadDir()
   if get(s:, 'do_install', 0) == 1
     call minpac#update()
+    " helptags ALL
   endif
+  " let l:dir = g:pack_path . '/opt'
+  " let l:expr = g:config_expr_enabled
   " Load optional plugins (packloadall)
-  for l:name in minpac#getpackages(g:pack_dir, 'opt', '', 1)
+  let l:files = minpac#getpackages(g:pack_dir, 'opt', '', 1)
+  for l:name in s:enabled
+    " echom 'packadd' l:name
     execute 'packadd' l:name
   endfor
 endfunction
@@ -105,6 +112,8 @@ function! config#minpac#add(repo, ...) abort
 
   " echom 'minpac add ' . l:repo
   " echo l:opts
+
+  let s:enabled = add(s:enabled, l:opts.name)
 
   " Update &packpath
   call minpac#add(l:repo, l:opts)

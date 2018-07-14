@@ -71,6 +71,12 @@ let g:jsx_ext_required = 1
 
 " Golang:
 " Pack 'fatih/vim-go', {'for': 'go'}
+" if exists('$GOPATH') && !empty($GOPATH)
+"   let g:golint = $GOPATH . '/src/golang.org/x/lint/misc/vim'
+"   if isdirectory(g:golint) && executable('golint')
+"     Pack g:golint, {'as': 'golint', 'for': 'go'}
+"   endif
+" endif
 
 " JavaScript:
 let g:enable_ternjs = !get(g:, 'enable_youcompleteme', 0)
