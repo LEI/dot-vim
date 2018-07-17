@@ -41,6 +41,7 @@ Pack 'mbbill/undotree', {'on': 'UndotreeToggle'}
 " Pack 'AndrewRadev/splitjoin.vim'
 " Pack 'tommcdo/vim-lion' " Align by charactef
 Pack 'tpope/vim-eunuch' " Better UNIX shell commands
+let g:enable_pass = 1 " Password store editing
 
 " Completion:
 " let g:enable_youcompleteme = 1
