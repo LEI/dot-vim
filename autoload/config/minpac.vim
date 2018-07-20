@@ -7,7 +7,8 @@
 let g:minpac_path = get(g:, 'minpac_path', g:pack_path . '/opt/minpac')
 let g:minpac_url = get(g:, 'minpac_url', 'https://github.com/k-takata/minpac.git')
 
-let g:minpac_opts = {'package_name': g:pack_dir} " 'verbose': 0
+let g:minpac_opts = get(g:, 'minpac_opts', {'package_name': g:pack_dir})
+" 'verbose': 0
 
 let s:base_spec = {'branch': 'master'}
 let s:TYPE = {
