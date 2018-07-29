@@ -17,6 +17,12 @@ role:
         # - with-pyhton3
         # - with-custom-python
         # - with-custom-ruby
+    -  neovim
+    # pip install neovim
+    # pip3 install neovim
+    # gem install neovim
+    # - name: python-neovim
+    #   os: ["archlinux"]
   link:
     # - "[^.]*:.vim"
     # - "autoload/*:.vim/autoload"
