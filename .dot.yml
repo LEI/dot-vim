@@ -4,7 +4,19 @@ role:
     - curl
     # - fzf # $(brew --prefix)/opt/fzf/install
     - git
-    - vim
+    - name: vim # -nox
+      os: ["debian"]
+    - name: vim
+      os: ["darwin"]
+      args:
+        # - with-cscope
+        - with-lua
+        - with-luajit
+        - with-override-system-vi
+        - with-python
+        # - with-pyhton3
+        # - with-custom-python
+        # - with-custom-ruby
   link:
     # - "[^.]*:.vim"
     # - "autoload/*:.vim/autoload"
