@@ -5,7 +5,7 @@ role:
     # - fzf # $(brew --prefix)/opt/fzf/install
     - git
     - name: vim # -nox
-      os: ["debian"]
+      os: ["!darwin"]
     - name: vim
       os: ["darwin"]
       args:
