@@ -4,7 +4,7 @@ role:
     - curl
     # - fzf # $(brew --prefix)/opt/fzf/install
     - git
-    - name: vim # -nox
+    - name: vim
       os: ["!darwin"]
     - name: vim
       os: ["darwin"]
@@ -22,7 +22,7 @@ role:
     # pip3 install neovim
     # gem install neovim
     # - name: python-neovim
-    #   os: ["archlinux"]
+    #   os: ["arch"]
   link:
     # - "[^.]*:.vim"
     # - "autoload/*:.vim/autoload"
