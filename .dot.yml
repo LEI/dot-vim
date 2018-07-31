@@ -9,14 +9,14 @@ role:
     - name: vim
       os: ["darwin"]
       args:
-        # - with-cscope
-        - with-lua
-        - with-luajit
-        - with-override-system-vi
-        - with-python
-        # - with-pyhton3
-        # - with-custom-python
-        # - with-custom-ruby
+        # - --with-cscope
+        - --with-lua
+        - --with-luajit
+        - --with-override-system-vi
+        - --with-python
+        # - --with-pyhton3
+        # - --with-custom-python
+        # - --with-custom-ruby
     -  neovim
     # pip install neovim
     # pip3 install neovim
