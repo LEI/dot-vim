@@ -3,7 +3,7 @@ role:
   pkg:
     - curl
     # - fzf # $(brew --prefix)/opt/fzf/install
-    - git
+    # - git
     - name: vim
       os: ["!darwin"]
     - name: vim
