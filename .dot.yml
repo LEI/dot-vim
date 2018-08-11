@@ -23,6 +23,8 @@ role:
     # gem install neovim
     # - name: python-neovim
     #   os: ["arch"]
+  dir:
+    - .vim
   link:
     # - "[^.]*:.vim"
     # - "autoload/*:.vim/autoload"
