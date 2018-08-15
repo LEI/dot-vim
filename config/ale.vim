@@ -12,19 +12,33 @@ Pack 'w0rp/ale'
 "let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
 let g:ale_linters = {'javascript': ['eslint', 'flow', 'jscs', 'xo']}
 " let g:ale_linters = {'javascript': ['flow', 'jscs', 'standard', 'xo']}
+
 " Shell: bashate, shellcheck
-" Golang: go get -u github.com/golang/lint/golint
-" VimL: pip3 install vim-vint
-" Pack 'syngan/vim-vimlint' | Pack 'ynkdir/vim-vimlparser'
+
+" Golang:
+" $ go get golang.org/x/tools/cmd/goimports
+" $ go get -u github.com/golang/lint/golint
+" $ go get -u github.com/alecthomas/gometalinter
+let g:ale_linters.go = ['gometalinter', 'gofmt']
+" Available Linters: ['go build', 'gofmt', 'golint', 'gometalinter', 'gosimple', 'gotype', 'go vet', 'staticcheck']
+" Enabled Linters: ['gofmt', 'golint', 'go vet']
 " if executable('go')
 "   Pack 'haya14busa/go-vimlparser'
 " endif
+" let g:ale_go_gobuild_options = ''
+" let g:ale_go_gofmt_options = ''
+let g:ale_go_gometalinter_options = '--fast'
+" let g:ale_go_gometalinter_lint_package = 1
+
+" VimL: pip3 install vim-vint
+" Pack 'syngan/vim-vimlint' | Pack 'ynkdir/vim-vimlparser'
 
 " Define fixers per filetype (json, less, md -> prettier)
 let g:ale_fixers = {
       \   'css': ['prettier'],
       \   'javascript': ['eslint'],
       \   'php': ['phpcbf'],
+      \   'go': ['goimports'],
       \ }
 
 " Fix files automatically on save
