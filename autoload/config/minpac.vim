@@ -65,10 +65,14 @@ function! config#minpac#init() abort
   " let l:dir = g:pack_path . '/opt'
   " let l:expr = g:config_expr_enabled
   " Load optional plugins (packloadall)
-  let l:files = minpac#getpackages(g:pack_dir, 'opt', '', 1)
+  "let l:files = minpac#getpackages(g:pack_dir, 'opt', '', 1)
   for l:name in s:enabled
     " echom 'packadd' l:name
-    execute 'packadd' l:name
+    try
+      execute 'packadd' l:name
+    catch
+      echom 'failed to add pack' l:name
+    endtry
   endfor
 endfunction
 
