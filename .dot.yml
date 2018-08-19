@@ -1,7 +1,8 @@
 ---
 role:
   pkg:
-    - curl
+    - name: curl
+      action: install
     # - fzf # $(brew --prefix)/opt/fzf/install
     # - git
     - name: vim
