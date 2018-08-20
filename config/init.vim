@@ -71,7 +71,7 @@ let g:jsx_ext_required = 1
 " Pack 'vim-scripts/SQLUtilities'
 
 " Golang:
-Pack 'fatih/vim-go', {'for': 'go'} " 'do': ':GoInstallBinaries'
+Pack 'fatih/vim-go', {'do': 'GoInstallBinaries', 'for': 'go'}
 " if exists('$GOPATH') && !empty($GOPATH)
 "   let g:golint = $GOPATH . '/src/golang.org/x/lint/misc/vim'
 "   if isdirectory(g:golint) && executable('golint')

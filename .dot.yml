@@ -22,8 +22,9 @@ role:
     # pip install neovim
     # pip3 install neovim
     # gem install neovim
+    # npm install -g neovim 
     # - name: python-neovim
-    #   os: ["arch"]
+    #   os: ["arch", "darwin"]
   dir:
     - .vim
   link:
