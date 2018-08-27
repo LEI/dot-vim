@@ -34,10 +34,11 @@ let g:ale_go_gometalinter_options = '--fast'
 " Pack 'syngan/vim-vimlint' | Pack 'ynkdir/vim-vimlparser'
 
 " Define fixers per filetype (json, less, md -> prettier)
+" TODO: remove_trailing_lines, trim_whitespace
 let g:ale_fixers = {
       \   'css': ['prettier'],
       \   'javascript': ['eslint'],
-      \   'php': ['phpcbf', 'phpstan'],
+      \   'php': ['phpcbf'],
       \   'go': ['goimports'],
       \ }
 
