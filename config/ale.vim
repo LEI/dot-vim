@@ -37,7 +37,7 @@ let g:ale_go_gometalinter_options = '--fast'
 let g:ale_fixers = {
       \   'css': ['prettier'],
       \   'javascript': ['eslint'],
-      \   'php': ['phpcbf'],
+      \   'php': ['phpcbf', 'phpstan'],
       \   'go': ['goimports'],
       \ }
 
