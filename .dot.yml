@@ -25,6 +25,15 @@ role:
     # npm install -g neovim
     # - name: python-neovim
     #   os: ["arch", "darwin"]
+
+    # Linters (c.f. config/ale.vim)
+    # - name: vim-vint
+    #   type: pip3
+
+    # Fixers
+    - name: shfmt
+      os: darwin
+
   dir:
     - .vim
   link:

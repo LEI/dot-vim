@@ -30,6 +30,10 @@ let g:ale_linters.go = ['gometalinter', 'gofmt']
 let g:ale_go_gometalinter_options = '--fast'
 " let g:ale_go_gometalinter_lint_package = 1
 
+" Use 2 spaces instead of tabs and indent switch cases
+" https://google.github.io/styleguide/shell.xml
+let g:ale_sh_shfmt_options = '-i 2 -ci'
+
 " VimL: pip3 install vim-vint
 " Pack 'syngan/vim-vimlint' | Pack 'ynkdir/vim-vimlparser'
 
@@ -40,6 +44,7 @@ let g:ale_fixers = {
       \   'javascript': ['eslint'],
       \   'php': ['phpcbf'],
       \   'go': ['goimports'],
+      \   'sh': ['shfmt'],
       \ }
 
 " Fix files automatically on save
