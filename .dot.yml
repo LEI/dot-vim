@@ -58,8 +58,7 @@ role:
   line:
     ".vimrc": "source $HOME/.vim/init.vim"
     ".gvimrc": "source $HOME/.vim/ginit.vim"
-
-  install:
+  post_install:
     - vim --version
     - nvim --version
     - neovim-node-host
