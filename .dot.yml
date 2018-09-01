@@ -21,7 +21,9 @@ role:
 
     -  neovim
     # https://github.com/alexgenco/neovim-ruby
-    - name: neovim
+    - name:
+        - rdoc
+        - neovim
       type: gem
     # https://github.com/neovim/node-client
     - name: neovim
