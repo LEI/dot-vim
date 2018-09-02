@@ -60,8 +60,9 @@ role:
     ".vimrc": "source $HOME/.vim/init.vim"
     ".gvimrc": "source $HOME/.vim/ginit.vim"
   post_install:
-    - vim --version
-    - nvim --version
+    - vim --version | head -n1
+    - nvim --version | head -n1
+    # try nvim +checkhealth +qa
     - neovim-node-host
     - python2 -c 'import neovim'
     - python3 -c 'import neovim'
