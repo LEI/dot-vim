@@ -64,7 +64,8 @@ role:
     - nvim --version | head -n1
     # try nvim +checkhealth +qa
     - | # $(npm prefix --global)/bin
-        PATH="PATH:$HOME/.node_modules"
+        PATH="PATH:$HOME/.node_modules/bin"
+        ls -la $HOME/.node_modules/bin
         neovim-node-host
     - python2 -c 'import neovim'
     - python3 -c 'import neovim'
