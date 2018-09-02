@@ -63,5 +63,7 @@ role:
     - vim --version
     - nvim --version
     - neovim-node-host
+    - python2 -c 'import neovim'
+    - python3 -c 'import neovim'
     - command: neovim-ruby-host
       os: ["darwin"]
