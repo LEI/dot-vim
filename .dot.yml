@@ -66,9 +66,7 @@ role:
       env: PATH=$PATH:$HOME/.node_modules/bin
     - python2 -c 'import neovim'
     - python3 -c 'import neovim'
-    - command: echo $GEM_HOME
-      env:
-        GEM_HOME: "${GEM_HOME:-$(gem env gemdir)}"
-    - command: command -v neovim-ruby-host
-      env: PATH=$PATH:${GEM_HOME:-$(gem env gemdir)}/bin
+    - |
+        PATH=$PATH:${GEM_HOME:-$(gem env gemdir)}/bin
+        command -v neovim-ruby-host
     # TODO: non-interactive nvim +checkhealth +qa
