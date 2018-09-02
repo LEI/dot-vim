@@ -34,7 +34,6 @@ role:
     # https://github.com/alexgenco/neovim-ruby
     - name: neovim
       type: gem
-      os: ["darwin"]
 
     # Linters (c.f. config/ale.vim)
     # - name: vim-vint
@@ -59,21 +58,13 @@ role:
   line:
     ".vimrc": "source $HOME/.vim/init.vim"
     ".gvimrc": "source $HOME/.vim/ginit.vim"
-  env:
-    TEST1: "$PATH"
   post_install:
-    - "echo TEST1: $TEST1"
-    - command: "echo TEST2: $TEST2"
-      env: # TEST2=$TEST1
-        TEST2: "ok"
     - vim --version | head -n1
     - nvim --version | head -n1
-    # try nvim +checkhealth +qa
     - | # $(npm prefix --global)/bin
         PATH="$PATH:$HOME/.node_modules/bin"
-        ls -la $HOME/.node_modules/bin
         neovim-node-host
     - python2 -c 'import neovim'
     - python3 -c 'import neovim'
-    - command: neovim-ruby-host
-      os: ["darwin"]
+    - neovim-ruby-host
+    # TODO: non-interactive nvim +checkhealth +qa
