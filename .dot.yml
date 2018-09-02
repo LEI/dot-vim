@@ -68,6 +68,9 @@ role:
     - python3 -c 'import neovim'
     # GEM_HOME="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
     # PATH="$PATH:$GEM_HOME/bin"
-    - command: command -v neovim-ruby-host
+    - command:
+        echo $PATH
+        ls -la ${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}
+        command -v neovim-ruby-host
       env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
     # TODO: non-interactive nvim +checkhealth +qa
