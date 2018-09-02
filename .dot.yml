@@ -65,8 +65,8 @@ role:
     ".gvimrc": "source $HOME/.vim/ginit.vim"
   post_install:
     - vim --version
-    - command:
-        - nvim --version
-        - neovim-node-host
+    - command: |
+        nvim --version
+        neovim-node-host
       os: ["darwin"]
     - neovim-ruby-host
