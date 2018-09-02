@@ -63,6 +63,10 @@ role:
     - vim --version | head -n1
     - nvim --version | head -n1
     # try nvim +checkhealth +qa
+    - echo $PATH
+    - echo $NPM_CONFIG_PREFIX
+    - npm prefix --global
+    - ls -la $(npm prefix --global)
     - neovim-node-host
     - python2 -c 'import neovim'
     - python3 -c 'import neovim'
