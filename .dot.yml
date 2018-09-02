@@ -32,6 +32,8 @@ role:
     # - name: python-neovim
     #   os: ["arch", "darwin"]
     # https://github.com/alexgenco/neovim-ruby
+    - name: gcc
+      os: ["linux"]
     - name: neovim
       type: gem
 
