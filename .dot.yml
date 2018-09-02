@@ -61,10 +61,10 @@ role:
   post_install:
     - vim --version | head -n1
     - nvim --version | head -n1
-    - | # $(npm prefix --global)/bin
-        PATH="$PATH:$HOME/.node_modules/bin"
-        neovim-node-host
+    - command: command -v neovim-node-host
+      # $(npm prefix --global)/bin
+      env: PATH="$PATH:$HOME/.node_modules/bin"
     - python2 -c 'import neovim'
     - python3 -c 'import neovim'
-    - neovim-ruby-host
+    - command -v neovim-ruby-host
     # TODO: non-interactive nvim +checkhealth +qa
