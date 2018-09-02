@@ -62,8 +62,8 @@ role:
   env:
     TEST1: "$PATH"
   post_install:
-    - echo TEST1: $TEST1
-    - command: echo TEST2: $TEST2
+    - "echo TEST1: $TEST1"
+    - command: "echo TEST2: $TEST2"
       env: # TEST2=$TEST1
         TEST2: "ok"
     - vim --version | head -n1
