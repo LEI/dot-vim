@@ -70,6 +70,7 @@ role:
         PATH=$PATH:${GEM_HOME:-$(gem env gemdir)}/bin
         gem env gemdir
         echo $PATH
-        ls -la $(gem env gemdir)/bin
+        gem env
+        ls -la $(gem env gemdir)
         command -v neovim-ruby-host
     # TODO: non-interactive nvim +checkhealth +qa
