@@ -20,25 +20,21 @@ role:
         # - --with-custom-ruby
 
     # https://neovim.io/doc
+    - neovim
+    # https://github.com/neovim/node-client
     - name: neovim
-      os: ["darwin"]
+      type: npm
+    # https://github.com/neovim/python-client
+    - name: neovim
+      type: pip2
+    - name: neovim
+      type: pip3
+    # - name: python-neovim
+    #   os: ["arch", "darwin"]
     # https://github.com/alexgenco/neovim-ruby
     - name: neovim
       type: gem
       os: ["darwin"]
-    # https://github.com/neovim/node-client
-    - name: neovim
-      type: npm
-      os: ["darwin"]
-    # https://github.com/neovim/python-client
-    - name: neovim
-      type: pip2
-      os: ["darwin"]
-    - name: neovim
-      type: pip3
-      os: ["darwin"]
-    # - name: python-neovim
-    #   os: ["arch", "darwin"]
 
     # Linters (c.f. config/ale.vim)
     # - name: vim-vint
@@ -65,9 +61,7 @@ role:
     ".gvimrc": "source $HOME/.vim/ginit.vim"
   post_install:
     - vim --version
-    - command: nvim --version
-      os: ["darwin"]
-    - command: neovim-node-host
-      os: ["darwin"]
+    - nvim --version
+    - neovim-node-host
     - command: neovim-ruby-host
       os: ["darwin"]
