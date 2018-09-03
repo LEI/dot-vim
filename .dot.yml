@@ -74,7 +74,7 @@ role:
       env: PATH=$PATH:$HOME/.node_modules/bin
     - command: |
         python2 -c 'import neovim'
-        python3 -c 'import neovim'
+        python3 -c 'import neovim' || python36 -c 'import neovim'
       os: ["archlinux", "centos", "darwin"]
     # GEM_HOME="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
     # PATH="$PATH:$GEM_HOME/bin"
