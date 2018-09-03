@@ -33,7 +33,7 @@ role:
     #   type: pip2
     - name: neovim
       type: pip2
-      os: ["alpine", "archlinux", "centos", "darwin"]
+      os: ["archlinux", "centos", "darwin"]
     - name: neovim
       type: pip3
       os: ["alpine", "archlinux", "centos", "darwin"]
