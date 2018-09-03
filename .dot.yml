@@ -40,6 +40,7 @@ role:
     # https://github.com/alexgenco/neovim-ruby
     - name: neovim
       type: gem
+      os: ["archlinux", "darwin"]
 
     # Linters (c.f. config/ale.vim)
     # - name: vim-vint
@@ -76,5 +77,6 @@ role:
     # PATH="$PATH:$GEM_HOME/bin"
     - command: command -v neovim-ruby-host
       env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
+      os: ["archlinux", "darwin"]
       # env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
     # TODO: non-interactive nvim +checkhealth +qa
