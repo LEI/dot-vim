@@ -1,14 +1,20 @@
 <?php
+/**
+ * Check if the current time is day time.
+ */
 
 $timezone = 'Europe/Paris';
 date_default_timezone_set($timezone);
 
 if (PHP_SAPI === 'cli') {
-    if (count($argv) > 2) throw new \Exception('Too many arguments');
-    if (count($argv) === 2) $timezone = $argv[1];
+    if (count($argv) > 2) { throw new \Exception('Too many arguments');
+    }
+    if (count($argv) === 2) { $timezone = $argv[1];
+    }
 }
 
-function isDayTime($dt, $lat, $lon) {
+function isDayTime($dt, $lat, $lon)
+{
     $timestamp = $dt->getTimestamp(); // ->format('H:i')
     $format = SUNFUNCS_RET_TIMESTAMP; // _STRING, _DOUBLE, _TIMESTAMP
     $zenith = 96; // Civilian zenith
@@ -19,7 +25,8 @@ function isDayTime($dt, $lat, $lon) {
     return $timestamp > $sunrise && $timestamp < $sunset;
 }
 
-function main($timezone) {
+function main($timezone)
+{
     $tz = new DateTimeZone($timezone);
     $now = new DateTime('now', $tz);
     $loc = $tz->getLocation();
