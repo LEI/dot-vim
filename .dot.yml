@@ -75,6 +75,6 @@ role:
     # GEM_HOME="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
     # PATH="$PATH:$GEM_HOME/bin"
     - command: command -v neovim-ruby-host
-      env: PATH=$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin
+      env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
       # env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
     # TODO: non-interactive nvim +checkhealth +qa
