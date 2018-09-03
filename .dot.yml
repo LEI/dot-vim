@@ -26,8 +26,12 @@ role:
       type: npm
     # https://github.com/neovim/python-client
     - name:
+        - setuptools
+        - wheel
         - greenlet
         - neovim
+      type: pip2
+    - name: neovim
       type: pip2
     - name: neovim
       type: pip3
