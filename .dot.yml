@@ -33,10 +33,10 @@ role:
     #   type: pip2
     - name: neovim
       type: pip2
-      os: ["archlinux", "centos", "darwin"]
+      os: ["alpine", "archlinux", "centos", "darwin"]
     - name: neovim
       type: pip3
-      os: ["archlinux", "centos", "darwin"]
+      os: ["alpine", "archlinux", "centos", "darwin"]
     # - name: python-neovim
     #   os: ["arch", "darwin"]
     # https://github.com/alexgenco/neovim-ruby
