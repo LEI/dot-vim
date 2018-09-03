@@ -33,7 +33,7 @@ role:
     #   type: pip2
     - name: neovim
       type: pip2
-      os: ["archlinux", "centos", "darwin"]
+      os: ["alpine", "archlinux", "centos", "darwin"]
     - name: neovim
       type: pip3
       os: ["alpine", "archlinux", "centos", "darwin"]
@@ -42,7 +42,7 @@ role:
     # https://github.com/alexgenco/neovim-ruby
     - name: neovim
       type: gem
-      os: ["archlinux", "darwin"]
+      os: ["alpine", "archlinux", "darwin"]
 
     # Linters (c.f. config/ale.vim)
     # - name: vim-vint
@@ -76,11 +76,11 @@ role:
     - command: |
         python2 -c 'import neovim'
         python3 -c 'import neovim' || python36 -c 'import neovim'
-      os: ["archlinux", "centos", "darwin"]
+      os: ["alpine", "archlinux", "centos", "darwin"]
     # GEM_HOME="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
     # PATH="$PATH:$GEM_HOME/bin"
     - command: command -v neovim-ruby-host
       env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
-      os: ["archlinux", "darwin"]
+      os: ["alpine", "archlinux", "darwin"]
       # env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
     # TODO: non-interactive nvim +checkhealth +qa
