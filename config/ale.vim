@@ -8,12 +8,12 @@ endif
 
 Pack 'w0rp/ale'
 
+let g:ale_linters = get(g:, 'ale_linters', {})
+
 " JavaScript: disable 'eslint' and 'standard' JavaScript linters
 "let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
-let g:ale_linters = {'javascript': ['eslint', 'flow', 'jscs', 'xo']}
+let g:ale_linters.javascript = ['eslint', 'flow', 'jscs', 'xo']
 " let g:ale_linters = {'javascript': ['flow', 'jscs', 'standard', 'xo']}
-
-" Shell: bashate, shellcheck
 
 " Golang:
 " $ go get golang.org/x/tools/cmd/goimports
@@ -30,6 +30,7 @@ let g:ale_linters.go = ['gometalinter', 'gofmt']
 let g:ale_go_gometalinter_options = '--fast'
 " let g:ale_go_gometalinter_lint_package = 1
 
+" Shell: bashate, shellcheck
 " Use 2 spaces instead of tabs and indent switch cases
 " https://google.github.io/styleguide/shell.xml
 let g:ale_sh_shfmt_options = '-i 2 -ci'
