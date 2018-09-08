@@ -15,7 +15,7 @@ Pack 'tpope/vim-surround' " Quoting/parenthesizing
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
 let g:enable_qf = 1
 " let g:enable_textobj = 1
-" let g:enable_unimpaired = 1
+let g:enable_unimpaired = 1
 Pack 'keith/investigate.vim' " Look up documentation with gK
 " Pugg 'romainl/vim-qlist' " Persist 'include-search' and 'definition-search'
 Pack 'tpope/vim-abolish' " Search, substitute and abbreviate variants

@@ -42,8 +42,10 @@ role:
       type: gem
 
     # Linters (c.f. config/ale.vim)
-    # - name: vim-vint
-    #   type: pip3
+    - name: vim-vint
+      type: pip3
+    - name: sqlint
+      type: gem
 
     # Fixers
     - name: shfmt

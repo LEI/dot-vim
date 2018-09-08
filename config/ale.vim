@@ -6,7 +6,7 @@ if !has('nvim') && v:version < 800
   finish
 endif
 
-Pack 'w0rp/ale'
+Pack 'LEI/ale' " Pack 'w0rp/ale'
 
 let g:ale_linters = get(g:, 'ale_linters', {})
 
@@ -27,26 +27,31 @@ let g:ale_linters.go = ['gometalinter', 'gofmt']
 " endif
 " let g:ale_go_gobuild_options = ''
 " let g:ale_go_gofmt_options = ''
-let g:ale_go_gometalinter_options = '--fast'
+let g:ale_go_gometalinter_options = '--fast' " --enable-all
 " let g:ale_go_gometalinter_lint_package = 1
+
+" SQL:
+" let g:ale_linters.sql = ['sqlint'] " pgsql only
+let g:ale_sql_sqlfmt_options = '-u'
 
 " Shell: bashate, shellcheck
 " Use 2 spaces instead of tabs and indent switch cases
 " https://google.github.io/styleguide/shell.xml
 let g:ale_sh_shfmt_options = '-i 2 -ci'
 
-" VimL: pip3 install vim-vint
+" VimL: vint
 " Pack 'syngan/vim-vimlint' | Pack 'ynkdir/vim-vimlparser'
+
+let g:ale_fixers = get(g:, 'ale_fixers', {})
 
 " Define fixers per filetype (json, less, md -> prettier)
 " TODO: remove_trailing_lines, trim_whitespace
-let g:ale_fixers = {
-      \   'css': ['prettier'],
-      \   'javascript': ['eslint'],
-      \   'php': ['phpcbf'],
-      \   'go': ['goimports'],
-      \   'sh': ['shfmt'],
-      \ }
+let g:ale_fixers.css = ['prettier']
+let g:ale_fixers.javascript = ['eslint']
+let g:ale_fixers.php = ['phpcbf']
+let g:ale_fixers.go = ['goimports']
+let g:ale_fixers.sh = ['shfmt']
+let g:ale_fixers.sql = ['sqlfmt']
 
 " Fix files automatically on save
 let g:ale_fix_on_save = 1
