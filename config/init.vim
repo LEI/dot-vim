@@ -24,7 +24,7 @@ Pack 'tpope/vim-endwise' " Automatic end keywords
 " Pack 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Pack 'tpope/vim-repeat' " Enable repeating supported plugin maps
 
-" Settings: ciaranm/detectindent, tpope/vim-projectionist
+" Settings: ciaranm/detectindent
 " let g:enable_editorconfig = 1
 Pack 'tpope/vim-sleuth' " Automatic indentation detection
 
@@ -91,7 +91,7 @@ Pack 'shawncplus/phpcomplete.vim', {'for': 'php'}
 
 " Project:
 Pack 'tpope/vim-dispatch'
-Pack 'tpope/vim-projectionist'
+"Pack 'tpope/vim-projectionist'
 if executable('composer')
    " Use :Dispatch to run composer dump-autoload
   Pack 'noahfrederick/vim-composer' " :Composer
