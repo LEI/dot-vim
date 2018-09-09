@@ -9,6 +9,7 @@ function! config#plug#init() abort
     execute 'silent !curl -sfLo ' . g:plug_path . ' --create-dirs ' . g:plug_url
     let s:do_install = 1
   endif
+  source g:plug_path
   call plug#begin() " Start Vim Plug
   call config#LoadDir() " Source plugins configuration ($VIMHOME . '/config')
   call plug#end() " Add plugins to &runtimepath
