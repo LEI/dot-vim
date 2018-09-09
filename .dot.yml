@@ -20,10 +20,12 @@ role:
         # - --with-custom-ruby
 
     # https://neovim.io/doc
-    - neovim
+    - name: neovim
+      os: ["!jessie"]
     # https://github.com/neovim/node-client
     - name: neovim
       type: npm
+      os: ["!jessie"]
     # https://github.com/neovim/python-client
     # - name:
     #     - setuptools
@@ -33,13 +35,16 @@ role:
     #   type: pip2
     - name: neovim
       type: pip2
+      os: ["!jessie"]
     - name: neovim
       type: pip3
+      os: ["!jessie"]
     # - name: python-neovim
     #   os: ["archlinux", "darwin"]
     # https://github.com/alexgenco/neovim-ruby
     - name: neovim
       type: gem
+      os: ["!jessie"]
 
     # Linters (c.f. config/ale.vim)
     - name: vim-vint
@@ -68,16 +73,20 @@ role:
     ".gvimrc": "source $HOME/.vim/ginit.vim"
   post_install:
     - vim --version | head -n1
-    - nvim --version | head -n1
+    - command: nvim --version | head -n1
+      os: ["!jessie"]
     - command: command -v neovim-node-host
       # $(npm prefix --global)/bin
       env: PATH=$PATH:$HOME/.node_modules/bin
+      os: ["!jessie"]
     - command: |
         python2 -c 'import neovim'
         python3 -c 'import neovim' || python36 -c 'import neovim'
+      os: ["!jessie"]
     # GEM_HOME="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
     # PATH="$PATH:$GEM_HOME/bin"
     - command: command -v neovim-ruby-host
       env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
+      os: ["!jessie"]
       # env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
     # TODO: non-interactive nvim +checkhealth +qa
