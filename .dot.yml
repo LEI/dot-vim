@@ -85,6 +85,8 @@ role:
       os: ["!jessie"]
     # GEM_HOME="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
     # PATH="$PATH:$GEM_HOME/bin"
+    - command: "echo PATH: $PATH; echo GEM_HOME: ${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
+      env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
     - command: command -v neovim-ruby-host
       env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
       os: ["!jessie"]
