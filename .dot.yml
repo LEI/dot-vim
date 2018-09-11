@@ -90,7 +90,7 @@ role:
     - command: echo $TEST; ls -la $TEST
       env: TEST="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
       os: ["!android", "!jessie"]
-    - command: command -v neovim-ruby-host
+    - command: echo $PATH; command -v neovim-ruby-host
       env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
       os: ["!android", "!jessie"]
       # env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
