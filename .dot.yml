@@ -49,10 +49,10 @@ role:
     # Linters (c.f. config/ale.vim)
     - name: vim-vint
       type: pip3
-      os:darwin
+      os: darwin
     - name: sqlint
       type: gem
-      os:darwin
+      os: darwin
 
     # Fixers
     - name: shfmt
