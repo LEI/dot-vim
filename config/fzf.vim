@@ -13,6 +13,9 @@ endif
 
 Pack 'junegunn/fzf.vim'
 
+" command! -bang -nargs=? -complete=dir FFiles
+"   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
 if executable('ag')
   " let s:ag_args = '--hidden --ignore .git'
   " --nogroup --nocolor " --files-with-matches
@@ -23,35 +26,30 @@ if executable('ag')
     \           : fzf#vim#with_preview('right:50%', '?'),
     \   <bang>0)
   " right:50%:hidden
-  " command! -bang Colors
-  "   \ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
-  command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-  " GitFiles
 endif
 
-" Use the correct file source, based on context
-" https://github.com/junegunn/fzf/wiki/Examples-(vim)
-function! ContextualFZF()
-    " Determine if inside a git repo
-    silent exec '!git rev-parse --show-toplevel'
-    redraw!
+" " Use the correct file source, based on context
+" " https://github.com/junegunn/fzf/wiki/Examples-(vim)
+" function! ContextualFZF()
+"     " Determine if inside a git repo
+"     silent exec '!git rev-parse --show-toplevel'
+"     redraw!
 
-    if v:shell_error
-        " Search in current directory
-        call fzf#run({
-          \'sink': 'e',
-          \'down': '40%',
-        \})
-    else
-        " Search in entire git repo
-        call fzf#run({
-          \'sink': 'e',
-          \'down': '40%',
-          \'source': 'git ls-tree --full-tree --name-only -r HEAD',
-        \})
-    endif
-endfunction
+"     if v:shell_error
+"         " Search in current directory
+"         call fzf#run({
+"           \'sink': 'e',
+"           \'down': '40%',
+"         \})
+"     else
+"         " Search in entire git repo
+"         call fzf#run({
+"           \'sink': 'e',
+"           \'down': '40%',
+"           \'source': 'git ls-tree --full-tree --name-only -r HEAD',
+"         \})
+"     endif
+" endfunction
 
 " map <C-p> :call ContextualFZF()<CR> :Files?
 map <C-p> :FZF<CR>
