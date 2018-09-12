@@ -73,19 +73,19 @@ role:
   line:
     ".vimrc": "source $HOME/.vim/init.vim"
     ".gvimrc": "source $HOME/.vim/ginit.vim"
-  post_install:
-    - vim --version | head -n1
-    - command: nvim --version | head -n1
-      os: ["!jessie"]
-    - command: command -v neovim-node-host
-      # $(npm prefix --global)/bin
-      env: PATH=$PATH:$HOME/.node_modules/bin
-      os: ["!android", "!jessie"]
-    - command: |
-        python2 -c 'import neovim'
-        python3 -c 'import neovim' || python36 -c 'import neovim'
-      os: ["!android", "!jessie"]
-    - command: command -v neovim-ruby-host
-      env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
-      os: ["!android", "!jessie"]
-    # TODO: non-interactive nvim +checkhealth +qa
+  # post_install:
+  #   - vim --version | head -n1
+  #   - command: nvim --version | head -n1
+  #     os: ["!jessie"]
+  #   - command: command -v neovim-node-host
+  #     # $(npm prefix --global)/bin
+  #     env: PATH=$PATH:$HOME/.node_modules/bin
+  #     os: ["!android", "!jessie"]
+  #   - command: |
+  #       python2 -c 'import neovim'
+  #       python3 -c 'import neovim' || python36 -c 'import neovim'
+  #     os: ["!android", "!jessie"]
+  #   - command: command -v neovim-ruby-host
+  #     env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
+  #     os: ["!android", "!jessie"]
+  #   # TODO: non-interactive nvim +checkhealth +qa
