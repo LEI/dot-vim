@@ -85,12 +85,7 @@ role:
         python2 -c 'import neovim'
         python3 -c 'import neovim' || python36 -c 'import neovim'
       os: ["!android", "!jessie"]
-    # GEM_HOME="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}"
-    # PATH="$PATH:$GEM_HOME/bin"
-    - command: echo $TEST; ls -la $TEST
-      env: TEST="${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
-      os: ["!android", "!jessie"]
-    - command: echo $PATH; command -v neovim-ruby-host
+    - command: command -v neovim-ruby-host
       env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
       os: ["!android", "!jessie"]
       # env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
