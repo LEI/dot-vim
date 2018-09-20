@@ -10,10 +10,14 @@ Pack 'LEI/ale' " Pack 'w0rp/ale'
 
 let g:ale_linters = get(g:, 'ale_linters', {})
 
-" JavaScript: disable 'eslint' and 'standard' JavaScript linters
-"let g:ale_linters = {'javascript': ['flow', 'jscs', 'jshint', 'xo']}
+" JavaScript: disable 'standard' and 'jshint'
 let g:ale_linters.javascript = ['eslint', 'flow', 'jscs', 'xo']
-" let g:ale_linters = {'javascript': ['flow', 'jscs', 'standard', 'xo']}
+
+" PHP: nunomaduro/larastan
+"let g:ale_linters.php = ['langserver', 'phan', 'php', 'phpcs', 'phpmd']
+" let g:ale_php_phpstan_executable = 'phpstan'
+" let g:ale_php_phpstan_level = 4
+" let g:ale_php_phpstan_configuration = 'phpstan.neon'
 
 " Golang:
 " $ go get golang.org/x/tools/cmd/goimports
