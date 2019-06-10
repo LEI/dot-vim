@@ -44,7 +44,7 @@ function! ColorScheme(...) abort
     endif
   endif
   let l:colors_name = l:colors
-        \ . (strlen(l:bg) ? '_' . l:bg : '')
+        " \ . (strlen(l:bg) ? '_' . l:bg : '')
         \ . (strlen(l:theme) ? '_' . l:theme : '')
   " try
     let &background = l:bg
@@ -55,7 +55,8 @@ function! ColorScheme(...) abort
 endfunction
 
 function! Solarized8Contrast(delta) abort
-  let l:schemes = map(['_low', '_flat', '', '_high'], "'solarized8_'.(&background).v:val")
+  "let l:schemes = map(['_low', '_flat', '', '_high'], "'solarized8_'.(&background).v:val")
+  let l:schemes = map(['_low', '_flat', '', '_high'], "'solarized8'.v:val")
   execute 'colorscheme' l:schemes[((a:delta+index(l:schemes, g:colors_name)) % 4 + 4) % 4]
 endfunction
 
@@ -63,9 +64,9 @@ function! ToggleBackground(...) abort
   let l:background = &background
   let l:c = g:colors_name
   let l:b = l:background !=# 'dark' ? 'dark' : 'light'
-  if g:colors_name =~# l:background
-    let l:c = substitute(l:c, l:background, l:b, '')
-  endif
+  "if g:colors_name =~# l:background
+  "  let l:c = substitute(l:c, l:background, l:b, '')
+  "endif
   let &background = l:b
   execute 'colorscheme' l:c
 endfunction
