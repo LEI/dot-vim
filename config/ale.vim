@@ -6,12 +6,14 @@ if !has('nvim') && v:version < 800
   finish
 endif
 
-Pack 'LEI/ale' " Pack 'w0rp/ale'
+Pack 'w0rp/ale'
 
 let g:ale_linters = get(g:, 'ale_linters', {})
 
-" JavaScript: disable 'standard' and 'jshint'
+" JavaScript: disable 'standard', 'jshint'
 let g:ale_linters.javascript = ['eslint', 'flow', 'jscs', 'xo']
+" TypeScript: disable 'standard', 'tslint', 'tsserver', 'typecheck', 'xo'
+let g:ale_linters.typescript = ['eslint']
 
 " PHP: nunomaduro/larastan
 "let g:ale_linters.php = ['langserver', 'phan', 'php', 'phpcs', 'phpmd']
@@ -36,7 +38,7 @@ let g:ale_go_gometalinter_options = '--fast' " --enable-all
 
 " SQL:
 " let g:ale_linters.sql = ['sqlint'] " pgsql only
-let g:ale_sql_sqlfmt_options = '-u'
+"let g:ale_sql_sqlfmt_options = '-u'
 
 " Shell: bashate, shellcheck
 " Use 2 spaces instead of tabs and indent switch cases
@@ -52,10 +54,11 @@ let g:ale_fixers = get(g:, 'ale_fixers', {})
 " TODO: remove_trailing_lines, trim_whitespace
 let g:ale_fixers.css = ['prettier']
 let g:ale_fixers.javascript = ['eslint']
+let g:ale_fixers.typescript = ['eslint']
 let g:ale_fixers.php = ['phpcbf']
 let g:ale_fixers.go = ['goimports']
 let g:ale_fixers.sh = ['shfmt']
-let g:ale_fixers.sql = ['sqlfmt']
+"let g:ale_fixers.sql = ['sqlfmt']
 
 " Fix files automatically on save
 let g:ale_fix_on_save = 1

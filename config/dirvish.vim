@@ -28,9 +28,9 @@ function! s:DirvishFileType() abort
   nnoremap <silent><buffer> gh :silent keeppatterns g@\v/\.[^\/]+/?$@d<cr>
 
   " Enable :Gstatus
-  if exists('g:loaded_fugitive')
-    call fugitive#detect(@%)
-  endif
+  " if exists('g:loaded_fugitive')
+  "   call fugitive#detect(@%)
+  " endif
 
   " Trigger hidden buffer auto command manually (close qf/loc list if needed)
   if bufnr('$') > 1 && exists('#BufHidden#*')

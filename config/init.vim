@@ -64,14 +64,14 @@ let g:enable_ale = 1
 
 " Languages:
 Pack 'sheerun/vim-polyglot' " Syntax and indentation language pack
-let g:polyglot_disabled = ['tmux', 'graphql']
+" let g:polyglot_disabled = ['csv', 'graphql', 'tmux']
 let g:jsx_ext_required = 1
 
 " SQL:
 " Pack 'vim-scripts/SQLUtilities'
 
 " Golang:
-Pack 'fatih/vim-go', {'do': 'GoInstallBinaries', 'for': 'go'}
+" Pack 'fatih/vim-go', {'do': 'GoInstallBinaries', 'for': 'go'}
 " if exists('$GOPATH') && !empty($GOPATH)
 "   let g:golint = $GOPATH . '/src/golang.org/x/lint/misc/vim'
 "   if isdirectory(g:golint) && executable('golint')
