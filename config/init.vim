@@ -109,6 +109,11 @@ if executable('tmux') " len($TMUX)
   Pack 'tmux-plugins/vim-tmux-focus-events'
 endif
 
+" Beancount
+if executable('bean-check')
+  Pack 'nathangrigg/vim-beancount'
+endif
+
 " Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim
 " Pack 'jamessan/vim-gnupg' " Transparent editing of *.gpg, *.pgp and *.asc
 " Pack 'xolox/vim-misc' " Auto-load scripts
