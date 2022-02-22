@@ -25,11 +25,11 @@ role:
 
     # https://neovim.io/doc
     - name: neovim
-      os: ["!jessie"]
+      os: ["!debian"]
     # https://github.com/neovim/node-client
     - name: neovim
       type: npm
-      os: ["!jessie"]
+      os: ["!debian"]
     # https://github.com/neovim/python-client
     # - name:
     #     - setuptools
@@ -39,16 +39,16 @@ role:
     #   type: pip2
     - name: neovim
       type: pip2
-      os: ["!jessie"]
+      os: ["!debian"]
     - name: neovim
       type: pip3
-      os: ["!jessie"]
+      os: ["!debian"]
     # - name: python-neovim
     #   os: ["archlinux", "darwin"]
     # https://github.com/alexgenco/neovim-ruby
     - name: neovim
       type: gem
-      os: ["!jessie"]
+      os: ["!debian"]
 
     # Linters (c.f. config/ale.vim)
     - name: vim-vint
@@ -82,16 +82,16 @@ role:
   # post_install:
   #   - vim --version | head -n1
   #   - command: nvim --version | head -n1
-  #     os: ["!jessie"]
+  #     os: ["!debian"]
   #   - command: command -v neovim-node-host
   #     # $(npm prefix --global)/bin
   #     env: PATH=$PATH:$HOME/.node_modules/bin
-  #     os: ["!android", "!jessie"]
+  #     os: ["!android", "!debian"]
   #   - command: |
   #       python2 -c 'import neovim'
   #       python3 -c 'import neovim' || python36 -c 'import neovim'
-  #     os: ["!android", "!jessie"]
+  #     os: ["!android", "!debian"]
   #   - command: command -v neovim-ruby-host
   #     env: PATH="$PATH:${GEM_HOME:-$(ruby -e 'print Gem.user_dir')}/bin"
-  #     os: ["!android", "!jessie"]
+  #     os: ["!android", "!debian"]
   #   # TODO: non-interactive nvim +checkhealth +qa
