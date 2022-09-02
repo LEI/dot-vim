@@ -1,5 +1,7 @@
 " Plugins configuration
 
+" Setting g:enable_<name> = 1 looks for config/<name>.vim
+
 " Appearance:
 let g:enable_colorscheme = 1
 let g:enable_statusline = 1
@@ -24,10 +26,6 @@ Pack 'tpope/vim-endwise' " Automatic end keywords
 " Pack 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Pack 'tpope/vim-repeat' " Enable repeating supported plugin maps
 
-" Settings: ciaranm/detectindent
-" let g:enable_editorconfig = 1
-Pack 'tpope/vim-sleuth' " Automatic indentation detection
-
 " File Explorer: Shougo/vimfiler.vim
 let g:enable_dirvish = 1
 " Pack 'tpope/vim-vinegar' " Improved netrw directory browser
@@ -49,12 +47,21 @@ let g:enable_pass = 1 " Password store editing
 " let g:enable_deoplete = has('nvim')
 " let g:enable_neocomplete = !has('nvim')
 " let g:enable_neosnippet = g:enable_deoplete || g:enable_neocomplete
-Pack 'ajh17/VimCompletesMe' " https://robots.thoughtbot.com/vim-you-complete-me
+
+" https://robots.thoughtbot.com/vim-you-complete-me
+" Pack 'ajh17/VimCompletesMe'
+
+" https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim
+let g:enable_coc = 1 " Language server completion and diagnostics
 
 " Search:
 let g:enable_ctags = 1
 " let g:enable_ctrlp = 1
 let g:enable_fzf = 1
+if has('nvim')
+  Pack 'kristijanhusak/vim-js-file-import', {'do': 'npm install'}
+  let g:js_file_import_use_fzf = 1
+endif
 
 " Syntax Check:
 let g:enable_ale = 1
@@ -84,6 +91,7 @@ let g:enable_ternjs = !get(g:, 'enable_youcompleteme', 0)
 " Pack 'jelera/vim-javascript-syntax', {'for': 'javascript'}
 " Pack 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
 Pack 'posva/vim-vue' ", {'for': 'vue.*'} & npm i -g eslint eslint-plugin-vue
+Pack 'burnettk/vim-angular'
 
 " PHP:
 " Pack 'spf13/PIV', {'for': 'php'}
@@ -114,9 +122,15 @@ if executable('bean-check')
   Pack 'nathangrigg/vim-beancount'
 endif
 
+" Settings: ciaranm/detectindent
+" let g:enable_editorconfig = 1
+Pack 'tpope/vim-sleuth' " Automatic indentation detection
+
 " Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim
 " Pack 'jamessan/vim-gnupg' " Transparent editing of *.gpg, *.pgp and *.asc
 " Pack 'xolox/vim-misc' " Auto-load scripts
+let g:enable_db = 1
+let g:enable_test = 1
 
 " Extras: wikitopian/hardmode, takac/vim-hardtime
 " Pack 'chrisbra/csv.vim' " CSV files
@@ -128,3 +142,5 @@ endif
 " Pack 'mhinz/vim-startify' " Start screen
 " Pack 'vim-scripts/dbext.vim' " Database access
 " Pack 'ap/vim-css-color' " Color preview
+
+" Pack 'github/copilot.vim' " GitHub Copilot

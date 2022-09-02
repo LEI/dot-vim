@@ -21,5 +21,5 @@ endfunction
 
 augroup TrailingWhitespace
   autocmd!
-  autocmd BufWritePre *.js,*.php,*.py :call StripTrailingWhitespace()
+  autocmd BufWritePre *.js,*.ts,*.php,*.py :call StripTrailingWhitespace()
 augroup END

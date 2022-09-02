@@ -4,10 +4,10 @@ if !executable('ctags')
   finish
 endif
 
-" Pack 'ludovicchabant/vim-gutentags'
+Pack 'ludovicchabant/vim-gutentags'
 " Pack 'tomtom/ttags_vim' | Pack 'tomtom/tlib_vim'
 
-nmap <Leader>ct :call ReindexCtags()<CR>
+nmap <Leader>t :call ReindexCtags()<CR>
 
 " http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html
 " https://github.com/thoughtbot/dotfiles/blob/master/vim/plugin/ctags.vim

@@ -6,14 +6,29 @@ if !has('nvim') && v:version < 800
   finish
 endif
 
+" https://github.com/dense-analysis/ale#5iii-how-can-i-use-ale-and-cocnvim-together
+if get(g:, 'enable_coc')
+  let g:ale_disable_lsp = 1
+endif
+
 Pack 'w0rp/ale'
 
 let g:ale_linters = get(g:, 'ale_linters', {})
 
-" JavaScript: disable 'standard', 'jshint'
-let g:ale_linters.javascript = ['eslint', 'flow', 'jscs', 'xo']
-" TypeScript: disable 'standard', 'tslint', 'tsserver', 'typecheck', 'xo'
-let g:ale_linters.typescript = ['eslint']
+" HTML:
+" npm i -g write-good
+let g:ale_linters.html = [] " ['tidy', 'write-good']
+
+" See coc.vim and coc-settings.json
+if !get(g:, 'enable_coc')
+  " JavaScript: disable 'standard', 'jshint'
+  let g:ale_linters.javascript = ['eslint', 'flow', 'jscs', 'xo']
+  " TypeScript: disable 'standard', 'tslint', 'tsserver', 'typecheck', 'xo'
+  let g:ale_linters.typescript = ['eslint']
+else
+  let g:ale_linters.javascript = []
+  let g:ale_linters.typescript = []
+endif
 
 " PHP: nunomaduro/larastan
 "let g:ale_linters.php = ['langserver', 'phan', 'php', 'phpcs', 'phpmd']
@@ -53,8 +68,8 @@ let g:ale_fixers = get(g:, 'ale_fixers', {})
 " Define fixers per filetype (json, less, md -> prettier)
 " TODO: remove_trailing_lines, trim_whitespace
 let g:ale_fixers.css = ['prettier']
-let g:ale_fixers.javascript = ['eslint']
-let g:ale_fixers.typescript = ['eslint']
+let g:ale_fixers.javascript = ['eslint'] " , 'prettier']
+let g:ale_fixers.typescript = ['eslint'] " , 'prettier']
 let g:ale_fixers.php = ['phpcbf']
 let g:ale_fixers.go = ['goimports']
 let g:ale_fixers.sh = ['shfmt']
@@ -99,6 +114,7 @@ let g:ale_warn_about_trailing_whitespace = 1
 "let g:ale_echo_msg_error_str = 'E'
 "let g:ale_echo_msg_warning_str = 'W'
 "let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_echo_msg_format = '[%linter%% code%] %s'
 
 let g:ale_sign_error = 'x' " >>
 let g:ale_sign_warning = '!' " --
@@ -109,7 +125,10 @@ endif
 
 function! ALEStatus() abort
   let l:str = ''
-  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:buf = bufnr('')
+  let l:prefix = '['
+  let l:suffix = ']'
+  let l:counts = ale#statusline#Count(l:buf)
 
   if l:counts.total == 0
     return l:str
@@ -119,6 +138,9 @@ function! ALEStatus() abort
   let l:all_non_errors = l:counts.total - l:all_errors
 
   if l:all_errors > 0
+    let l:first = ale#statusline#FirstProblem(l:buf, 'error')
+    " let l:lnum = type(l:first) == v:t_dict && get(l:first, 'lnum') ? l:first.lnum : -1
+    " \ . (l:lnum >= 0 ? l:prefix . l:lnum. l:suffix : ' ')
     let l:str.= l:all_errors . ' ' . g:ale_sign_error
   endif
 
@@ -127,6 +149,9 @@ function! ALEStatus() abort
   endif
 
   if l:all_non_errors > 0
+    let l:first = ale#statusline#FirstProblem(l:buf, 'warning')
+    " let l:lnum = type(l:first) == v:t_dict && get(l:first, 'lnum') ? l:first.lnum : -1
+    " \ . (l:lnum >= 0 ? l:prefix . l:lnum. l:suffix : ' ')
     let l:str.= l:all_non_errors . ' ' . g:ale_sign_warning
   endif
 

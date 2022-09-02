@@ -66,6 +66,7 @@ function! StatusLineRight(...) abort
   let l:s.= '%( %{exists("*neomake#Make") ? neomake#statusline#line#LoclistStatus() : ""}%)'
   let l:s.= '%( %{exists("g:loaded_ale") ? ALEStatus() : ""}%)'
   let l:s.= ' %)%*'
+  let l:s.= '%( %{exists("*gutentags#statusline") ? gutentags#statusline("[", "]") : ""}%)'
   let l:s.= '%( %{exists("ObsessionStatus") ? ObsessionStatus() : ""}%)'
   let l:s.= ' ' " Space
   let l:s.= '%(%{winwidth(0) > 40 ? statusline#core#Type() : ""}' . g:statusline.symbols.sep . '%)' " File type

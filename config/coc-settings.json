@@ -1,0 +1,8 @@
+{
+  "diagnostic.checkCurrentLine": true,
+  "diagnostic.displayByAle": true,
+  "html.autoClosingTags": true,
+  "html.autoCreateQuotes": true,
+  "suggest.noselect": true,
+  "typescript.showUnused": false
+}
