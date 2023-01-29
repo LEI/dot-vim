@@ -3,9 +3,12 @@
 " Setting g:enable_<name> = 1 looks for config/<name>.vim
 
 " Appearance:
-let g:enable_colorscheme = 1
-let g:enable_statusline = 1
-let g:enable_tabline = 1
+if !has('nvim')
+  let g:enable_colorscheme = 1
+  let g:enable_lightline = 0
+  let g:enable_statusline = 1
+  let g:enable_tabline = 0
+endif
 
 " Movements: goldfeld/vim-seek, tommcdo/vim-exchange
 " Pack 'justinmk/vim-sneak'
@@ -15,16 +18,29 @@ Pack 'tpope/vim-surround' " Quoting/parenthesizing
 " Pack 'tpope/vim-rsi' " Readline key bindings
 
 " Improvements: haya14busa/incsearch.vim, vim-scripts/YankRing.vim
-let g:enable_qf = 1
 " let g:enable_textobj = 1
 let g:enable_unimpaired = 1
-Pack 'keith/investigate.vim' " Look up documentation with gK
-" Pugg 'romainl/vim-qlist' " Persist 'include-search' and 'definition-search'
+if !has('nvim')
+  let g:enable_qf = 1
+  Pack 'keith/investigate.vim' " Look up documentation with gK
+  Pack 'tpope/vim-endwise' " Automatic end keywords
+endif
+" Pack 'romainl/vim-qlist' " Persist 'include-search' and 'definition-search'
 Pack 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 " Pack 'tpope/vim-characterize' " Unicode character metadata (ga)
-Pack 'tpope/vim-endwise' " Automatic end keywords
 " Pack 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Pack 'tpope/vim-repeat' " Enable repeating supported plugin maps
+
+" Toggle values with C-x
+let g:enable_alternate = 1
+
+" Development:
+if has('nvim')
+  let g:enable_lsp = 1
+else
+  " https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim
+  let g:enable_coc = 0
+endif
 
 " File Explorer: Shougo/vimfiler.vim
 let g:enable_dirvish = 1
@@ -51,28 +67,43 @@ let g:enable_pass = 1 " Password store editing
 " https://robots.thoughtbot.com/vim-you-complete-me
 " Pack 'ajh17/VimCompletesMe'
 
-" https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim
-let g:enable_coc = 1 " Language server completion and diagnostics
-
 " Search:
-let g:enable_ctags = 1
+let g:enable_ctags = 0
 " let g:enable_ctrlp = 1
 let g:enable_fzf = 1
-if has('nvim')
-  Pack 'kristijanhusak/vim-js-file-import', {'do': 'npm install'}
-  let g:js_file_import_use_fzf = 1
-endif
 
 " Syntax Check:
-let g:enable_ale = 1
+let g:enable_ale = 0
 " let g:enable_neomake = 1
 " scrooloose/syntastic, maralla/validator.vim, tomtom/checksyntax_vim
 " google/vim-codefmt, vim-scripts/LanguageTool
 
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has('nvim')
+  set signcolumn=yes:1
+" if has("nvim-0.5.0") || has("patch-8.1.1564")
+"   " Recently vim can merge signcolumn and number column into one
+"   set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
 " Languages:
 Pack 'sheerun/vim-polyglot' " Syntax and indentation language pack
 " let g:polyglot_disabled = ['csv', 'graphql', 'tmux']
+if has('nvim')
+  let g:polyglot_disabled = ['go']
+endif
 let g:jsx_ext_required = 1
+
+" if g:enable_ctags
+"   " https://github.com/sheerun/vim-polyglot/issues/730
+"   augroup FixTagBarWithPolyglot
+"     autocmd!
+"     autocmd FileType typescript unlet g:tagbar_type_typescript
+"   augroup END
+" endif
 
 " SQL:
 " Pack 'vim-scripts/SQLUtilities'
@@ -87,19 +118,25 @@ let g:jsx_ext_required = 1
 " endif
 
 " JavaScript:
-let g:enable_ternjs = !get(g:, 'enable_youcompleteme', 0)
+" let g:enable_ternjs = !get(g:, 'enable_youcompleteme', 0)
 " Pack 'jelera/vim-javascript-syntax', {'for': 'javascript'}
 " Pack 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
-Pack 'posva/vim-vue' ", {'for': 'vue.*'} & npm i -g eslint eslint-plugin-vue
-Pack 'burnettk/vim-angular'
+" Pack 'posva/vim-vue' ", {'for': 'vue.*'} & npm i -g eslint eslint-plugin-vue
+" Pack 'burnettk/vim-angular' " let g:angular_skip_alternate_mappings = 1
+" Pack 'mracos/mermaid.vim'
 
 " PHP:
 " Pack 'spf13/PIV', {'for': 'php'}
 Pack 'shawncplus/phpcomplete.vim', {'for': 'php'}
 
 " Project:
-Pack 'tpope/vim-dispatch'
-"Pack 'tpope/vim-projectionist'
+Pack 'tpope/vim-dispatch' " autocmd FileType java let b:dispatch = 'javac %'
+Pack 'tpope/vim-dotenv'
+
+let g:enable_dadbod = 1
+let g:enable_project = 1
+let g:enable_test = 1
+
 if executable('composer')
    " Use :Dispatch to run composer dump-autoload
   Pack 'noahfrederick/vim-composer' " :Composer
@@ -112,10 +149,11 @@ endif
 " Runtime:
 let g:enable_fugitive = 1
 Pack 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-if executable('tmux') " len($TMUX)
-  " Fixes autoread in terminal running tmux
-  Pack 'tmux-plugins/vim-tmux-focus-events'
-endif
+" " Obsolete since version 8.2.2345
+" if executable('tmux') " len($TMUX)
+"   " Fixes autoread in terminal running tmux
+"   Pack 'tmux-plugins/vim-tmux-focus-events'
+" endif
 
 " Beancount
 if executable('bean-check')
@@ -129,8 +167,6 @@ Pack 'tpope/vim-sleuth' " Automatic indentation detection
 " Utilities: tomtom/tlib_vim, LucHermitte/lh-vim-lib, vim-jp/vital.vim
 " Pack 'jamessan/vim-gnupg' " Transparent editing of *.gpg, *.pgp and *.asc
 " Pack 'xolox/vim-misc' " Auto-load scripts
-let g:enable_db = 1
-let g:enable_test = 1
 
 " Extras: wikitopian/hardmode, takac/vim-hardtime
 " Pack 'chrisbra/csv.vim' " CSV files
@@ -141,6 +177,5 @@ let g:enable_test = 1
 " Pack 'metakirby5/codi.vim' " Interactive scratchpad
 " Pack 'mhinz/vim-startify' " Start screen
 " Pack 'vim-scripts/dbext.vim' " Database access
-" Pack 'ap/vim-css-color' " Color preview
 
-" Pack 'github/copilot.vim' " GitHub Copilot
+let g:enable_copilot = 1

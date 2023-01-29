@@ -1,8 +1,111 @@
+// https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file
 {
+  "ansible.disableProgressNotifications": false,
+  // "ansible.builtin.isWithYamllint": true,
+
+  "cSpellExt.enableDictionaries": ["french"],
+  "cSpell.language": "en,fr",
+  // Controls the maximum number of spelling errors per document.
+  "cSpell.maxNumberOfProblems": 100,
+  // Controls the number of suggestions shown.
+  "cSpell.numSuggestions": 8,
+  // The minimum length of a word before checking it against a dictionary.
+  "cSpell.minWordLength": 4,
+  // Specify file types to spell check.
+  // "cSpell.enabledLanguageIds": [
+  //     "csharp",
+  //     "go",
+  //     "javascript",
+  //     "javascriptreact",
+  //     "markdown",
+  //     "php",
+  //     "plaintext",
+  //     "typescript",
+  //     "typescriptreact",
+  //     "yml"
+  // ],
+  // Display the spell checker status on the status bar.
+  "cSpell.showStatus": true,
+  // Words to add to dictionary for a workspace.
+  "cSpell.words": [
+    // "deps",
+    "elig",
+    "fmt",
+    "ipaddress",
+  ],
+  // https://github.com/iamcco/coc-spell-checker#predefined-regexp-expressions
+  "cSpell.ignoreRegExpList": [
+    // Package names (e.g. github.com/...)
+    // "/[a-z]+\\.[a-z]+\\.[a-z]+/gi",
+    // Package names (e.g. @namespace/package)
+    "/@?[a-z0-9-]+\\/[a-z0-9-]+/gi",
+  ],
+  // Enable / Disable compound words like 'errormessage'
+  "cSpell.allowCompoundWords": false,
+  // Words to be ignored and not suggested.
+  "cSpell.ignoreWords": ["behaviour"],
+  // User words to add to dictionary.  Should only be in the user settings.
+  "cSpell.userWords": [],
+  // Specify paths/files to ignore.
+  "cSpell.ignorePaths": ["node_modules"],
+  // flagWords - list of words to be always considered incorrect
+  // This is useful for offensive words and common spelling errors.
+  // For example "hte" should be "the"`
+  // "cSpell.flagWords": ["hte"],
+  // Set the delay before spell checking the document. Default is 50.
+  "cSpell.spellCheckDelayMs": 1000,
+
+  "coverage.uncoveredSign.text": "☂", // ⦿
+
   "diagnostic.checkCurrentLine": true,
-  "diagnostic.displayByAle": true,
+  // "diagnostic.displayByAle": true,
+
+  // TODO: reuse in coc.vim
+  "diagnostic.errorSign": "x",
+  "diagnostic.warningSign": "!",
+  "diagnostic.infoSign": "ℹ",
+  "diagnostic.hintSign": "➤",
+  // "diagnostic.separateRelatedInformationAsDiagnostics": true,
+  "diagnostic.signPriority": 10,
+  "diagnostic.virtualText": false,
+
+  // FIXME "eslint.enable": false,
+  // "eslint.alwaysShowStatus": true,
+  "eslint.autoFixOnSave": true,
+  // "eslint.format.enable": true,
+
+  "git.addGBlameToVirtualText": true,
+  "git.gitlab.hosts": ["git.flexnetwork.fr", "gitlab.com"],
+
   "html.autoClosingTags": true,
   "html.autoCreateQuotes": true,
+
+  "json.maxItemsComputed": 1000, // Default is 5000
+
+  "lightbulb.text": {
+    // nerd-font: nf-mdi-lightbulb, text used when there're code actions
+    // "default": "",
+    "default": "💡",
+    // nerd-font: nf-mdi-auto_fix, text used when there're code actions and quickfix exists
+    // "quickfix": ""
+    "quickfix": "🪄",
+  },
+
+  "links.highlight": true,
+  // "links.tooltip": true,
+
+  "nginx.nginxfmt.indent": 2,
+
+  "phpstan.memoryLimit": "1G",
+  "phpstan.download.checkOnStartup": false,
+
+  // "prettier.trailingComma": "es5",
+
   "suggest.noselect": true,
-  "typescript.showUnused": false
+  "suggest.virtualText": true,
+
+  // "tsserver.locale": "fr",
+  "tsserver.maxTsServerMemory": 1024,
+
+  "typescript.showUnused": false,
 }

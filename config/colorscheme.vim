@@ -16,19 +16,19 @@
 Pack 'lifepillar/vim-solarized8'
 let g:true_color = 1
 
-nnoremap <silent> <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
-nnoremap <silent> <F5> :call ToggleBackground()<CR>
-nnoremap <silent> <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
+" nnoremap <silent> <F4> :<C-u>call Solarized8Contrast(-v:count1)<CR>
+" nnoremap <silent> <F5> :call ToggleBackground()<CR>
+" nnoremap <silent> <F6> :<C-u>call Solarized8Contrast(+v:count1)<CR>
 
 augroup Solarized
   autocmd!
   " autocmd User Config call ColorScheme()
-  autocmd VimEnter * call ColorScheme()
+  "autocmd VimEnter * call ColorScheme()
+  colorscheme solarized8
 
   " Quickfix PHP indentation issue (caused by 'hi clear' in colorscheme)
   " Similar to https://github.com/2072/PHP-Indenting-for-VIm/issues/52
   autocmd VimEnter * highlight link PhpParent Normal
-
 augroup END
 
 function! ColorScheme(...) abort

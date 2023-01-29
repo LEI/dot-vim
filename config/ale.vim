@@ -7,9 +7,9 @@ if !has('nvim') && v:version < 800
 endif
 
 " https://github.com/dense-analysis/ale#5iii-how-can-i-use-ale-and-cocnvim-together
-if get(g:, 'enable_coc')
-  let g:ale_disable_lsp = 1
-endif
+" if get(g:, 'enable_coc') -- TODO: check displayByAle
+"   let g:ale_disable_lsp = 1
+" endif
 
 Pack 'w0rp/ale'
 
@@ -119,9 +119,12 @@ let g:ale_echo_msg_format = '[%linter%% code%] %s'
 let g:ale_sign_error = 'x' " >>
 let g:ale_sign_warning = '!' " --
 if has('multi_byte') && &encoding ==# 'utf-8'
-  let g:ale_sign_error =  nr2char(0x2A09) " nr2char(0xD7)
+  let g:ale_sign_error = nr2char(0x2A09) " nr2char(0xD7)
   let g:ale_sign_warning = '!'
 endif
+
+" Disable virtual text (default: 'all')
+let g:ale_virtualtext_cursor = 0
 
 function! ALEStatus() abort
   let l:str = ''

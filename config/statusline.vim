@@ -56,6 +56,7 @@ endfunction
 function! StatusLineRight(...) abort
   let l:info = a:0 > 1 ? a:2 : '' " get(g:statusline, 'right', '')
   let l:s = l:info " Extra markers
+  let l:s.= '%( %{exists("g:enable_lsp") ? LspStatus() : ""}%)'
   let l:s.= '%#StatusLineWarn#%(' " WarningMsg
   let l:s.= '%( %{statusline#warn#Indent()}%)' " &bt nofile, nowrite
   let l:s.= '%( %{empty(&bt) ? statusline#warn#Trailing() : ""}%)'
@@ -75,6 +76,22 @@ function! StatusLineRight(...) abort
   return l:s
 endfunction
 
+" Statusline
+" https://github.com/nvim-lua/lsp-status.nvim/blob/master/lua/lsp-status/statusline.lua
+function! LspStatus() abort
+  " return '%#StatusLineWarn#%( %{luaeval("#vim.lsp.buf_get_clients() > 0") ? luaeval("require(\"lsp-status\").status()") : ""}%)%*'
+  " FIXME: Received `end` message with no corresponding `begin` and nil client
+  if luaeval('#vim.lsp.buf_get_clients() > 0')
+    try
+      return luaeval("require('lsp-status').status()")
+    catch /module 'lsp-status' not found/
+      " Lazy-loading error
+    endtry
+  endif
+  return ''
+endfunction
+
+
 " Reverse: cterm=NONE gui=NONE | ctermfg=bg ctermbg=fg
 function! StatusLineHighlight() abort
   if &background ==# 'dark'
@@ -92,10 +109,10 @@ function! StatusLineHighlight() abort
     highlight StatusLineReplace cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#cb4b16
     highlight StatusLineVisual cterm=NONE ctermfg=7 ctermbg=3 gui=NONE guifg=#eee8d5 guibg=#b58900
   endif
-  " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
-  highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#dc322f
-  " highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
-  highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#cb4b16
+  " " highlight StatusLineError cterm=NONE ctermfg=7 ctermbg=1 gui=NONE guifg=#eee8d5 guibg=#cb4b16
+  " highlight StatusLineError cterm=reverse ctermfg=1 gui=reverse guifg=#dc322f
+  " " highlight StatusLineWarn cterm=NONE ctermfg=7 ctermbg=9 gui=NONE guifg=#eee8d5 guibg=#dc322f
+  " highlight StatusLineWarn cterm=NONE ctermfg=9 gui=NONE guifg=#cb4b16
 endfunction
 
 augroup StatusLine

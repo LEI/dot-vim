@@ -33,15 +33,15 @@ function! s:DirvishFileType() abort
   " endif
 
   " Trigger hidden buffer auto command manually (close qf/loc list if needed)
-  if bufnr('$') > 1 && exists('#BufHidden#*')
-    doautocmd BufHidden *
-  endif
+  " if bufnr('$') > 1 && exists('#BufHidden#*')
+  "   doautocmd BufHidden *
+  " endif
 endfunction
 
 augroup Dirvish
   autocmd!
   " Hide 'No matching autocommands'
-  autocmd BufNew * silent echo
+  " autocmd BufNew * silent echo
   " Override mappings, options and settings
   autocmd FileType dirvish call s:DirvishFileType()
 augroup END

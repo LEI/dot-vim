@@ -34,8 +34,9 @@ function! ReindexCtags()
   " mv "$dir/$$.tags" "$dir/tags"
 endfunction
 
-" Pack 'majutsushi/tagbar'
-" nmap <F8> :TagbarToggle<CR>
+Pack 'preservim/tagbar'
+nnoremap <silent> <F8> :TagbarToggle<CR>
+" ['<Leader>'] = { t = { t = { '<cmd>TagbarToggle<CR>', 'Toggle Tagbar' } } },
 " set tags=tags;/
 " " Proportions
 " let g:tagbar_left = 0
@@ -46,5 +47,3 @@ endfunction
 " Pack 'vim-scripts/taglist.vim'
 " Exclude Javascript files in :Rtags via rails.vim due to warnings when parsing
 " let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
-
-" Pack 'tomtom/ttags_vim'

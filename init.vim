@@ -288,7 +288,7 @@ if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 endif
-" set showmode " Show current mode in command line
+set noshowmode " Show current mode in command line
 if has('wildmenu')
   " set wildchar=<Tab>
   set wildmenu " Display completion matches in a status line
@@ -351,31 +351,28 @@ let g:mapleader = "\<Space>"
 " Switch between the current and previous buffer :b#<CR>
 nnoremap <Leader><Leader> <C-^>
 " Add files to arglist with wildcards
-nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-D>
+"nnoremap <Leader>a :argadd <C-r>=fnameescape(expand('%:p:h'))<CR>/*<C-D>
 " Start the buffer prompt and display all loaded buffers
-nnoremap <Leader>b :b **/*<C-D>
+"nnoremap <Leader>b :b **/*<C-D>
 " Find a file in current working directory
-nnoremap <Leader>e :e **/*
+"nnoremap <Leader>e :e **/*
 " Faster grep :noautocmd
-nnoremap <Leader>g :grep<Space>
+"nnoremap <Leader>g :grep<Space>
 " Grep last search term similar files
-" nnoremap <Leader>G :Grep <C-R>=(v:searchforward?@/:@?) *<C-R>=(expand('%:e')==''?'':'.'.expand('%:e'))
+"nnoremap <Leader>G :Grep <C-R>=(v:searchforward?@/:@?) *<C-R>=(expand('%:e')==''?'':'.'.expand('%:e'))
 if exists(':Ilist') " Make :ilist go into a quickfix window
   nnoremap <Leader>i :Ilist<Space>
 endif
 " Taglist jump command line
 nnoremap <Leader>j :tjump /
 " Run make on the current buffer
-nnoremap <Leader>m :make<CR>
+"nnoremap <Leader>m :make<CR>
 " Quicker quit
-nnoremap <Leader>q :q<CR>
-" Remove trailing spaces in the current file
-nnoremap <Leader>s :call StripTrailingWhitespace()<CR>
+nnoremap <Leader>q :confirm quit<CR>
 " Sort visually selected lines
 vnoremap <Leader>s :sort<CR>
-if exists(':TTags') " List and filter tags
-  nnoremap <Leader>t :TTags<Space>*<Space>*<Space>.<CR>
-endif
+" Undo tree toggle
+nnoremap <Leader>u :UndotreeToggle<CR>
 " Save a file
 nnoremap <Leader>w :w<CR>
 " Write as root
@@ -425,8 +422,8 @@ nnoremap <C-K> <C-W>k
 nnoremap <C-L> <C-W>l
 
 " Navigate tab pages
-" nnoremap <Left> :tabprevious<CR>
-" nnoremap <Right> :tabnext<CR>
+nnoremap <Left> :tabprevious<CR>
+nnoremap <Right> :tabnext<CR>
 
 " Bubble single or multiple lines
 noremap <C-Up> ddkP
@@ -442,9 +439,9 @@ vnoremap <C-Down> xp`[V`]
 " vnoremap Q gv
 
 " Stop the highlighting for the 'hlsearch' option and redraw the screen
-nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-" if maparg('<C-L>', 'n') ==# ''
-"   nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+"nnoremap <silent> <Space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
+" if maparg('<C-l>', 'n') ==# ''
+"   nnoremap <silent> <C-l> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-l>
 " endif
 
 " Edit in the same directory as the current file :e %%
@@ -452,8 +449,10 @@ cnoremap <expr> %% getcmdtype() ==# ':' ? fnameescape(expand('%:h')) . '/' : '%%
 
 " Use left and right arrow keys to move the cursor in command-line completion
 " instead of selecting a different match, as Tab and S-Tab do
-cnoremap <expr> <Left> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
-cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
+if !has('nvim')
+  cnoremap <expr> <Left> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Left>" : "\<Left>"
+  cnoremap <expr> <Right> getcmdtype() ==# ':' ? "\<Space>\<BS>\<Right>" : "\<Right>"
+endif
 
 " Save current file as root with sudo
 if mapcheck('w!!', 'c') ==# '' " && !hasmapto('...', 'c')

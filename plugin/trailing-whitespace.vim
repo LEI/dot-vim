@@ -19,7 +19,12 @@ endfunction
 
 " command! -range=% RemoveTrailing call <SID>StripTrailingWhitespaceRange(<line1>,<line2>)
 
-augroup TrailingWhitespace
-  autocmd!
-  autocmd BufWritePre *.js,*.ts,*.php,*.py :call StripTrailingWhitespace()
-augroup END
+" Remove trailing spaces in the current file
+nnoremap <Leader>st :call StripTrailingWhitespace()<CR>
+
+if !has('nvim')
+  augroup TrailingWhitespace
+    autocmd!
+    autocmd BufWritePre *.js,*.ts,*.php,*.py :call StripTrailingWhitespace()
+  augroup END
+endif

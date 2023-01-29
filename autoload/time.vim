@@ -1,4 +1,7 @@
 " Time utils
+"
+" https://gist.github.com/alexander-yakushev/88531e23a89a0f2acbf1
+" lua tonumber(os.date('%H'))
 
 if exists('g:loaded_time')
   finish

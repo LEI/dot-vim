@@ -1,39 +1,57 @@
 " Conquer of Completion
 
 Pack 'neoclide/coc.nvim', {'branch': 'release'}
-"  \ 'coc-git',
-"  \ 'coc-docker',
-"  \ 'coc-word',
+  " \ 'coc-emmet',
+  " \ 'coc-snippets',
+  " \ 'coc-solidity',
+  " \ 'coc-sqlfluff',
+  " \ 'coc-svg',
+  " \ 'coc-word',
+  " \ 'coc-xml',
 let g:coc_global_extensions = [
+  \ '@yaegassy/coc-ansible',
+  \ '@yaegassy/coc-nginx',
+  \ '@yaegassy/coc-phpstan',
   \ 'coc-angular',
+  \ 'coc-calc',
+  \ 'coc-coverage',
+  \ 'coc-cspell-dicts',
   \ 'coc-css',
   \ 'coc-db',
+  \ 'coc-docker',
   \ 'coc-eslint',
+  \ 'coc-git',
   \ 'coc-go',
+  \ 'coc-highlight',
   \ 'coc-html',
+  \ 'coc-htmlhint',
   \ 'coc-json',
+  \ 'coc-lightbulb',
   \ 'coc-markdownlint',
+  \ 'coc-php-cs-fixer',
   \ 'coc-prettier',
   \ 'coc-sh',
+  \ 'coc-spell-checker',
   \ 'coc-sql',
+  \ 'coc-swagger',
   \ 'coc-tsserver',
   \ 'coc-vimlsp',
   \ 'coc-yaml',
   \ ]
 
+" TODO: load from coc-settings.json
+let g:coc_user_config = get(g:, 'coc_user_config', {})
+let g:coc_user_config.diagnostic = get(g:coc_user_config, 'diagnostic', {
+  \   'errorSign': 'x',
+  \   'warningSign': '!',
+  \   'infoSign': 'ℹ',
+  \   'hintSign': '➤',
+  \ })
+
 " https://github.com/neoclide/coc.nvim#example-vim-configuration
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("nvim-0.5.0") || has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: There's always complete item selected by default, you may want to enable
@@ -63,8 +81,10 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
+" Get all diagnostics of current buffer in location list
+nmap <leader>d :CocDiagnostics<CR>
+
 " Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
@@ -105,13 +125,14 @@ augroup end
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
+vmap <leader>a  <Plug>(coc-codeaction-selected)
+xmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
+nmap <leader>af  <Plug>(coc-fix-current)
 
 " Run the Code Lens action on the current line.
 nmap <leader>cl  <Plug>(coc-codelens-action)
