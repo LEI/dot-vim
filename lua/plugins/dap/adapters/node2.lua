@@ -8,6 +8,7 @@ return {
   setup = function(source_name)
     require('mason-nvim-dap.automatic_setup')(source_name)
     -- dap.adapters.node2.args
+    -- https://github.com/microsoft/vscode/blob/main/.vscode/launch.json
     -- vim.fn.stdpath('data') .. '/mason/packages/node-debug2-adapter/out/src/nodeDebug.js'
     for _, language in ipairs(filetypes) do
       for _, config in ipairs(dap.configurations[language]) do

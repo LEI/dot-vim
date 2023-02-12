@@ -3,6 +3,155 @@
 -- https://github.com/junnplus/lsp-setup.nvim
 local settings = require('core.settings')
 
+---@alias Command string | string[]
+---@alias Source table null-ls source
+---@alias Tool table { version?: string }
+
+local function executable(name)
+  return vim.fn.executable(name) == 1
+end
+
+-- Execute shell commands
+---@param commands { [string]: Command }
+local function execute_install(commands)
+  for name, cmd in pairs(commands) do
+    local is_installed = executable(name)
+    if not is_installed then
+      vim.notify(string.format('Installing %s', name), 'INFO', {
+        title = name,
+      })
+      local Job = require('plenary.job')
+      local is_table = type(cmd) == 'table'
+      local opts = {
+        command = is_table and cmd[1] or 'sh',
+        args = is_table and { unpack(cmd, 2) } or #cmd and { cmd } or {},
+        -- on_exit = function(j, return_val)
+        --   vim.pretty_print(j:result())
+        -- end,
+      }
+      -- vim.pretty_print(opts)
+      Job:new(opts):start() -- or :sync(10000)
+    end
+  end
+end
+
+-- Ensure tools are installed
+-- Skip if no version is provided and the tool is available globally
+---@param tools { [string]: Tool }
+local function mason_install(tools)
+  local mr = require('mason-registry')
+  for name, opts in pairs(tools) do
+    if not vim.tbl_isempty(opts) or not executable(name) then
+      local p = mr.get_package(name)
+      if not p:is_installed() then
+        p:install(opts)
+      end
+    end
+  end
+end
+
+---@param config { install: { [string]: Command }, tools?: { [string]: Tool }, sources: Source[] }
+local function null_ls_register(config)
+  local null_ls = require('null-ls')
+  -- https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1373#issuecomment-1407433597
+  -- if name and not null_ls.is_registered(?) then
+  --   return false
+  -- end
+  if config.install then
+    execute_install(config.install)
+  end
+  if config.tools then
+    mason_install(config.tools)
+  end
+  null_ls.register(config.sources)
+end
+
+-- https://github.com/neovim/neovim/blob/master/runtime/lua/vim/lsp/util.lua#L1351
+-- local max_width = 80
+-- local line_separator = function()
+--   local width = math.min(vim.fn.winwidth(0) - 2, max_width) -- vim.lsp.buf.util.width
+--   return string.rep('─', width)
+-- end
+
+-- Alternative? https://github.com/neovim/neovim/issues/17757#issuecomment-1073266618
+local format_diagnostic = function(diagnostic)
+  local msg = diagnostic.message
+  local user_data = diagnostic.user_data
+
+  -- Add LSP diagnostic code (e.g. eslint rule)
+  if diagnostic.code then
+    msg = string.format('%s (%s)', msg, diagnostic.code)
+  end
+
+  if user_data then
+    if user_data.lsp and user_data.lsp.codeDescription then
+      -- TODO no highlight msg = string.format('%s\n', msg)
+      for key, value in pairs(user_data.lsp.codeDescription) do
+        -- Add codeDescription.href (eslint documentation link)
+        if key == 'href' then
+          msg = string.format('%s\n%s', msg, value)
+        else
+          msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+        end
+      end
+    end
+    if user_data.lsp then
+      if user_data.lsp.relatedInformation then
+        for _, related in ipairs(user_data.lsp.relatedInformation) do
+          msg = string.format(
+            '%s\n[%d-%d] %s',
+            msg,
+            related.location.range.start.character,
+            related.location.range['end'].character,
+            related.message
+            -- related.location.uri
+          )
+        end
+      end
+      if user_data.lsp.data then
+        if user_data.lsp.data.rendered then
+          msg = string.format('%s\n%s', msg, user_data.lsp.data.rendered)
+        end
+        for key, value in pairs(user_data.lsp.data) do
+          if key ~= 'rendered' then
+            msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+          end
+        end
+      end
+      for key, value in pairs(user_data.lsp) do
+        if
+          key ~= 'code'
+          and key ~= 'codeDescription'
+          and key ~= 'data'
+          and key ~= 'relatedInformation'
+          and (diagnostic.source ~= 'typescript' or key ~= 'tags')
+        then
+          msg = string.format('%s\nLSP %s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+        end
+      end
+    else
+      for key, value in pairs(user_data) do
+        msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+      end
+    end
+  end
+
+  -- -- TODO: Get documentation URL from eslint-ls code action
+  -- local code_actions = vim.lsp.buf.code_action({
+  --   context = {
+  --     diagnostics = { diagnostic },
+  --   },
+  --   -- only = { 'source...eslint' },
+  -- })
+  -- print(vim.inspect(code_actions))
+  -- local url = code_actions[1].edit.documentChanges[1].textDocument.text
+  -- local url = url:match('https://eslint.org/docs/rules/[%w-]+')
+  -- if url then
+  --   msg = string.format('%s [%s]', msg, url)
+  -- end
+  return string.format('%s\n', msg)
+end
+
 if settings.diagnostic.float == nil then
   settings.diagnostic.float = {}
 end
@@ -102,81 +251,6 @@ vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
   })
 end
 
--- https://github.com/neovim/neovim/blob/master/runtime/lua/vim/lsp/util.lua#L1351
--- local max_width = 80
--- local line_separator = function()
---   local width = math.min(vim.fn.winwidth(0) - 2, max_width) -- vim.lsp.buf.util.width
---   return string.rep('─', width)
--- end
-
--- Alternative? https://github.com/neovim/neovim/issues/17757#issuecomment-1073266618
-local format_diagnostic = function(diagnostic)
-  local msg = diagnostic.message
-  local user_data = diagnostic.user_data
-
-  -- Add LSP diagnostic code (e.g. eslint rule)
-  if diagnostic.code then
-    msg = string.format('%s (%s)', msg, diagnostic.code)
-  end
-
-  if user_data then
-    if user_data.lsp and user_data.lsp.codeDescription then
-      -- TODO no highlight msg = string.format('%s\n', msg)
-      for key, value in pairs(user_data.lsp.codeDescription) do
-        -- Add codeDescription.href (eslint documentation link)
-        if key == 'href' then
-          msg = string.format('%s\n%s', msg, value)
-        else
-          msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
-        end
-      end
-    end
-    if user_data.lsp then
-      if user_data.lsp.relatedInformation then
-        for _, related in ipairs(user_data.lsp.relatedInformation) do
-          msg = string.format(
-            '%s\n[%d-%d] %s',
-            msg,
-            related.location.range.start.character,
-            related.location.range['end'].character,
-            related.message
-            -- related.location.uri
-          )
-        end
-      end
-      for key, value in pairs(user_data.lsp) do
-        if
-          key ~= 'code'
-          and key ~= 'codeDescription'
-          and key ~= 'relatedInformation'
-          and (diagnostic.source ~= 'typescript' or key ~= 'tags')
-        then
-          msg = string.format('%s\nLSP %s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
-        end
-      end
-    else
-      for key, value in pairs(user_data) do
-        msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
-      end
-    end
-  end
-
-  -- -- TODO: Get documentation URL from eslint-ls code action
-  -- local code_actions = vim.lsp.buf.code_action({
-  --   context = {
-  --     diagnostics = { diagnostic },
-  --   },
-  --   -- only = { 'source...eslint' },
-  -- })
-  -- print(vim.inspect(code_actions))
-  -- local url = code_actions[1].edit.documentChanges[1].textDocument.text
-  -- local url = url:match('https://eslint.org/docs/rules/[%w-]+')
-  -- if url then
-  --   msg = string.format('%s [%s]', msg, url)
-  -- end
-  return string.format('%s\n', msg)
-end
-
 -- documentFormatting
 -- hover
 -- documentSymbol
@@ -187,7 +261,6 @@ return {
   -- lspconfig
   {
     'neovim/nvim-lspconfig',
-    event = 'BufReadPre',
     dependencies = {
       -- { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
       { 'folke/neodev.nvim', config = true }, -- Replaces hrsh7th/cmp-nvim-lua
@@ -195,31 +268,19 @@ return {
       'williamboman/mason-lspconfig.nvim',
       'hrsh7th/cmp-nvim-lsp', -- 'hrsh7th/nvim-cmp',
       -- 'lsp_signature.nvim', -- Alternative hrsh7th/cmp-nvim-lsp-signature-help
-      'jose-elias-alvarez/typescript.nvim', -- https://github.com/jose-elias-alvarez/typescript.nvim#null-ls
       'b0o/schemastore.nvim', -- jsonls
       'null-ls.nvim',
     },
-    -- you can do any additional lsp server setup here
-    -- return true if you don't want this server to be setup with lspconfig
-    ---@param server string lsp server name
-    ---@param opts _.lspconfig.options any options set for the server
+    event = 'BufReadPre',
+    -- Return true to skip setup with lspconfig
     setup_server = function(server, opts)
-      if server == 'tsserver' then
-        require('typescript').setup({
-          disable_commands = false, -- prevent the plugin from creating Vim commands
-          debug = true, -- enable debug logging for commands
-          go_to_source_definition = {
-            fallback = true, -- fall back to standard LSP definition on failure
-          },
-          server = opts,
-        })
-        return true
-      end
-      return false
+      return vim.tbl_contains({ 'rust_analyzer', 'tsserver' }, server)
     end,
     config = function(plugin)
       local lspconfig = require('lspconfig')
       local configs = require('lspconfig.configs')
+
+      -- vim.api.nvim_set_hl(0, 'LspCodeLens', { default = true, link = 'Comment' })
 
       for name, config in pairs(LoadDir('plugins/lsp/available')) do
         configs[name] = config
@@ -230,10 +291,9 @@ return {
       --   https://github.com/williamboman/mason.nvim/issues/863
       --   https://github.com/yarnpkg/yarn/issues/6152
       -- pyright
-      -- rust_analyzer
       -- vuels
 
-      local servers = LoadDir('plugins/lsp/enabled')
+      local servers = LoadDir('plugins/lsp/servers')
 
       -- setup formatting and keymaps
       local attached = {}
@@ -254,6 +314,7 @@ return {
           -- 'TextChangedI', 'TextChangedP'
           vim.api.nvim_create_autocmd({ 'CursorHoldI' }, {
             buffer = bufnr,
+            group = vim.api.nvim_create_augroup('LspSignatureHelp', { clear = true }), -- lsp_group
             callback = function()
               if not settings.signature_help then
                 return
@@ -272,7 +333,6 @@ return {
               end
               vim.lsp.buf.signature_help()
             end,
-            group = vim.api.nvim_create_augroup('LspSignatureHelp', { clear = true }), -- lsp_group
           })
         end
 
@@ -284,8 +344,6 @@ return {
 
       require('lspconfig.ui.windows').default_options.border = settings.border
 
-      ---@type lspconfig.options
-      -- local servers = plugin.servers or {}
       -- local capabilities = vim.lsp.protocol.make_client_capabilities()
       -- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -318,7 +376,7 @@ return {
       -- and check if another floating window is open
       -- and allow click or copy without focus?
 
-      local function on_hover(args)
+      local function on_hover()
         if not settings.diagnostic_hover then
           return
         end
@@ -362,9 +420,63 @@ return {
       -- You will likely want to reduce updatetime which affects CursorHold
       -- note: this setting is global and should be set only once
       vim.api.nvim_create_autocmd({ 'CursorHold', 'DiagnosticChanged' }, {
-        callback = on_hover,
         group = lsp_group,
+        callback = on_hover,
       })
+
+      local setup_filetypes = {
+        markdown = {
+          servers = {
+            marksman = {},
+          },
+        },
+        php = {
+          install = {
+            phan = false, -- 'composer require phan/phan',
+            psalm = false, -- 'composer require vimeo/psalm',
+          },
+          servers = {
+            -- intelephense = {},
+            -- phan = {},
+            -- phpactor = {}, -- $(php -r "echo PHP_VERSION;" | cut -d. -f1) -ge 8
+            -- psalm = {},
+          },
+        },
+      }
+      for ft, config in pairs(setup_filetypes) do
+        local manual_install = {}
+        local auto_install = {}
+        for server, opts in pairs(config.servers) do
+          if config.install and config.install[server] then
+            manual_install[server] = config.install[server]
+          elseif not config.install or config.install[server] == nil then
+            table.insert(auto_install, server)
+          end
+          opts.capabilities = vim.tbl_deep_extend('force', opts.capabilities or {}, capabilities)
+          servers[server] = opts
+        end
+        if #manual_install then
+          execute_install(manual_install)
+        end
+        vim.api.nvim_create_autocmd('FileType', {
+          -- desc = 'Install and register LSP servers',
+          pattern = ft,
+          group = lsp_group,
+          callback = function()
+            if config.install then
+              for server, opts in pairs(config.servers) do
+                vim.notify('Setup ' .. server, vim.log.levels.INFO, { title = 'LSP' })
+                lspconfig[server].setup(opts)
+              end
+            else
+              lsp_mason.setup({
+                ensure_installed = auto_install,
+                automatic_installation = true,
+              })
+            end
+          end,
+        })
+      end
     end,
   },
 
@@ -440,7 +552,7 @@ return {
     -- enabled = false,
     opts = {
       exclude = require('plugins.lsp.format').list_excluded(),
-      -- exclude = { 'sumneko_lua', 'tsserver', 'yamlls' },
+      -- exclude = { 'lua_ls', 'tsserver', 'yamlls' },
       -- order = {},
       -- FIX: format_options = vim.tbl_deep_extend('force', {}, M.format_options or {}, format_options)
       sync = true, -- Synchronous formatting
@@ -457,7 +569,6 @@ return {
       -- 'jay-babu/mason-null-ls.nvim',
       'jose-elias-alvarez/typescript.nvim',
       -- {
-      --   -- 'lsp-format.nvim',
       --   -- https://github.com/ThePrimeagen/refactoring.nvim#configuration-for-refactoring-operations
       --   'ThePrimeagen/refactoring.nvim',
       --   dependencies = {
@@ -470,42 +581,12 @@ return {
       --   },
       -- },
     },
-    ensure_installed = {
-      -- 'alex',
-      'codespell',
-      'commitlint',
-      -- 'cspell',
-      -- dotenv-linter: https://dotenv-linter.github.io/#/installation
-      -- 'eslint_d',
-      'gitlint',
-      -- 'hadolint', -- :MasonInstall hadolint@v2.12.1-beta
-      'luacheck',
-      'markdownlint',
-      -- 'misspell',
-      'prettier',
-      -- 'proselint',
-      -- 'selene',
-      'semgrep',
-      'shfmt',
-      'shellcheck', -- Used by bashls
-      -- 'shellharden', -- Install failsInstall fails
-      -- 'sql-formatter',
-      'sqlfluff',
-      'stylua',
-      'vint',
-      'vale',
-      -- 'write-good',
-      -- 'yamlfmt',
-      'yamllint',
-    },
-    config = function(plugin)
-      local mr = require('mason-registry')
-      for _, tool in ipairs(plugin.ensure_installed) do
-        local p = mr.get_package(tool)
-        if not p:is_installed() then
-          p:install()
-        end
-      end
+    config = function()
+      mason_install({
+        codespell = {},
+        -- cspell = {},
+        -- misspell = {},
+      })
 
       local null_ls = require('null-ls')
 
@@ -527,180 +608,36 @@ return {
       --   },
       -- }
 
-      local sqlfluff = {
-        -- stylua: ignore
-        extra_args = {
-          '--dialect', 'postgres',
-          -- '--processes', '-1',
-        },
-        extra_filetypes = { 'pgsql' },
-      }
-
       local sources = {
         -- null_ls.builtins.code_actions.cspell.with(cspell),
-        -- null_ls.builtins.code_actions.eslint_d,
-        -- null_ls.builtins.code_actions.gitrebase,
         null_ls.builtins.code_actions.gitsigns,
-        -- null_ls.builtins.code_actions.gomodifytags,
-        -- null_ls.builtins.code_actions.proselint,
-        -- null_ls.builtins.code_actions.refactoring,
-        -- null_ls.builtins.code_actions.shellcheck,
-        require('typescript.extensions.null-ls.code-actions'), -- https://github.com/jose-elias-alvarez/typescript.nvim/issues/21#issuecomment-1345725105
+        -- null_ls.builtins.code_actions.refactoring, -- go, javascript, lua, python, typescript
 
-        -- null_ls.builtins.completion.luasnip,
         -- null_ls.builtins.completion.spell,
         -- null_ls.builtins.completion.tags,
 
-        -- null_ls.builtins.diagnostics.alex.with({
-        --   extra_filetypes = { 'txt' },
-        -- }),
         -- null_ls.builtins.diagnostics.ansiblelint,
         -- null_ls.builtins.diagnostics.buf,
         -- null_ls.builtins.diagnostics.checkmake,
         null_ls.builtins.diagnostics.codespell.with({
-          diagnostics_postprocess = map_severity({ [vim.diagnostic.severity.WARN] = vim.diagnostic.severity.INFO }),
+          diagnostics_postprocess = map_severity({
+            [vim.diagnostic.severity.WARN] = vim.diagnostic.severity.INFO,
+          }),
         }),
-        null_ls.builtins.diagnostics.commitlint, -- https://github.com/jose-elias-alvarez/null-ls.nvim/pull/1107
         -- null_ls.builtins.diagnostics.cspell.with(cspell),
-        -- null_ls.builtins.diagnostics.dotenv_linter, -- TODO
         -- null_ls.builtins.diagnostics.editorconfig_checker,
-        -- null_ls.builtins.diagnostics.eslint_d,
         -- null_ls.builtins.diagnostics.flake8,
-        null_ls.builtins.diagnostics.gitlint,
-        null_ls.builtins.diagnostics.hadolint, -- Dockerfile
-        null_ls.builtins.diagnostics.jsonlint,
-        -- null_ls.builtins.diagnostics.ltrs, -- LanguageTool-Rust
-        null_ls.builtins.diagnostics.luacheck.with({
-          extra_args = { '--globals', 'vim' },
-        }),
-        null_ls.builtins.diagnostics.markdownlint,
         -- null_ls.builtins.diagnostics.misspell,
-        -- null_ls.builtins.diagnostics.php,
-        -- null_ls.builtins.diagnostics.phpcs,
-        -- null_ls.builtins.diagnostics.phpmd,
-        -- null_ls.builtins.diagnostics.phpstan,
-        -- null_ls.builtins.diagnostics.proselint,
         -- null_ls.builtins.diagnostics.protolint,
         -- null_ls.builtins.diagnostics.psalm,
         -- null_ls.builtins.diagnostics.puglint,
-        -- null_ls.builtins.diagnostics.selene, -- https://github.com/Kampfkarren/selene/issues/284
-        null_ls.builtins.diagnostics.semgrep.with({
-          extra_args = {
-            '--config=auto',
-            -- '--config=r/javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal',
-            -- '--config=r/javascript.lang.security.audit.vm-injection.vm-runincontext-context-injection',
-            -- '--config=r/javascript.lang.security.detect-eval-with-expression.detect-eval-with-expression',
-            -- '--config=p/javascript-command-injection',
-            -- '--config=p/best-practices',
-            -- '--config=p/command-injection',
-            -- '--config=p/docker',
-            -- '--config=p/docker-compose',
-            -- '--config=p/dockerfile',
-            -- '--config=p/expressjs',
-            -- '--config=p/headless-browser',
-            -- '--config=p/javascript',
-            -- '--config=p/jwt',
-            -- '--config=p/lockfiles',
-            -- '--config=p/nginx',
-            -- '--config=p/nodejs',
-            -- '--config=p/php',
-            -- '--config=p/php-laravel',
-            -- '--config=p/phpcs-security-audit',
-            -- '--config=p/rc2-best-practices',
-            -- '--config=p/secrets',
-            -- '--config=p/security-audit',
-            -- '--config=p/sql-injection',
-            -- '--config=p/typescript',
-            -- '--config=p/xss',
-            -- '--metrics=off',
-            -- '--timeout=0',
-            -- '--timeout-threshold=0',
-          },
-          -- method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
-          timeout = 30000,
-        }),
-        -- null_ls.builtins.diagnostics.shellcheck,
-        null_ls.builtins.diagnostics.sqlfluff.with(sqlfluff),
         -- null_ls.builtins.diagnostics.stylelint,
         -- null_ls.builtins.diagnostics.stylint,
         -- null_ls.builtins.diagnostics.textlint,
-        -- null_ls.builtins.diagnostics.tidy,
         -- null_ls.builtins.diagnostics.todo_comments, -- TODO Comments
         -- null_ls.builtins.diagnostics.trail_space,
-        -- null_ls.builtins.diagnostics.tsc,
-        null_ls.builtins.diagnostics.vale.with({
-          -- diagnostics_postprocess = function(diagnostic)
-          --   diagnostic.severity = diagnostic.message:find('really')
-          --     and vim.diagnostic.severity['HINT']
-          --     or diagnostic.severity
-          -- end,
-          -- extra_filetypes = { 'html', 'typescript', 'xml' },
-        }),
-        null_ls.builtins.diagnostics.vint,
-        -- null_ls.builtins.diagnostics.write_good.with({
-        --   -- diagnostics_postprocess = function(diagnostic)
-        --   --   diagnostic.severity = diagnostic.message:find('really') and vim.diagnostic.severity['ERROR']
-        --   --       or vim.diagnostic.severity['WARN']
-        --   -- end,
-        --   extra_filetypes = { 'txt' },
-        -- }),
-        null_ls.builtins.diagnostics.yamllint.with({
-          extra_args = { '--config-data', '{ rules: { comments: { min-spaces-from-content: 1 } } }' },
-        }),
-        -- null_ls.builtins.diagnostics.zsh,
 
         -- null_ls.builtins.formatting.bean_format,
-        -- null_ls.builtins.formatting.eslint_d,
-        -- null_ls.builtins.formatting.markdownlint,
-        null_ls.builtins.formatting.nginx_beautifier.with({
-          -- npm install -g nginxbeautifier
-          extra_args = { '--space', 2 },
-        }),
-        -- null_ls.builtins.formatting.pg_format,
-        null_ls.builtins.formatting.prettier.with({
-          extra_args = settings.format and settings.format.prettier and settings.format.prettier.args or {},
-          -- disabled_filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
-          -- extra_filetypes = {},
-          filetypes = {
-            'css',
-            'scss',
-            'less',
-            -- 'html', -- htmlls
-            'json',
-            'jsonc',
-            -- 'yaml', -- yamlls
-            'markdown',
-            'markdown.mdx',
-            'graphql',
-            'handlebars',
-          },
-        }),
-        null_ls.builtins.formatting.shfmt.with({
-          -- stylua: ignore
-          -- extra_args = {
-          --   -- Binary ops like && and | may start a line.
-          --   '--binary-next-line',
-          --   -- Switch cases will be indented.
-          --   '--case-indent',
-          --   -- --func-next-line Function opening braces are placed on a separate line.
-          --   '--indent', 2,
-          --   -- --keep-padding Keep column alignment paddings.
-          --   -- --space-redirects Redirect operators will be followed by a space.
-          -- },
-        }),
-        null_ls.builtins.formatting.sqlfluff.with(sqlfluff),
-        -- null_ls.builtins.formatting.sql_formatter.with({
-        --   extra_args = { '--language', 'postgresql' },
-        --   extra_filetypes = { 'pgsql' },
-        -- }),
-        -- null_ls.builtins.formatting.shellharden,
-        null_ls.builtins.formatting.stylua.with({
-          extra_args = settings.format and settings.format.stylua and vim.deepcopy(settings.format.stylua.args) or {},
-        }),
-        -- null_ls.builtins.formatting.tidy,
-        -- null_ls.builtins.formatting.yamlfmt.with({
-        --   -- extra_args = { '--conf', '~/.config/yamlfmt/.yamlfmt' },
-        -- }),
 
         -- null_ls.builtins.hover.dictionary,
       }
@@ -728,6 +665,288 @@ return {
         -- temp_dir = nil,
         -- update_in_insert = false,
       })
+
+      local prettier_filetypes = {
+        'javascript',
+        'javascriptreact',
+        'typescript',
+        'typescriptreact',
+        -- 'vue',
+        -- 'css',
+        -- 'scss',
+        'less',
+        -- 'html', -- htmlls
+        'json',
+        'jsonc',
+        -- 'yaml',
+        'markdown',
+        'markdown.mdx',
+        'graphql',
+        'handlebars',
+      }
+      local register_filetypes = {
+        dockerfile = {
+          -- https://github.com/hadolint/hadolint/issues/897
+          tools = { hadolint = { version = 'v2.12.1-beta' } },
+          sources = { null_ls.builtins.diagnostics.hadolint },
+        },
+        gitcommit = {
+          tools = {
+            commitlint = {},
+            gitlint = {},
+          },
+          sources = {
+            -- https://github.com/jose-elias-alvarez/null-ls.nvim/pull/1107
+            null_ls.builtins.diagnostics.commitlint,
+            null_ls.builtins.diagnostics.gitlint,
+          },
+        },
+        -- gitrebase = { sources = { null_ls.builtins.code_actions.gitrebase } },
+        -- [{ 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' }] = {
+        --   tools = {
+        --     eslint_d = {},
+        --   },
+        --   sources = {
+        --     null_ls.builtins.code_actions.eslint_d,
+        --     null_ls.builtins.diagnostics.eslint_d,
+        --     null_ls.builtins.formatting.eslint_d,
+        --   },
+        -- },
+        -- xml = { -- [{ 'html', 'xml' }]
+        --   install = {
+        --     -- tidy = 'brew install tidy-html5',
+        --   },
+        --   sources = {
+        --     null_ls.builtins.diagnostics.tidy,
+        --     null_ls.builtins.formatting.tidy,
+        --   },
+        -- },
+        json = {
+          tools = { jsonlint = {} },
+          sources = { null_ls.builtins.diagnostics.jsonlint },
+        },
+        lua = {
+          tools = {
+            luacheck = {},
+            stylua = {},
+          },
+          sources = {
+            -- null_ls.builtins.completion.luasnip,
+            null_ls.builtins.diagnostics.luacheck.with({
+              extra_args = { '--globals', 'vim' },
+            }),
+            null_ls.builtins.formatting.stylua.with({
+              extra_args = settings.format and settings.format.stylua and vim.deepcopy(settings.format.stylua.args)
+                or {},
+            }),
+          },
+        },
+        -- [{ 'lua', 'luau' }] = {
+        --   tools = {
+        --     selene = {},
+        --   },
+        --   sources = {
+        --     null_ls.builtins.diagnostics.selene, -- https://github.com/Kampfkarren/selene/issues/284
+        --   },
+        -- },
+        markdown = {
+          tools = {
+            markdownlint = {},
+            -- ['write-good'] = {},
+          },
+          sources = {
+            null_ls.builtins.diagnostics.markdownlint,
+            -- null_ls.builtins.formatting.markdownlint,
+            -- null_ls.builtins.diagnostics.write_good.with({
+            --   -- diagnostics_postprocess = function(diagnostic)
+            --   --   diagnostic.severity = diagnostic.message:find('really') and vim.diagnostic.severity['ERROR']
+            --   --       or vim.diagnostic.severity['WARN']
+            --   -- end,
+            --   extra_filetypes = { 'txt' },
+            -- }),
+          },
+        },
+        -- [{ 'markdown', 'tex' }] = {
+        --   tools = { proselint = {} },
+        --   sources = {
+        --     null_ls.builtins.code_actions.proselint,
+        --     null_ls.builtins.diagnostics.proselint,
+        --   },
+        -- },
+        [{ 'markdown', 'txt' }] = {
+          tools = {
+            alex = {},
+          },
+          sources = {
+            null_ls.builtins.diagnostics.alex.with({
+              extra_filetypes = { 'txt' },
+            }),
+          },
+        },
+        [{ 'markdown', 'tex', 'asciidoc' }] = {
+          tools = { vale = {} },
+          sources = {
+            -- ~/.vale.ini
+            null_ls.builtins.diagnostics.vale.with({
+              -- diagnostics_postprocess = function(diagnostic)
+              --   diagnostic.severity = diagnostic.message:find('really')
+              --     and vim.diagnostic.severity['HINT']
+              --     or diagnostic.severity
+              -- end,
+              -- extra_filetypes = { 'html', 'typescript', 'xml' },
+            }),
+          },
+        },
+        nginx = {
+          install = {
+            nginxbeautifier = 'npm install --global nginxbeautifier',
+          },
+          sources = {
+            null_ls.builtins.formatting.nginx_beautifier.with({
+              extra_args = { '--space', 2 },
+            }),
+          },
+        },
+        php = {
+          tools = {
+            -- ['php-cs-fixer'] = {},
+            -- phpcbf = {},
+            -- phpcs = {},
+            -- phpmd = {},
+            -- phpstan = {},
+            -- pint = {}, -- PHP 8
+          },
+          sources = {
+            null_ls.builtins.diagnostics.php,
+            null_ls.builtins.diagnostics.phpcs,
+            -- null_ls.builtins.diagnostics.phpmd,
+            null_ls.builtins.diagnostics.phpstan,
+            -- null_ls.builtins.diagnostics.psalm,
+            null_ls.builtins.formatting.phpcbf,
+            -- null_ls.builtins.formatting.phpcsfixer,
+            -- null_ls.builtins.formatting.pint.with(),
+          },
+        },
+        sh = {
+          tools = {
+            shfmt = {},
+            shellcheck = {}, -- Used by bashls
+            shellharden = {},
+          },
+          sources = {
+            -- null_ls.builtins.code_actions.shellcheck,
+            -- null_ls.builtins.diagnostics.dotenv_linter,
+            -- null_ls.builtins.diagnostics.shellcheck,
+            -- null_ls.builtins.diagnostics.zsh,
+            null_ls.builtins.formatting.shfmt,
+            -- null_ls.builtins.formatting.shellharden,
+          },
+        },
+        [{ 'sql', 'pgsql' }] = {
+          tools = {
+            -- ['sql-formatter'] = {},
+            sqlfluff = {},
+          },
+          sources = {
+            null_ls.builtins.diagnostics.sqlfluff.with({
+              -- '--processes', '-1',
+              extra_args = { '--dialect', 'postgres' },
+              extra_filetypes = { 'pgsql' },
+            }),
+            -- null_ls.builtins.formatting.pg_format,
+            null_ls.builtins.formatting.sqlfluff.with({
+              extra_args = { '--dialect', 'postgres' },
+              extra_filetypes = { 'pgsql' },
+            }),
+            -- null_ls.builtins.formatting.sql_formatter.with({
+            --   extra_args = { '--language', 'postgresql' },
+            --   extra_filetypes = { 'pgsql' },
+            -- }),
+          },
+        },
+        toml = {
+          tools = { taplo = {} },
+          sources = { null_ls.builtins.formatting.taplo },
+        },
+        -- vim = {
+        --   tools = { vint = {} }, -- Segmentation fault: 11
+        --   sources = { null_ls.builtins.diagnostics.vint },
+        -- },
+        yaml = {
+          tools = {
+            -- yamlfmt = {},
+            yamllint = {},
+          },
+          sources = {
+            -- null_ls.builtins.formatting.yamlfmt.with({
+            --   -- extra_args = { '--conf', '~/.config/yamlfmt/.yamlfmt' },
+            -- }),
+            null_ls.builtins.diagnostics.yamllint.with({
+              extra_args = { '--config-data', '{ rules: { comments: { min-spaces-from-content: 1 } } }' },
+            }),
+          },
+        },
+        -- [{ 'typescript', 'typescriptreact', 'ruby', 'python', 'java', 'go' }] = {
+        --   tools = { semgrep = {} },
+        --   sources = {
+        --     null_ls.builtins.diagnostics.semgrep.with({
+        --       extra_args = {
+        --         '--config=auto',
+        --         -- '--metrics=off',
+        --         -- '--timeout=0',
+        --         -- '--timeout-threshold=0',
+        --       },
+        --       -- method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+        --       timeout = 30000,
+        --     }),
+        --   },
+        -- },
+        -- [{
+        --   'dockerfile',
+        --   -- 'javascript',
+        --   -- 'javascriptreact',
+        --   -- 'typescript',
+        --   -- 'typescriptreact',
+        --   -- 'json',
+        --   -- 'markdown',
+        --   'toml',
+        --   -- 'rust',
+        --   -- 'roslyn',
+        -- }] = {
+        --   tools = {
+        --     dprint = {},
+        --   },
+        --   sources = {
+        --     null_ls.builtins.formatting.dprint,
+        --   },
+        -- },
+        [prettier_filetypes] = {
+          tools = {
+            prettier = {},
+          },
+          sources = {
+            null_ls.builtins.formatting.prettier.with({
+              -- disabled_filetypes = {},
+              -- extra_filetypes = {},
+              filetypes = prettier_filetypes,
+            }),
+          },
+        },
+      }
+
+      -- local group = vim.api.nvim_create_augroup('NullLsFt', { clear = true })
+      for ft, config in pairs(register_filetypes) do
+        -- https://github.com/jose-elias-alvarez/null-ls.nvim/issues/596
+        null_ls_register(config)
+        -- vim.api.nvim_create_autocmd('FileType', {
+        --   -- desc = 'Install and register tools',
+        --   pattern = ft,
+        --   group = group,
+        --   callback = function()
+        --     null_ls_register(config)
+        --   end,
+        -- })
+      end
     end,
   },
 
@@ -744,6 +963,49 @@ return {
       lsp_cfg = false,
       -- trouble = true,
     },
+    config = function()
+      -- go = {
+      --   tools = {},
+      --   sources = {
+      --     -- null_ls.builtins.code_actions.gomodifytags,
+      --   },
+      -- },
+    end,
+  },
+  {
+    'simrat39/rust-tools.nvim',
+    dependencies = 'nvim-lspconfig',
+    ft = { 'rust' },
+    config = function()
+      local opts = require('plugins.lsp.servers.rust_analyzer')
+      require('rust-tools').setup({
+        -- tools = { on_initialized = vim.pretty_print },
+        server = opts,
+      })
+      local null_ls = require('null-ls')
+      null_ls_register({ tools = { rustfmt = {} }, sources = { null_ls.builtins.formatting.rustfmt } })
+    end,
+  },
+  {
+    'jose-elias-alvarez/typescript.nvim',
+    ft = { 'typescript', 'typescriptreact' },
+    config = function()
+      local opts = require('plugins.lsp.servers.tsserver')
+      require('typescript').setup({
+        disable_commands = false, -- prevent the plugin from creating Vim commands
+        debug = true, -- enable debug logging for commands
+        go_to_source_definition = {
+          fallback = true, -- fall back to standard LSP definition on failure
+        },
+        server = opts,
+      })
+      local sources = {
+        -- https://github.com/jose-elias-alvarez/typescript.nvim/issues/21#is5725105
+        require('typescript.extensions.null-ls.code-actions'),
+        -- null_ls.builtins.diagnostics.tsc,
+      }
+      require('null-ls').register(sources)
+    end,
   },
 
   require('plugins.lsp.ui'),

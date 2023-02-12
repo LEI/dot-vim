@@ -33,6 +33,7 @@ return {
         depth_limit_indicator = settings.chars.ellipsis,
         safe_output = true,
       })
+      vim.api.nvim_set_hl(0, 'NavicText', { link = 'Comment' })
 
       -- https://github.com/askfiy/nvim/blob/master/lua/config/lsp/nvim-navic.lua
 
@@ -225,7 +226,7 @@ return {
     opts = {
       ignore = {
         'null-ls',
-        -- 'sumneko_lua',
+        -- 'lua_ls',
       },
       sign = {
         enabled = true,

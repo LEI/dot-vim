@@ -13,7 +13,11 @@ endif
 " Movements: goldfeld/vim-seek, tommcdo/vim-exchange
 " Pack 'justinmk/vim-sneak'
 " Pack 'terryma/vim-expand-region' " Visually select increasingly larger regions
+
 Pack 'tpope/vim-commentary' " Comments (alt: tomtom/tcomment_vim)
+" nnoremap <C-c> :Commentary<CR>
+" vnoremap <C-c> :Commentary<CR>
+
 Pack 'tpope/vim-surround' " Quoting/parenthesizing
 " Pack 'tpope/vim-rsi' " Readline key bindings
 
@@ -30,6 +34,7 @@ Pack 'tpope/vim-abolish' " Search, substitute and abbreviate variants
 " Pack 'tpope/vim-characterize' " Unicode character metadata (ga)
 " Pack 'tpope/vim-obsession' " Continuously updated session files (alt: xolox/vim-session)
 Pack 'tpope/vim-repeat' " Enable repeating supported plugin maps
+Pack 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
 
 " Toggle values with C-x
 let g:enable_alternate = 1
@@ -38,7 +43,6 @@ let g:enable_alternate = 1
 if has('nvim')
   let g:enable_lsp = 1
 else
-  " https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim
   let g:enable_coc = 0
 endif
 
@@ -148,6 +152,9 @@ endif
 
 " Runtime:
 let g:enable_fugitive = 1
+if exists(':terminal')
+  let g:enable_neoterm = 1
+end
 Pack 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 " " Obsolete since version 8.2.2345
 " if executable('tmux') " len($TMUX)

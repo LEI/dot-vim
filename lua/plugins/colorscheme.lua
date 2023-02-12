@@ -10,17 +10,32 @@ local sidebars = {
   'vim',
 }
 
+local is_day = vim.fn['time#IsDay']() == '1'
+vim.o.background = is_day and 'light' or 'dark'
+
 return {
+  -- {
+  --   'navarasu/onedark.nvim',
+  --   -- enabled = false,
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     require('onedark').setup({
+  --       style = is_day and 'light' or 'dark',
+  --     })
+  --     vim.cmd('colorscheme onedark')
+  --   end,
+  -- },
+
   {
     'folke/tokyonight.nvim',
-    -- enabled = false,
+    -- enabled = false, -- Cursor day invisible: https://github.com/folke/tokyonight.nvim/issues/26
     lazy = false,
     priority = 1000,
     config = function()
       local tokyonight = require('tokyonight')
-      vim.o.background = vim.fn['time#IsDay']() and 'light' or 'dark'
       tokyonight.setup({
-        -- style = 'moon', -- storm, moon, nigh, day
+        style = 'moon', -- storm, moon, night, day
         -- styles = {
         --   -- Style to be applied to different syntax groups
         --   -- Value is any valid attr-list value for `:help nvim_set_hl`
@@ -33,14 +48,15 @@ return {
         --   floats = 'dark', -- style for floating windows
         -- },
         sidebars = sidebars,
-        -- day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
-        hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
+        -- day_brightness = 0.3,
+        -- hide_inactive_statusline = true,
         dim_inactive = false,
         on_highlights = function(highlights, colors)
-          highlights.DiagnosticStatusError = { bg = highlights.DiagnosticError.fg, fg = is_day and colors.bg or nil }
+          -- highlights.DiagnosticStatusError = { bg = highlights.DiagnosticError.fg, fg = is_day and colors.bg or nil }
           -- highlights.DiagnosticStatusWarn = { bg = highlights.DiagnosticWarn.fg, fg = colors.bg }
           -- highlights.DiagnosticStatusInfo = highlights.DiagnosticInfo
           -- highlights.DiagnosticStatusHint = highlights.DiagnosticHint
+          highlights.NvimInternalError = { bg = highlights.Error.fg, fg = is_day and colors.bg or nil }
           highlights.WinSeparator.fg = colors.comment -- colors.none
         end,
       })
@@ -56,8 +72,8 @@ return {
     priority = 1000,
     config = function()
       require('catppuccin').setup({
-        flavour = 'mocha', -- latte, frappe, macchiato, mocha
-        background = { -- :h background
+        flavour = is_day and 'latte' or 'mocha', -- latte, frappe, macchiato, mocha
+        background = {
           light = 'latte',
           dark = 'mocha',
         },
@@ -86,7 +102,9 @@ return {
         color_overrides = {},
         custom_highlights = function(colors)
           return {
-            DiagnosticStatusError = { bg = colors.red, fg = colors.base },
+            -- NvimInternalError = { bg = 'Red', fg = 'White' },
+            NvimInternalError = { bg = colors.red, fg = colors.crust },
+            WinSeparator = { fg = colors.surface0 },
           }
         end,
         integrations = {

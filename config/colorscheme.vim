@@ -70,3 +70,19 @@ function! ToggleBackground(...) abort
   let &background = l:b
   execute 'colorscheme' l:c
 endfunction
+
+" Override cursor highlight group
+function! CursorColor() abort
+  if &background ==# 'dark'
+    " highlight Cursor ctermfg=8 ctermbg=4 guifg=#002b36 guibg=#268bd2
+    highlight Cursor ctermfg=0 ctermbg=15 guifg=#002b36 guibg=#fdf6e3
+  else "if &background ==# 'light'
+    " highlight Cursor ctermfg=15 ctermbg=4 guifg=#fdf6e3 guibg=#268bd2
+    highlight Cursor ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#002b36
+  endif
+endfunction
+
+augroup CustomColorcheme
+  autocmd!
+  autocmd VimEnter,ColorScheme * :call CursorColor()
+augroup END

@@ -3,7 +3,8 @@ local capabilities = require('plugins.lsp.capabilities').completion()
 return {
   capabilities = capabilities,
   init_options = {
-    provideFormatter = false, -- prettier
+    -- Use prettier instead to keep new lines and inline arrays
+    provideFormatter = false,
   },
   settings = {
     json = { -- allowComments, trailingCommas...

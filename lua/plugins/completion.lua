@@ -306,12 +306,12 @@ return {
         -- { name = 'nvim_lua' },
         { name = 'luasnip' },
         buffer_source,
-        { name = 'tmux', option = { all_panes = false } },
         { name = 'nerdfont', option = { trigger_characters = { ':' } } },
+        { name = 'calc', option = { trigger_characters = { '=' } } },
       }
       -- Second group index only visible if none of the above source is available
       local fallback_sources = {
-        { name = 'calc', option = { keyword_length = 3 } },
+        { name = 'tmux', option = { all_panes = false } },
         { name = 'tags', option = { keyword_length = 3 } },
         { name = 'dictionary', option = { keyword_length = 3 } },
       }
@@ -479,7 +479,7 @@ return {
                 local item = entry:get_completion_item()
                 if item.documentation == 'SQL reserved word' then
                   vim_item.kind = 'Keyword'
-                  -- vim_item.menu = '[SQL]'
+                -- vim_item.menu = '[SQL]'
                 elseif item.documentation == 'table' then
                   vim_item.kind = 'Table'
                 elseif item.documentation:sub(-13) == ' table column' then
@@ -591,6 +591,12 @@ return {
 
       -- https://github.com/hrsh7th/nvim-cmp/issues/875#issuecomment-1214416687
       cmp.setup.cmdline(':', {
+        -- enabled = function()
+        --   local cmdline = vim.fn.getcmdline()
+        --   if cmdline and cmdline:sub(1, 1) == ':' and cmdline:sub(-1) == '%' then
+        --     return false
+        --   end
+        -- end,
         -- fields = { 'abbr' },
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
@@ -624,7 +630,6 @@ return {
         sources = cmp.config.sources({
           { name = 'git' },
           { name = 'luasnip' },
-        }, {
           buffer_source,
           { name = 'tmux', option = { all_panes = false } },
         }),

@@ -1,4 +1,5 @@
 " Trailing whitespace
+" TODO: read .editorconfig trailing_whitespace setting
 
 " http://vimcasts.org/episodes/tidying-whitespace/
 " bronson/vim-trailing-whitespace

@@ -368,17 +368,22 @@ nnoremap <Leader>j :tjump /
 " Run make on the current buffer
 "nnoremap <Leader>m :make<CR>
 " Quicker quit
-nnoremap <Leader>q :confirm quit<CR>
-" Sort visually selected lines
-vnoremap <Leader>s :sort<CR>
-" Undo tree toggle
-nnoremap <Leader>u :UndotreeToggle<CR>
+nnoremap <expr><silent> <Leader>q exists(':Sayonara') ? ':Sayonara<CR>' : ':confirm quit<CR>'
 " Save a file
 nnoremap <Leader>w :w<CR>
 " Write as root
 nnoremap <Leader>W :w!!<CR>
 
 " Key bindings {{{1
+
+nnoremap U :redo<CR>
+nnoremap <BS>l :edit $HOME/.vim/lua/plugins/lsp/init.lua<CR>
+nnoremap <BS>o :edit $MYVIMRC<CR>
+nnoremap <BS>r :source $MYVIMRC<CR>
+nnoremap <BS>u :UndotreeToggle<CR>
+
+" Sort visually selected lines
+vnoremap <BS>s :sort<CR>
 
 " Use Q for formatting instead of switching to Ex mode
 map Q gq
@@ -487,6 +492,22 @@ omap al :<C-u>normal val<CR>
 " inoremap <silent> ;o <C-x><C-o>
 " inoremap <silent> ;p <C-x><C-p>
 " inoremap <silent> ;t <C-x><C-]>
+
+" Go to matching bracket
+nmap mm %
+vmap mm %
+" Surround add
+" nmap ms <Plug>Yssurround
+" Surround replace
+nmap mr cs
+" Surround delete
+nmap md ds
+" Change/Delete around object
+nmap mac ca
+nmap mad da
+" Change/Delete inside object
+nmap mic ci
+nmap mid di
 
 " Abbreviations {{{1
 

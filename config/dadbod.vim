@@ -42,7 +42,7 @@ if has('nvim')
         \     'tables': s:collapsed . '',
         \     'table': s:collapsed . '',
         \   },
-        \   'saved_query': '󰃀',
+        \   'saved_query': '',
         \   'new_query': '󰓰',
         \   'tables': '󰓫',
         \   'buffers': '﬘',

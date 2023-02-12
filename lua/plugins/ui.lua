@@ -103,10 +103,7 @@ local filetype_icon = {
 local filetype_name = {
   'filetype',
   cond = function()
-    return vim.bo.filetype == 'toggleterm' or (not type_as_mode() and vim.api.nvim_win_get_width(0) > 80)
-  end,
-  fmt = function(filetype)
-    return vim.bo.filetype ~= 'toggleterm' and filetype or '' -- vim.b.toggle_number
+    return not type_as_mode() and vim.api.nvim_win_get_width(0) > 80
   end,
   icons_enabled = false,
   padding = { right = 1 },
@@ -127,7 +124,7 @@ end
 
 local filename = {
   'filename',
-  -- color = fg('Normal'), -- NormalNC
+  color = fg('Normal'),
   cond = function()
     return not hide_filename()
   end,
@@ -235,7 +232,7 @@ local inactive_sections = {
 
 local function trailing_whitespaces()
   local prefix = '' -- TW
-  local sep = ' ' -- :
+  local sep = '' -- :
   local space = vim.fn.search([[\s\+$]], 'nwc')
   return space ~= 0 and prefix .. sep .. space or ''
 end
@@ -378,10 +375,10 @@ return {
       'nvim-web-devicons',
     },
     event = 'VeryLazy',
-    init = function()
-      vim.keymap.set('n', '<S-l>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Buffer' })
-      vim.keymap.set('n', '<S-h>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous Buffer' })
-    end,
+    -- init = function()
+    --   vim.keymap.set('n', '<S-l>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next Buffer' })
+    --   vim.keymap.set('n', '<S-h>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Previous Buffer' })
+    -- end,
     opts = {
       options = {
         diagnostics = 'nvim_lsp', -- FIXME
@@ -421,6 +418,12 @@ return {
       local lualine = require('lualine')
       --local icons = require('lazyvim.config.settings').icons
 
+      -- Default highlight groups
+      vim.api.nvim_set_hl(0, 'DiagnosticStatusError', { default = true, link = 'NvimInternalError' })
+      -- vim.api.nvim_set_hl(0, 'DiagnosticStatusWarn', { default = true, link = 'DiagnosticWarn' })
+      -- vim.api.nvim_set_hl(0, 'DiagnosticStatusInfo', { default = true, link = 'DiagnosticInfo' })
+      -- vim.api.nvim_set_hl(0, 'DiagnosticStatusHint', { default = true, link = 'DiagnosticHint' })
+
       -- https://codeberg.org/esensar/nvim-dev-container/wiki/Recipes#statusbar
       vim.api.nvim_create_autocmd('User', {
         pattern = 'DevcontainerBuildProgress',
@@ -429,6 +432,12 @@ return {
         end,
       })
 
+      -- local theme = require('lualine.themes.auto')
+      -- for _, mode in ipairs({ 'normal', 'insert', 'replace', 'visual', 'command' }) do
+      --   if theme[mode].a.gui == 'bold' then
+      --     theme[mode].a.gui = nil
+      --   end
+      -- end
       lualine.setup({
         options = {
           -- icons_enabled = false,
@@ -638,10 +647,10 @@ return {
                   return ''
                 end
                 return string.format(
-                  '[%s/%s](%s%%)',
+                  'devc[%s/%s](%s%%%%)',
                   status.current_step or '',
                   status.step_count or '',
-                  status.progress and string.format('(%s%%)', status.progress) or ''
+                  status.progress or 0
                 )
               end,
             },
@@ -742,6 +751,7 @@ return {
           -- sidebar, -- 'symbols-outline',
         },
       })
+
       -- require('lualine').setup(plugin.override({
       --   options = {
       --     theme = 'auto',
@@ -998,45 +1008,14 @@ return {
   -- Folding
   -- kevinhwang91/nvim-ufo
 
-  -- Terminal
-  -- https://github.com/akinsho/toggleterm.nvim#custom-terminals
-  {
-    'akinsho/toggleterm.nvim',
-    cmd = { 'Lazygit', 'TermExec', 'ToggleTerm' },
-    keys = {
-      { '<Leader>tt', desc = 'Toggle Terminal' },
-      { '<C-S-t>', '<cmd>ToggleTermToggleAll<CR>' },
-      { '<Leader>gg', '<cmd>Lazygit<CR>', desc = 'Toggle Lazygit' },
-      { '<Leader>tl', '<cmd>ToggleTermSendVisualLines<CR>', desc = 'Send visual lines', mode = 'v' },
-      { '<Leader>tv', '<cmd>ToggleTermSendVisualSelection<CR>', desc = 'Send visual selection', mode = 'v' },
-      -- command! -count=1 TermGitPush  lua require'toggleterm'.exec("git push",    <count>, 12)
-      -- command! -count=1 TermGitPushF lua require'toggleterm'.exec("git push -f", <count>, 12)
-    },
-    opts = {
-      open_mapping = '<Leader>tt', -- [[<c-\>]],
-      -- shade_filetypes = {},
-      shading_factor = 1,
-      -- start_in_insert = false,
-      -- close_on_exit = false,
-    },
-    config = function(plugin)
-      require('toggleterm').setup(plugin.opts)
-
-      local opts = { cmd = 'lazygit', direction = 'float', hidden = true }
-      local lazygit = require('toggleterm.terminal').Terminal:new(opts)
-      vim.api.nvim_create_user_command('Lazygit', function()
-        lazygit:toggle()
-      end, { desc = 'Toggle Lazygit' })
-    end,
-  },
-
-  -- Node package manager
+  -- Package managers
   {
     'vuki656/package-info.nvim',
     branch = 'develop',
     dev = true, -- version = false,
-    ft = 'json', -- event = 'VeryLazy',
     dependencies = 'MunifTanjim/nui.nvim',
+    ft = 'json',
+    event = 'BufRead package.json',
     -- stylua: ignore
     keys = {
       { '<Leader>ns', function() require('package-info').show({ force = false }) end, desc = 'Show npm outdated' },
@@ -1047,11 +1026,6 @@ return {
       { '<Leader>ni', function() require('package-info').install() end, desc = 'Install a new dependency' },
       { '<Leader>np', function() require('package-info').change_version() end, desc = 'Install a different version' },
     },
-    init = function()
-      vim.cmd('highlight default link PackageInfoOutdatedVersion Error')
-      vim.cmd('highlight default link PackageInfoUnwantedVersion WarningMsg')
-      vim.cmd('highlight default link PackageInfoUpToDateVersion LspCodeLens')
-    end,
     opts = {
       diagnostic = {
         enable = true,
@@ -1068,6 +1042,91 @@ return {
       hide_up_to_date = true,
       -- hide_unstable_versions = true,
     },
+    config = function()
+      vim.api.nvim_set_hl(0, 'PackageInfoOutdatedVersion', { default = true, link = 'Error' })
+      vim.api.nvim_set_hl(0, 'PackageInfoUnwantedVersion', { default = true, link = 'WarningMsg' })
+      vim.api.nvim_set_hl(0, 'PackageInfoUpToDateVersion', { default = true, link = 'LspCodeLens' })
+
+      vim.api.nvim_create_autocmd('BufRead', {
+        group = vim.api.nvim_create_augroup('PackageInfo', { clear = true }),
+        pattern = 'package.json',
+        callback = function() end,
+      })
+    end,
+  },
+  {
+    'saecki/crates.nvim',
+    ft = 'toml',
+    dependencies = {
+      'null-ls.nvim',
+      'nvim-cmp',
+      'plenary.nvim',
+    },
+    event = 'BufRead Cargo.toml',
+    keys = {
+      {
+        '<Leader>ct',
+        function()
+          require('package-info').show({ force = false })
+        end,
+        desc = 'Show npm outdated',
+      },
+    },
+    opts = {
+      null_ls = {
+        enabled = true,
+        name = 'crates.nvim',
+      },
+    },
+    init = function()
+      vim.api.nvim_create_autocmd('BufRead', {
+        group = vim.api.nvim_create_augroup('CargoCrates', { clear = true }),
+        pattern = 'Cargo.toml',
+        callback = function(args)
+          local cmp = require('cmp')
+          local crates = require('crates')
+          local wk = require('which-key')
+
+          cmp.setup.buffer({
+            sources = {
+              -- { name = 'path' },
+              -- { name = 'buffer' },
+              -- { name = 'nvim_lsp' },
+              { name = 'crates' },
+            },
+          })
+
+          wk.register({
+            cC = {
+              name = '+Crates',
+              t = { crates.toggle, 'Toggle Crates' },
+              r = { crates.reload, 'Reload Crates' },
+
+              v = { crates.show_versions_popup, 'Show Crates Versions' },
+              f = { crates.show_features_popup, 'Show Crates Features' },
+              d = { crates.show_dependencies_popup, 'Show Crates Dependencies' },
+
+              u = { crates.update_crate, 'Update Crate' },
+              a = { crates.update_all_crates, 'Update Crates' },
+              U = { crates.upgrade_crates, 'Upgrade Crates' },
+              A = { crates.upgrade_all_crates, 'Upgrade All Crates' },
+
+              H = { crates.open_homepage, 'Open Homepage' },
+              R = { crates.open_repository, 'Open Repository' },
+              D = { crates.open_documentation, 'Open Documentation' },
+              C = { crates.open_crates_io, 'Open Crates.io' },
+            },
+          }, { mode = 'n', prefix = '<Leader>', buffer = args.buf })
+
+          wk.register({
+            cC = {
+              u = { crates.update_crates, 'Update selected Crates' },
+              a = { crates.upgrade_crates, 'Upgrade selected Crates' },
+            },
+          }, { mode = 'v', prefix = '<Leader>', buffer = args.buf })
+        end,
+      })
+    end,
   },
 
   -- Color highlighter

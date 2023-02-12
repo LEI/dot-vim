@@ -1,0 +1,3 @@
+-- ltex-ls
+
+return {}

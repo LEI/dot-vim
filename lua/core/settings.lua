@@ -120,19 +120,19 @@ local settings = {
     -- Class = 'ﴯ', -- 𝓒 
     -- Interface = '', --  
     -- Module = '', -- ﰪ
-    -- Property = '', -- ﰠ 
+    -- Property = '', -- ﰠ  
     -- Unit = '塞',
     -- Value = '', -- 
-    Enum = '', -- 練 ℰ
+    -- Enum = '', -- 練 ℰ
     -- Keyword = '',
     Snippet = '', -- 
     -- Color = '',
-    -- File = '',
+    File = '', -- 
     -- Reference = '', -- 
     Folder = '', -- 
     -- EnumMember = '',
     -- Constant = '', -- ﲀ 
-    -- Struct = 'פּ', -- ﬌ 𝓢 
+    -- Struct = 'פּ', -- ﬌ 𝓢  
     -- Event = '', -- 
     -- Operator = '', -- 
     -- TypeParameter = '', -- 𝙏 
@@ -140,10 +140,10 @@ local settings = {
     -- symbols-outline
     Namespace = '', -- 
     Package = '',
-    String = '', -- 𝓐
-    Number = '', -- #
-    Boolean = '◩', -- ⊨
-    Array = '',
+    String = '', -- 𝓐 
+    Number = '', -- # 
+    Boolean = '◩', -- ⊨ 
+    Array = '', -- 
     Object = '',
     Key = '',
     Null = 'ﳠ',
@@ -222,22 +222,16 @@ local settings = {
   },
   format = {
     -- log_level = vim.log.levels.WARN,
-    prettier = {
-      args = {
-        '--single-quote',
-        -- https://prettier.io/docs/en/options.html#trailing-commas
-        -- '--trailing-comma', 'es5',
-      },
-    },
-    stylua = {
-      -- stylua: ignore
-      args = {
-        '--column-width', style.lua.max_line_length, -- tostring?
-        '--indent-type', style.lua.indent_style, -- Uppercase?
-        '--indent-width', style.lua.indent_width,
-        '--quote-style', 'AutoPreferSingle',
-      },
-    },
+    -- stylua = {
+    --   -- https://github.com/JohnnyMorganz/StyLua/issues/75
+    --   -- stylua: ignore
+    --   args = {
+    --     '--column-width', style.lua.max_line_length, -- tostring?
+    --     '--indent-type', style.lua.indent_style, -- Uppercase?
+    --     '--indent-width', style.lua.indent_width,
+    --     '--quote-style', 'AutoPreferSingle',
+    --   },
+    -- },
   },
 }
 

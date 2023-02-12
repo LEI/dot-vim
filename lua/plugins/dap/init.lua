@@ -30,9 +30,18 @@ return {
       -- 'nvim-dap-vscode-js',
     },
     keys = {
-      { '<Leader>B', '<cmd>BreakpointToggle<CR>', desc = 'Toggle breakpoint' },
-      { '<Leader>C', '<cmd>Debug<CR>', desc = 'Continue' },
-      { '<Leader>R', '<cmd>DapREPL<CR>', desc = 'Open REPL' },
+      { '<Leader>B', '<cmd>BreakpointToggle<CR>', desc = 'Debug toggle Breakpoint' },
+      { '<Leader>C', '<cmd>Debug<CR>', desc = 'Debug Continue' },
+      { '<Leader>R', '<cmd>DapREPL<CR>', desc = 'Debug open REPL' },
+      -- nnoremap <silent> <F5> <Cmd>lua require'dap'.continue()<CR>
+      -- nnoremap <silent> <F10> <Cmd>lua require'dap'.step_over()<CR>
+      -- nnoremap <silent> <F11> <Cmd>lua require'dap'.step_into()<CR>
+      -- nnoremap <silent> <F12> <Cmd>lua require'dap'.step_out()<CR>
+      -- nnoremap <silent> <Leader>b <Cmd>lua require'dap'.toggle_breakpoint()<CR>
+      -- nnoremap <silent> <Leader>B <Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
+      -- nnoremap <silent> <Leader>lp <Cmd>lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
+      -- nnoremap <silent> <Leader>dr <Cmd>lua require'dap'.repl.open()<CR>
+      -- nnoremap <silent> <Leader>dl <Cmd>lua require'dap'.run_last()<CR>
     },
     init = function()
       local map = vim.api.nvim_set_keymap
@@ -72,6 +81,15 @@ return {
         end,
         noremap = true,
       })
+
+      local group = vim.api.nvim_create_augroup('VSCode', { clear = true })
+      vim.api.nvim_create_autocmd('BufRead', {
+        group = group,
+        pattern = '.vscode/*.json',
+        callback = function()
+          vim.cmd('set filetype=jsonc')
+        end,
+      })
     end,
     config = function()
       local dap = require('dap')
@@ -109,6 +127,17 @@ return {
       end
 
       dap.set_log_level('TRACE')
+
+      local signs = {
+        DapBreakpoint = 'B',
+        DapBreakpointCondition = 'C',
+        DapLogPoint = 'L',
+        DapStopped = '→',
+        DapBreakpointRejected = 'R',
+      }
+      for name, icon in pairs(signs) do
+        vim.fn.sign_define(name, { text = icon, texthl = '', linehl = '', numhl = '' })
+      end
 
       -- https://github.com/mfussenegger/nvim-dap/wiki/Cookbook
       local keymap_restore = {}

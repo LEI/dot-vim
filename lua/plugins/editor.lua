@@ -318,7 +318,7 @@ return {
         --   align = 'left', -- align columns left, center or right
         -- },
         -- ignore_missing = false, -- enable this to hide mappings for which you didn't specify a label
-        hidden = { '<plug>', '<silent>', '<cmd>', '<Cmd>', '<CR>', 'call', 'lua', '^:', '^ ' }, -- hide mapping boilerplate
+        hidden = { '<Plug>', '<silent>', '<cmd>', '<Cmd>', '<CR>', 'call', 'lua', '^:', '^ ' }, -- hide mapping boilerplate
         -- show_help = true, -- show help message on the command line when the popup is visible
         -- show_keys = true, -- show the currently pressed key and its label as a message in the command line
         -- triggers = 'auto', -- automatically setup triggers
@@ -394,6 +394,7 @@ return {
   -- https://neovim.io/doc/user/lsp.html#vim.lsp.buf.document_highlight()
   {
     'RRethy/vim-illuminate',
+    -- enabled = false,
     -- dependencies = 'nvim-treesitter',
     event = 'CursorHold', -- BufReadPost
     config = function()
@@ -405,6 +406,7 @@ return {
           'fugitive',
           'mason', -- buftype: nofile
         },
+        under_cursor = false,
         large_file_cutoff = 300,
       })
     end,
@@ -438,7 +440,8 @@ return {
       { '<Leader>xq', '<cmd>TroubleToggle quickfix<cr>', desc = 'Diagnostics to Location list', noremap = true },
       { '<Leader>xr', '<cmd>TroubleToggle lsp_references<cr>', desc = 'LSP references under the cursor', noremap = true },
       { '<Leader>xD', '<cmd>TroubleToggle lsp_definitions<cr>', desc = 'LSP definitions under the cursor', noremap = true },
-      { '<Leader>xt', '<cmd>TroubleToggle lsp_type_definitions<cr>', desc = 'LSP type definitions under the cursor', noremap = true },
+      { '<Leader>xt', '<cmd>TroubleToggle lsp_type_definitions<cr>', desc = 'LSP type definitions under the cursor',
+        noremap = true },
     },
     opts = {
       -- position = 'bottom', -- position of the list can be: bottom, top, left, right
@@ -631,7 +634,43 @@ return {
   -- Devcontainer
   {
     'https://codeberg.org/esensar/nvim-dev-container',
-    dependencies = 'nvim-treesitter',
+    cmd = {
+      'DevcontainerBuild', -- builds image from nearest devcontainer.json
+      'DevcontainerImageRun', -- runs image from nearest devcontainer.json
+      'DevcontainerBuildAndRun', -- builds image from nearest devcontainer.json and then runs it
+      'DevcontainerBuildRunAndAttach', -- builds image from nearest devcontainer.json (with neovim added), runs it and attaches to neovim in it - currently using `terminal_handler`, but in the future with Neovim 0.8.0 maybe directly (https://codeberg.org/esensar/nvim-dev-container/issues/30)
+      'DevcontainerComposeUp', -- run docker-compose up based on devcontainer.json
+      'DevcontainerComposeDown', -- run docker-compose down based on devcontainer.json
+      'DevcontainerComposeRm', -- run docker-compose rm based on devcontainer.json
+      'DevcontainerStartAuto', -- start whatever is defined in devcontainer.json
+      'DevcontainerStartAutoAndAttach', -- start and attach to whatever is defined in devcontainer.json
+      'DevcontainerAttachAuto', -- attach to whatever is defined in devcontainer.json
+      'DevcontainerStopAuto', -- stop whatever was started based on devcontainer.json
+      'DevcontainerStopAll', -- stop everything started with this plugin (in current session)
+      'DevcontainerRemoveAll', -- remove everything started with this plugin (in current session)
+      'DevcontainerLogs', -- open plugin log file
+      'DevcontainerOpenNearestConfig', -- opens nearest devcontainer.json file if it exists
+      'DevcontainerEditNearestConfig', -- opens nearest devcontainer.json file if it exists, or creates a new one if it does not
+    },
+    keys = {
+      { '<Leader>dcb', '<cmd>DevcontainerBuild<CR>', desc = 'Build devcontainer' },
+      { '<Leader>dci', '<cmd>DevcontainerImageRun<CR>', desc = 'Run devcontainer image' },
+      { '<Leader>dcr', '<cmd>DevcontainerBuildAndRun<CR>', desc = 'Build and run devcontainer' },
+      { '<Leader>dca', '<cmd>DevcontainerBuildRunAndAttach<CR>', desc = 'Build, run and attach to devcontainer' },
+      { '<Leader>dcu', '<cmd>DevcontainerComposeUp<CR>', desc = 'Run docker-compose up' },
+      { '<Leader>dcd', '<cmd>DevcontainerComposeDown<CR>', desc = 'Run docker-compose down' },
+      -- { '<Leader>dcR', '<cmd>DevcontainerComposeRm<CR>', desc = 'Run docker-compose down' },
+      { '<Leader>dcs', '<cmd>DevcontainerStartAuto<CR>', desc = 'Start devcontainer' },
+      { '<Leader>dct', '<cmd>DevcontainerStartAutoAndAttach<CR>', desc = 'Start and attach to devcontainer' },
+      { '<Leader>dca', '<cmd>DevcontainerAttachAuto<CR>', desc = 'Attach to devcontainer' },
+      { '<Leader>dcx', '<cmd>DevcontainerStopAuto<CR>', desc = 'Stop devcontainer' },
+      { '<Leader>dcX', '<cmd>DevcontainerStopAll<CR>', desc = 'Stop all devcontainers' },
+      { '<Leader>dcR', '<cmd>DevcontainerRemoveAll<CR>', desc = 'Remove all devcontainers' },
+      { '<Leader>dcl', '<cmd>DevcontainerLogs<CR>', desc = 'Devcontainer logs' },
+      { '<Leader>dco', '<cmd>DevcontainerOpenNearestConfig<CR>', desc = 'Open devcontainer.json' },
+      { '<Leader>dce', '<cmd>DevcontainerEditNearestConfig<CR>', desc = 'Edit devcontainer.json' },
+    },
+    dependencies = 'nvim-treesitter', -- With jsonc parser
     opts = {
       -- config_search_start = function()
       --   -- By default this function uses vim.loop.cwd()
@@ -725,5 +764,16 @@ return {
       -- -- If it is nil, plugin will use whatever is available (trying "podman-compose" first)
       -- compose_command = nil,
     },
+    init = function()
+      local group = vim.api.nvim_create_augroup('Devcontainer', { clear = true })
+
+      vim.api.nvim_create_autocmd('BufRead', {
+        group = group,
+        pattern = 'devcontainer.json',
+        callback = function()
+          vim.cmd('set filetype=jsonc')
+        end,
+      })
+    end,
   },
 }

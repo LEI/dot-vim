@@ -1,5 +1,9 @@
 -- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/treesitter.lua
 
+-- NOTE: Highlight and indent plugins should be both enabled or disabled
+-- https://github.com/nvim-treesitter/nvim-treesitter/issues/1167#issuecomment-1268933971
+-- https://github.com/nvim-treesitter/nvim-treesitter/issues/2544#issuecomment-1320986775
+
 return {
   {
     'nvim-treesitter/nvim-treesitter',
@@ -24,6 +28,7 @@ return {
           'html',
           'javascript',
           'json',
+          'jsonc',
           'lua',
           'markdown',
           'markdown_inline',
@@ -46,7 +51,7 @@ return {
           --   return true
           -- end,
         },
-        -- indent = { enable = true },
+        indent = { enable = true },
         autopairs = { enable = true }, -- https://github.com/windwp/nvim-autopairs
         autotag = { enable = true }, -- https://github.com/windwp/nvim-ts-autotag
         context_commentstring = { enable = true, enable_autocmd = false }, -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring

@@ -93,6 +93,7 @@ function M.on_attach(client, bufnr)
   end
   if client.server_capabilities.hoverProvider then
     self:map('K', vim.lsp.buf.hover, { desc = 'Hover' })
+    self:map('<Leader>k', vim.lsp.buf.hover, { desc = 'Hover' })
   end
   if client.server_capabilities.implementationProvider then
     self:map('gi', vim.lsp.buf.implementation, { desc = 'Go to Implementation' })
@@ -137,7 +138,7 @@ function M.on_attach(client, bufnr)
 
   -- https://github.com/mhartington/formatter.nvim/issues/192
   -- https://github.com/coffebar/dotfiles/blob/master/.config/nvim/after/plugin/lspconfig.lua
-  -- local force_formatter = true -- client.name == 'sumneko_lua' or client.name == 'tsserver'
+  -- local force_formatter = true -- client.name == 'lua_ls' or client.name == 'tsserver'
   -- if client.server_capabilities.documentFormattingProvider and not force_formatter then
   --   self:map('=', function()
   --     vim.lsp.buf.format({})
