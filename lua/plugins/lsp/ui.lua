@@ -33,7 +33,7 @@ return {
         depth_limit_indicator = settings.chars.ellipsis,
         safe_output = true,
       })
-      vim.api.nvim_set_hl(0, 'NavicText', { link = 'Comment' })
+      vim.api.nvim_set_hl(0, 'NavicText', { link = 'Conceal' })
 
       -- https://github.com/askfiy/nvim/blob/master/lua/config/lsp/nvim-navic.lua
 
@@ -134,7 +134,6 @@ return {
         status_symbol = '', -- ' ',
         select_symbol = nil,
         update_interval = 300,
-
         signs = false,
       })
       require('lazyvim.util').on_attach(function(client, bufnr)

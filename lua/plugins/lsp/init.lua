@@ -274,6 +274,14 @@ return {
     event = 'BufReadPre',
     -- Return true to skip setup with lspconfig
     setup_server = function(server, opts)
+      if server == 'docker_compose_language_service' then
+        -- FIXME
+        return true
+      end
+      if server == 'lua_ls' then
+        require('lspconfig').sumneko_lua.setup(opts)
+        return true
+      end
       return vim.tbl_contains({ 'rust_analyzer', 'tsserver' }, server)
     end,
     config = function(plugin)
@@ -725,6 +733,9 @@ return {
           tools = { jsonlint = {} },
           sources = { null_ls.builtins.diagnostics.jsonlint },
         },
+        -- [{ 'json', 'yaml' }] = {
+        --   sources = { null_ls.builtins.diagnostics.vacuum },
+        -- },
         lua = {
           tools = {
             luacheck = {},
@@ -736,7 +747,9 @@ return {
               extra_args = { '--globals', 'vim' },
             }),
             null_ls.builtins.formatting.stylua.with({
-              extra_args = settings.format and settings.format.stylua and vim.deepcopy(settings.format.stylua.args)
+              extra_args = settings.format
+                  and settings.format.stylua
+                  and vim.deepcopy(settings.format.stylua.args)
                 or {},
             }),
           },
@@ -1006,6 +1019,19 @@ return {
       }
       require('null-ls').register(sources)
     end,
+  },
+  {
+    'joeveiga/ng.nvim',
+    ft = { 'html', 'typescript' },
+    cond = function()
+      return vim.fn.filereadable('angular.json') == 1
+    end,
+    -- stylua: ignore
+    keys = {
+      { '<leader>at', function() require('ng').goto_template_for_component() end, desc = 'Go to template for component' },
+      { '<leader>ac', function() require('ng').goto_component_with_template_file() end, desc = 'Go to component with template file' },
+      { '<leader>aT', function() require('ng').get_template_tcb() end, desc = 'Get template TCB' },
+    },
   },
 
   require('plugins.lsp.ui'),

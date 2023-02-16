@@ -10,7 +10,10 @@ M.servers = {
   copilot = false,
   eslint = true, -- Force formatting with eslint-ls
   -- ['null-ls'] = false,
-  lua_ls = false, -- Replaced by stylua
+
+  sumneko_lua = false, -- Replaced by stylua
+  lua_ls = false,
+
   tsserver = false, -- Replaced by eslint-ls
   -- yamlls = true,
 }

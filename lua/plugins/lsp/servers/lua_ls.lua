@@ -5,8 +5,6 @@ return {
     Lua = {
       diagnostics = {
         enable = true,
-        -- Get the language server to recognize the `vim` global
-        globals = { 'vim' },
         neededFileStatus = {
           ['codestyle-check'] = 'Any', -- Opened
           -- ['spell-check'] = 'Any',

@@ -6,6 +6,7 @@ local diagnostic_signs = {
   ok = vim.fn.sign_getdefined('DiagnosticSignOk')[1].text:gsub('%s+', ''),
 }
 
+-- TODO: editorconfig
 local style = {
   lua = {
     indent_style = 'spaces',

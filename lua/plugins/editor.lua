@@ -283,9 +283,11 @@ return {
     -- cmd = 'WhichKey',
     event = 'VeryLazy',
     config = function()
+      local wk = require('which-key')
+
       vim.o.timeout = true
       vim.o.timeoutlen = 300
-      local wk = require('which-key')
+
       wk.setup({
         plugins = { spelling = true },
         -- operators = { gc = 'Comments' },
@@ -357,7 +359,7 @@ return {
         -- ['<Leader><Tab>'] = { name = '+tabs' },
       })
 
-      local function map_bracket(mode, left, right, keymap)
+      local function remap(mode, left, right, keymap)
         -- keymap = keymap or {}
         if keymap and keymap.lhs and keymap.lhs ~= right and keymap.lhs:match('^%' .. right) then
           local lhs = keymap.lhs:gsub('^%' .. right, left)
@@ -374,18 +376,10 @@ return {
       for _, mode in ipairs({ 'n', 'o', 'x' }) do
         local keymaps = vim.api.nvim_get_keymap(mode)
         for _, keymap in ipairs(keymaps) do
-          for left, right in pairs({ ['('] = '[', [')'] = ']' }) do
-            map_bracket(mode, left, right, keymap)
-          end
+          remap(mode, '(', '[', keymap)
+          remap(mode, ')', ']', keymap)
         end
       end
-
-      -- local original = vim.api.nvim_set_keymap
-      -- vim.api.nvim_set_keymap = function(mode, lhs, rhs, opts)
-      --   map_bracket(mode, opts, lhs, rhs)
-      --   print(mode, lhs, rhs, opts)
-      --   return original(mode, lhs, rhs, opts)
-      -- end
     end,
   },
 
