@@ -41,8 +41,8 @@ function M.once_on_attach(client, bufnr)
   self:map('<Leader>I', 'LspInfo', { desc = 'LSP Info' })
 
   -- Diagnostic keymaps (TODO: register earlier to auto map brackets to parenthesis)
-  self:map('(d', M.diagnostic_goto(true), { desc = 'Next Diagnostic' })
-  self:map(')d', M.diagnostic_goto(false), { desc = 'Previous Diagnostic' })
+  self:map(')d', M.diagnostic_goto(true), { desc = 'Next Diagnostic' })
+  self:map('(d', M.diagnostic_goto(false), { desc = 'Previous Diagnostic' })
   -- self:map(']e', M.diagnostic_goto(true, 'ERROR'), { desc = 'Next Error' })
   -- self:map('[e', M.diagnostic_goto(false, 'ERROR'), { desc = 'Previous Error' })
   -- self:map(']w', M.diagnostic_goto(true, 'WARNING'), { desc = 'Next Warning' })
@@ -80,15 +80,15 @@ function M.on_attach(client, bufnr)
   -- LSP buffer keymaps
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   if client.server_capabilities.codeActionProvider then
-    self:map('<Leader>ca', vim.lsp.buf.code_action, { desc = 'Code Action', mode = { 'n', 'v' }, has = 'codeAction' })
+    self:map('<Leader>a', vim.lsp.buf.code_action, { desc = 'Code Action', mode = { 'n', 'v' }, has = 'codeAction' })
   end
   if client.server_capabilities.definitionProvider then
     self:map('gd', vim.lsp.buf.definition, { desc = 'Go to Definition' })
     self:map('gD', vim.lsp.buf.declaration, { desc = 'Go to Declaration' })
-    self:map('gtd', vim.lsp.buf.type_definition, { desc = 'Go to Type Definition' })
-    -- self:map('gd', 'Telescope lsp_definitions', { desc = 'Go to Definition' })
-    -- self:map('gD', 'Telescope lsp_declarations', { desc = 'Go to Declaration' })
-    self:map('gt', 'Telescope lsp_type_definitions', { desc = 'Go to Type Definition' })
+    self:map('gy', vim.lsp.buf.type_definition, { desc = 'Go to Type Definition' })
+    -- self:map('gd', 'Telescope lsp_definitions', { desc = 'Telescope Definition' })
+    -- self:map('gD', 'Telescope lsp_declarations', { desc = 'Telescope Declaration' })
+    self:map('gt', 'Telescope lsp_type_definitions', { desc = 'Telescope Type Definition' })
     self:map('<Leader>p', PeekDefinition, { desc = 'Peek Definition' })
   end
   if client.server_capabilities.hoverProvider then
@@ -97,14 +97,14 @@ function M.on_attach(client, bufnr)
   end
   if client.server_capabilities.implementationProvider then
     self:map('gi', vim.lsp.buf.implementation, { desc = 'Go to Implementation' })
-    self:map('gI', 'Telescope lsp_implementations', { desc = 'Go to Implementation' })
+    self:map('gI', 'Telescope lsp_implementations', { desc = 'Telescope Implementation' })
   end
   if client.server_capabilities.referencesProvider then
     self:map('gr', vim.lsp.buf.references, { desc = 'Go to References' })
-    self:map('gR', 'Telescope lsp_references', { desc = 'References' })
+    self:map('<Leader>h', 'Telescope lsp_references', { desc = 'Telescope References' })
   end
   if client.server_capabilities.renameProvider then
-    self:map('<Leader>rn', vim.lsp.buf.rename, { desc = 'Rename', has = 'rename' })
+    self:map('<Leader>r', vim.lsp.buf.rename, { desc = 'Rename', has = 'rename' })
     -- self:map('<leader>cr', M.rename, { expr = true, desc = 'Rename (inc)', has = 'rename' })
   end
   if client.server_capabilities.signatureHelpProvider then
@@ -131,9 +131,9 @@ function M.on_attach(client, bufnr)
     -- TypescriptAddMissingImports
     -- TypescriptFixAll
     -- TypescriptGoToSourceDefinition
-    self:map('<Leader>cO', 'TypescriptOrganizeImports', { desc = 'Organize Imports' })
+    self:map('<Leader>i', 'TypescriptOrganizeImports', { desc = 'Organize Imports' })
     -- TypescriptRemoveUnused
-    self:map('<Leader>rf', 'TypescriptRenameFile', { desc = 'Rename File' })
+    self:map('<Leader>R', 'TypescriptRenameFile', { desc = 'Rename File' })
   end
 
   -- https://github.com/mhartington/formatter.nvim/issues/192

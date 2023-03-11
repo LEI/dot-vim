@@ -84,7 +84,8 @@ local format_mode = function(active)
     if not is_active then
       local length = #name
       local window = window_number()
-      return length == 1 and tostring(window) or window .. ' ' .. string.rep('-', length - 2)
+      local rep = string.rep('-', 4); -- length - 2
+      return length == 1 and tostring(window) or window .. ' ' .. rep
     end
     return name
   end

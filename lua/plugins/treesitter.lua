@@ -61,9 +61,9 @@ return {
           enable = true,
           keymaps = {
             init_selection = '<C-Space>',
-            node_incremental = '<C-Space>',
+            node_incremental = '<C-Space>', -- A-o
             scope_incremental = '<C-s>',
-            node_decremental = '<c-backspace>',
+            node_decremental = '<C-Backspace>', -- A-i
           },
         },
         -- refactor = {
@@ -115,10 +115,10 @@ return {
           swap = {
             enable = true,
             swap_next = {
-              ['<Leader>sn'] = '@parameter.inner',
+              ['<Leader>Sn'] = '@parameter.inner',
             },
             swap_previous = {
-              ['<Leader>sp'] = '@parameter.inner',
+              ['<Leader>Sp'] = '@parameter.inner',
             },
           },
         },

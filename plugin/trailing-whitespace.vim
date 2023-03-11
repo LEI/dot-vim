@@ -21,7 +21,7 @@ endfunction
 " command! -range=% RemoveTrailing call <SID>StripTrailingWhitespaceRange(<line1>,<line2>)
 
 " Remove trailing spaces in the current file
-nnoremap <Leader>st :call StripTrailingWhitespace()<CR>
+nnoremap <Leader>St :call StripTrailingWhitespace()<CR>
 
 if !has('nvim')
   augroup TrailingWhitespace

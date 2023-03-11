@@ -376,15 +376,6 @@ nnoremap <Leader>W :w!!<CR>
 
 " Key bindings {{{1
 
-nnoremap U :redo<CR>
-nnoremap <BS>l :edit $HOME/.vim/lua/plugins/lsp/init.lua<CR>
-nnoremap <BS>o :edit $MYVIMRC<CR>
-nnoremap <BS>r :source $MYVIMRC<CR>
-nnoremap <BS>u :UndotreeToggle<CR>
-
-" Sort visually selected lines
-vnoremap <BS>s :sort<CR>
-
 " Use Q for formatting instead of switching to Ex mode
 map Q gq
 
@@ -493,6 +484,25 @@ omap al :<C-u>normal val<CR>
 " inoremap <silent> ;p <C-x><C-p>
 " inoremap <silent> ;t <C-x><C-]>
 
+nnoremap <BS>l :edit $HOME/.vim/lua/plugins/lsp/init.lua<CR>
+nnoremap <BS>o :edit $MYVIMRC<CR>
+nnoremap <BS>r :source $MYVIMRC<CR>
+nnoremap <BS>u :UndotreeToggle<CR>
+
+" Sort visually selected lines
+vnoremap <BS>s :sort<CR>
+
+" Helix
+nnoremap U :redo<CR>
+" Movement
+nnoremap gh 0
+vnoremap gh 0
+nnoremap gs ^
+vnoremap gs ^
+nnoremap gl $
+vnoremap gl $
+nnoremap ge G
+vnoremap ge G
 " Go to matching bracket
 nmap mm %
 vmap mm %

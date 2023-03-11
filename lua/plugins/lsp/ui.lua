@@ -72,7 +72,7 @@ return {
     },
     cmd = 'SymbolsOutline',
     keys = {
-      { '<leader>so', ':SymbolsOutline<CR>', desc = 'Symbols Outline' },
+      { '<leader>O', ':SymbolsOutline<CR>', desc = 'Symbols Outline' },
     },
     config = function()
       local symbols_outline = require('symbols-outline')
@@ -199,7 +199,7 @@ return {
     -- enabled = false,
     cmd = 'CodeActionMenu', -- FIXME: No range allowed
     keys = {
-      { '<leader>cA', ':CodeActionMenu<CR>', desc = 'Code action menu', mode = { 'n', 'v' } },
+      -- { '<Leader>a', ':CodeActionMenu<CR>', desc = 'Code action menu', mode = { 'n', 'v' } },
     },
     -- event = 'BufReadPost',
     init = function()

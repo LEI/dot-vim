@@ -15,7 +15,7 @@ M.servers = {
   lua_ls = false,
 
   tsserver = false, -- Replaced by eslint-ls
-  -- yamlls = true,
+  yamlls = false, -- TODO: fallback to yamlls if there is no prettier config
 }
 
 function M.should_force(client)

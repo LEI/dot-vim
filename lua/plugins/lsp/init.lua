@@ -686,7 +686,7 @@ return {
         -- 'html', -- htmlls
         'json',
         'jsonc',
-        -- 'yaml',
+        'yaml',
         'markdown',
         'markdown.mdx',
         'graphql',
@@ -734,6 +734,7 @@ return {
           sources = { null_ls.builtins.diagnostics.jsonlint },
         },
         -- [{ 'json', 'yaml' }] = {
+        --   tools = { vacuum = {} },
         --   sources = { null_ls.builtins.diagnostics.vacuum },
         -- },
         lua = {
@@ -746,12 +747,7 @@ return {
             null_ls.builtins.diagnostics.luacheck.with({
               extra_args = { '--globals', 'vim' },
             }),
-            null_ls.builtins.formatting.stylua.with({
-              extra_args = settings.format
-                  and settings.format.stylua
-                  and vim.deepcopy(settings.format.stylua.args)
-                or {},
-            }),
+            null_ls.builtins.formatting.stylua,
           },
         },
         -- [{ 'lua', 'luau' }] = {
@@ -838,6 +834,24 @@ return {
             null_ls.builtins.formatting.phpcbf,
             -- null_ls.builtins.formatting.phpcsfixer,
             -- null_ls.builtins.formatting.pint.with(),
+          },
+        },
+        python = {
+          tools = {
+            black = {},
+            -- flake8 = {},
+            isort = {},
+            -- mypy = {},
+            -- pylint = {},
+            -- yapf = {},
+          },
+          sources = {
+            -- null_ls.builtins.diagnostics.flake8,
+            -- null_ls.builtins.diagnostics.mypy,
+            -- null_ls.builtins.diagnostics.pylint,
+            null_ls.builtins.formatting.black,
+            null_ls.builtins.formatting.isort,
+            -- null_ls.builtins.formatting.yapf,
           },
         },
         sh = {
@@ -1028,9 +1042,9 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { '<leader>at', function() require('ng').goto_template_for_component() end, desc = 'Go to template for component' },
-      { '<leader>ac', function() require('ng').goto_component_with_template_file() end, desc = 'Go to component with template file' },
-      { '<leader>aT', function() require('ng').get_template_tcb() end, desc = 'Get template TCB' },
+      { '<leader>At', function() require('ng').goto_template_for_component() end, desc = 'Go to template for component' },
+      { '<leader>Ac', function() require('ng').goto_component_with_template_file() end, desc = 'Go to component with template file' },
+      { '<leader>AT', function() require('ng').get_template_tcb() end, desc = 'Get template TCB' },
     },
   },
 

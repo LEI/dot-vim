@@ -33,13 +33,13 @@ return {
     cmd = 'Neotree',
     keys = {
       {
-        '<Leader>ft',
+        '<Leader>tt',
         function()
           require('neo-tree.command').execute({ toggle = true, dir = require('lazyvim.util').get_root() })
         end,
         desc = 'NeoTree (root dir)',
       },
-      { '<Leader>fT', '<cmd>Neotree toggle<CR>', desc = 'NeoTree (cwd)' },
+      { '<Leader>tT', '<cmd>Neotree toggle<CR>', desc = 'NeoTree (cwd)' },
     },
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -144,12 +144,14 @@ return {
     -- stylua: ignore
     keys = {
       -- https://github.com/nvim-telescope/telescope.nvim#pickers
-      { '<leader>/', function() require('telescope.builtin').live_grep() end, desc = 'Find in Files (Grep)' },
-      -- { '<leader><space>', util.telescope('find_files'), desc = 'Find Files (root dir)' },
-      { '<Leader>fb', '<cmd>Telescope buffers<cr>', desc = 'Buffers' },
-      { '<Leader>ff', function() require('telescope.builtin').find_files() end, desc = 'Find Files (root dir)' },
-      { '<Leader>fF', function() require('telescope.builtin').find_files({ cwd = false }) end, desc = 'Find Files (cwd)' },
-      { '<Leader>fr', '<cmd>Telescope oldfiles<cr>', desc = 'Recent' },
+      { '<Leader>f', function() require('telescope.builtin').find_files() end, desc = 'File picker' },
+      { '<Leader>F', function() require('telescope.builtin').find_files({ cwd = false }) end, desc = 'File picker (cwd)' },
+      { '<Leader>b', '<cmd>Telescope buffers<cr>', desc = 'Buffers' },
+      { '<leader>s', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'Document Symbols' },
+      { '<leader>Sd', function() require('telescope.builtin').diagnostics() end, desc = 'Search Diagnostics' }, -- <Leader>d/D
+      { '<Leader>/', function() require('telescope.builtin').live_grep({ cwd = false }) end, desc = 'Global search' },
+      { '<leader>?', function() require('telescope.builtin').help_tags() end, desc = 'Search Help tags' },
+      -- { '<Leader>fr', '<cmd>Telescope oldfiles<cr>', desc = 'Recent' },
       { '<Leader>gc', '<cmd>Telescope git_commits<CR>', desc = 'commits' },
       { '<Leader>gs', '<cmd>Telescope git_status<CR>', desc = 'status' },
       { '<Leader>ha', '<cmd>Telescope autocommands<cr>', desc = 'Auto Commands' },
@@ -163,23 +165,14 @@ return {
       { '<Leader>hq', '<cmd>Telescope ghq list<CR>', desc = 'List remote repositories (ghq)' },
       { '<Leader>hs', '<cmd>Telescope highlights<cr>', desc = 'Search Highlight Groups' },
       { '<Leader>ht', '<cmd>Telescope builtin<cr>', desc = 'Telescope' },
-      { '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find<cr>', desc = 'Buffer' },
-      { '<leader>sc', '<cmd>Telescope command_history<cr>', desc = 'Search Command history' },
-      { '<leader>sd', function() require('telescope.builtin').diagnostics() end, desc = 'Search Diagnostics' },
-      { '<leader>sg', function() require('telescope.builtin').live_grep() end, desc = 'Search by Grep (root dir)' },
-      { '<leader>sG', function() require('telescope.builtin').live_grep({ cwd = false }) end,
-        desc = 'Search by Grep (cwd)', },
-      { '<leader>sh', function() require('telescope.builtin').help_tags() end, desc = 'Search Help tags' },
-      { '<leader>sm', '<cmd>Telescope marks<cr>', desc = 'Jump to Mark' },
+      -- { '<leader>Sg', function() require('telescope.builtin').live_grep() end, desc = 'Search by Grep (root dir)' },
+      -- { '<leader>SG', function() require('telescope.builtin').live_grep({ cwd = false }) end, desc = 'Search by Grep (cwd)', },
       { '<leader>,', '<cmd>Telescope buffers show_all_buffers=true<cr>', desc = 'Switch Buffer' },
       { '<leader>:', '<cmd>Telescope command_history<cr>', desc = 'Command History' },
-      { '<leader>ds', function() require('telescope.builtin').lsp_document_symbols() end, desc = 'Document Symbols' },
-      -- { '<leader>ws', function() require('telescope.builtin').lsp_workspace_symbols() end, desc = 'Workspace Symbols' },
-      { '<leader>ss',
-        function() require('telescope.builtin').lsp_document_symbols({ symbols = {
-            'Class', 'Function', 'Method', 'Constructor', 'Interface', 'Module', 'Struct', 'Trait', 'Field', 'Property',
-          }, })
-        end, desc = 'Goto Symbol', },
+      { '<leader>Sb', '<cmd>Telescope current_buffer_fuzzy_find<cr>', desc = 'Buffer' },
+      { '<leader>Sm', '<cmd>Telescope marks<cr>', desc = 'Jump to Mark' },
+      { '<leader>Sw', function() require('telescope.builtin').lsp_workspace_symbols() end, desc = 'Workspace Symbols' },
+      { '<leader>Sd', function() require('telescope.builtin').lsp_document_symbols({ symbols = { 'Class', 'Function', 'Method', 'Constructor', 'Interface', 'Module', 'Struct', 'Trait', 'Field', 'Property', }, }) end, desc = 'Goto Symbol' },
     },
     defaults = {
       -- prompt_prefix = ' ',
@@ -218,6 +211,7 @@ return {
         pickers = {
           find_files = {
             theme = 'dropdown',
+            hidden = true,
           },
           -- git_status = {
           --   theme = 'dropdown',
@@ -340,22 +334,15 @@ return {
       })
       wk.register({
         mode = { 'n', 'v' },
-        ['g'] = { name = '+git' }, -- goto
-        -- [')'] = { name = '+next' },
-        -- ['('] = { name = '+prev' },
-        ['<Leader>b'] = { name = '+buffer' },
+        ['g'] = { name = '+goto' },
+        [')'] = { name = '+next' },
+        ['('] = { name = '+prev' },
         ['<Leader>c'] = { name = '+code' }, -- change
-        ['<Leader>f'] = { name = '+find' }, -- file
         ['<Leader>g'] = { name = '+git' },
-        ['<Leader>h'] = { name = '+help' },
-        -- ['<Leader>n'] = { name = '+noice' },
-        -- ['<Leader>o'] = { name = '+open' },
-        -- ['<Leader>q'] = { name = '+quit/session' },
-        ['<Leader>s'] = { name = '+search' },
-        ['<Leader>t'] = { name = '+toggle', mode = 'n' },
+        ['<Leader>S'] = { name = '+search' },
+        ['<Leader>t'] = { name = '+toggle', mode = 'n' }, -- TODO: option mode
         ['<Leader>T'] = { name = '+test', mode = 'n' },
         ['<Leader>x'] = { name = '+diagnostics/quickfix', mode = 'n' },
-        -- ['<Leader>w'] = { name = '+windows' },
         -- ['<Leader><Tab>'] = { name = '+tabs' },
       })
 

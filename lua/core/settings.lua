@@ -6,16 +6,6 @@ local diagnostic_signs = {
   ok = vim.fn.sign_getdefined('DiagnosticSignOk')[1].text:gsub('%s+', ''),
 }
 
--- TODO: editorconfig
-local style = {
-  lua = {
-    indent_style = 'spaces',
-    indent_width = 2,
-    max_line_length = 120,
-    quote_style = 'single',
-  },
-}
-
 -- Common icons
 local icons = {
   absent = '', -- ○
@@ -211,29 +201,6 @@ local settings = {
     },
   },
   spinner = { '⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷' },
-  style = style,
-  lint = {
-    luacheck = {
-      -- stylua: ignore
-      args = {
-        '--globals', 'vim',
-        '--max-line-length', style.lua.max_line_length,
-      },
-    },
-  },
-  format = {
-    -- log_level = vim.log.levels.WARN,
-    -- stylua = {
-    --   -- https://github.com/JohnnyMorganz/StyLua/issues/75
-    --   -- stylua: ignore
-    --   args = {
-    --     '--column-width', style.lua.max_line_length, -- tostring?
-    --     '--indent-type', style.lua.indent_style, -- Uppercase?
-    --     '--indent-width', style.lua.indent_width,
-    --     '--quote-style', 'AutoPreferSingle',
-    --   },
-    -- },
-  },
 }
 
 return settings

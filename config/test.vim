@@ -43,9 +43,9 @@ augroup END
 let g:test#runner_commands = []
 
 " JS/TS
-let g:test#javascript#jasmine#executable = 'npm run -- jasmine'
+" let g:test#javascript#jasmine#executable = 'npm run -- jasmine'
 " let g:test#javascript#jasmine#file_pattern = '\v^(spec[\\/]|.*spec)\.(js|jsx|coffee|ts)$'
-let g:test#javascript#jasmine#file_pattern = '\v^(spec[\\/].*spec|.*\.spec)\.(coffee|js|jsx|ts)$'
+" let g:test#javascript#jasmine#file_pattern = '\v^(spec[\\/].*spec|.*\.spec)\.(coffee|js|jsx|ts)$'
 let g:test#runner_commands = g:test#runner_commands +
       \ ['Ava', 'CucumberJS', 'DenoTest', 'Intern', 'TAP', 'Teenytest', 'Karma', 'Lab', 'Mocha',  'NgTest', 'Nx', 'Jasmine', 'Jest', 'ReactScripts', 'WebdriverIO', 'Cypress', 'VueTestUtils', 'Playwright', 'Vitest']
 
