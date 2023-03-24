@@ -8,7 +8,7 @@ return {
     --   css = true,
     --   javascript = true
     -- },
-    provideFormatter = true,
+    provideFormatter = false,
   },
   -- settings = {},
 }

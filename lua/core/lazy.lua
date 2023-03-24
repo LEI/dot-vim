@@ -75,7 +75,8 @@ require('lazy').setup({
 local function load(name)
   local Util = require('lazy.core.util')
   -- always load lazyvim, then user file
-  for _, mod in ipairs({ 'lazyvim.config.' .. name, config_dir .. '.' .. name }) do
+  -- for _, mod in ipairs({ 'lazyvim.config.' .. name, config_dir .. '.' .. name }) do
+  for _, mod in ipairs({ config_dir .. '.' .. name }) do
     Util.try(function()
       require(mod)
     end, {

@@ -683,7 +683,7 @@ return {
         -- 'css',
         -- 'scss',
         'less',
-        -- 'html', -- htmlls
+        'html', -- htmlls
         'json',
         'jsonc',
         'yaml',
