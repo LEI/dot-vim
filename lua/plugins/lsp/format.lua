@@ -16,6 +16,8 @@ M.servers = {
 
   tsserver = false, -- Replaced by eslint-ls
   yamlls = false, -- TODO: fallback to yamlls if there is no prettier config
+
+  intelephense = false,
 }
 
 function M.should_force(client)

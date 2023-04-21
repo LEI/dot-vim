@@ -205,12 +205,13 @@ return {
     config = function(plugin)
       local telescope = require('telescope')
       telescope.setup({
-        defaults = plugin.defaults,
+        -- defaults = plugin.defaults,
         -- https://github.com/nvim-telescope/telescope.nvim/issues/938#issuecomment-877539724
         -- defaults = require('telescope.themes').get_dropdown(plugin.defaults),
+        defaults = require('telescope.themes').get_ivy(plugin.defaults),
         pickers = {
           find_files = {
-            theme = 'dropdown',
+            -- theme = 'dropdown',
             hidden = true,
           },
           -- git_status = {

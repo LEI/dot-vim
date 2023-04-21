@@ -100,8 +100,9 @@ function M.on_attach(client, bufnr)
     self:map('gI', 'Telescope lsp_implementations', { desc = 'Telescope Implementation' })
   end
   if client.server_capabilities.referencesProvider then
-    self:map('gr', vim.lsp.buf.references, { desc = 'Go to References' })
-    self:map('<Leader>h', 'Telescope lsp_references', { desc = 'Telescope References' })
+    self:map('gR', vim.lsp.buf.references, { desc = 'Go to References' })
+    -- <Leader>h
+    self:map('gr', 'Telescope lsp_references', { desc = 'Telescope References' })
   end
   if client.server_capabilities.renameProvider then
     self:map('<Leader>r', vim.lsp.buf.rename, { desc = 'Rename', has = 'rename' })
