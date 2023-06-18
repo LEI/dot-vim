@@ -8,11 +8,11 @@ local diagnostic_signs = {
 
 -- Common icons
 local icons = {
-  absent = '', -- ○
-  pending = '祥', -- ◌
-  present = '', -- ●
-  outdated = 'ﮮ',
-  unwanted = '',
+  absent = '󰝦', -- ○
+  pending = '󱎫', -- ◌
+  present = '󰄳', -- ●
+  outdated = '󰚰',
+  unwanted = '󰋚',
 }
 
 local settings = {
@@ -44,16 +44,16 @@ local settings = {
   },
 
   -- Trouble:
-  -- error = "",
-  -- warning = "",
-  -- hint = "",
+  -- error = "󰅚",
+  -- warning = "󰀪",
+  -- hint = "󰌶",
   -- information = "",
-  -- other = "﫠"
+  -- other = "󰗡"
   -- icons = {
   --   diagnostics = {
   --     Error = ' ',
   --     Warn = ' ',
-  --     Hint = ' ',
+  --     Hint = '󰌶 ',
   --     Info = ' ',
   --   },
   --   git = {
@@ -73,7 +73,7 @@ local settings = {
   --     Event = " ",
   --     Field = " ",
   --     File = " ",
-  --     Folder = " ",
+  --     Folder = "󰉋 ",
   --     Function = " ",
   --     Interface = " ",
   --     Key = " ",
@@ -81,7 +81,7 @@ local settings = {
   --     Method = " ",
   --     Module = " ",
   --     Namespace = " ",
-  --     Null = "ﳠ ",
+  --     Null = "󰟢 ",
   --     Number = " ",
   --     Object = " ",
   --     Operator = " ",
@@ -102,42 +102,42 @@ local settings = {
   -- LSP kind
   kinds = {
     -- Codicons
-    Text = '', --  
-    -- Method = '',
-    Function = '', -- ƒ
-    -- Constructor = '', --   
-    -- Field = '', -- ﰠ    
-    -- Variable = 'ﳋ', --    
-    -- Class = 'ﴯ', -- 𝓒 
+    Text = '󰉿', --  
+    -- Method = '󰆧',
+    Function = '󰊕', -- ƒ
+    -- Constructor = '', --   󰌗
+    -- Field = '󰆨', -- 󰜢 󰄶  󰇽 
+    -- Variable = '󰟍', -- 󰀫 󰂡  
+    -- Class = '󰠱', -- 𝓒 
     -- Interface = '', --  
-    -- Module = '', -- ﰪ
-    -- Property = '', -- ﰠ  
-    -- Unit = '塞',
-    -- Value = '', -- 
-    -- Enum = '', -- 練 ℰ
+    -- Module = '', -- 󰜬
+    -- Property = '', -- 󰜢  
+    -- Unit = '󰑭',
+    -- Value = '󰎠', -- 
+    -- Enum = '', -- 󰕘 ℰ
     -- Keyword = '',
-    Snippet = '', -- 
-    -- Color = '',
-    File = '', -- 
-    -- Reference = '', -- 
-    Folder = '', -- 
+    Snippet = '󰃅', -- 
+    -- Color = '󰏘',
+    File = '', -- 󰈙
+    -- Reference = '', -- 󰈇
+    Folder = '󰉋', -- 
     -- EnumMember = '',
-    -- Constant = '', -- ﲀ 
-    -- Struct = 'פּ', -- ﬌ 𝓢  
+    -- Constant = '󰏿', -- 󰞂 
+    -- Struct = '󰙅', -- 󰘍 𝓢  
     -- Event = '', -- 
-    -- Operator = '', -- 
-    -- TypeParameter = '', -- 𝙏 
+    -- Operator = '󰆕', -- 
+    -- TypeParameter = '󰊄', -- 𝙏 
 
     -- symbols-outline
-    Namespace = '', -- 
+    Namespace = '󰅲', -- 
     Package = '',
-    String = '', -- 𝓐 
-    Number = '', -- # 
+    String = '󰀬', -- 𝓐 
+    Number = '󰎠', -- # 
     Boolean = '◩', -- ⊨ 
-    Array = '', -- 
-    Object = '',
-    Key = '',
-    Null = 'ﳠ',
+    Array = '󰅪', -- 
+    Object = '󰅩',
+    Key = '󰌋',
+    Null = '󰟢',
 
     -- Copilot = '',
 
@@ -151,7 +151,7 @@ local settings = {
   devicons = {
     dbout = { icon = '󰥞', name = 'Output' },
     dbui = { icon = '󱙋', name = 'DBUI' },
-    sql = { icon = '', name = 'SQL' },
+    sql = { icon = '󰆼', name = 'SQL' },
     tags = { icon = '', name = 'Tags' },
     -- terminal = { icon = '>' },
     -- toggleterm = { icon = '' },
@@ -166,10 +166,10 @@ local settings = {
       cmd = '⌘',
       config = '',
       event = '',
-      ft = '',
+      ft = '󰉋',
       init = '⚙',
-      keys = '',
-      lazy = '鈴', -- 💤
+      keys = '󰌋',
+      lazy = '󰒲', -- 💤
       loaded = icons.present, -- ●
       not_loaded = icons.absent, -- ○
       plugin = '',

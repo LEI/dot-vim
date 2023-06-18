@@ -144,6 +144,7 @@ return {
     -- stylua: ignore
     keys = {
       -- https://github.com/nvim-telescope/telescope.nvim#pickers
+      { "<Leader>'", '<cmd>Telescope resume<CR>', desc = 'Open last picker' },
       { '<Leader>f', function() require('telescope.builtin').find_files() end, desc = 'File picker' },
       { '<Leader>F', function() require('telescope.builtin').find_files({ cwd = false }) end, desc = 'File picker (cwd)' },
       { '<Leader>b', '<cmd>Telescope buffers<cr>', desc = 'Buffers' },
@@ -200,6 +201,15 @@ return {
             return require('trouble.providers.telescope').open_with_trouble(...)
           end,
         },
+      },
+      -- Truncate preview of large files
+      -- https://github.com/nvim-telescope/telescope.nvim/issues/623#issuecomment-921978316
+      preview = {
+        filesize_hook = function(filepath, bufnr, opts)
+          local max_bytes = 10000
+          local cmd = { 'head', '-c', max_bytes, filepath }
+          require('telescope.previewers.utils').job_maker(cmd, bufnr, opts)
+        end,
       },
     },
     config = function(plugin)

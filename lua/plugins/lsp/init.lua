@@ -808,7 +808,7 @@ return {
         },
         nginx = {
           install = {
-            nginxbeautifier = 'npm install --global nginxbeautifier',
+            nginxbeautifier = 'npm install --global --quiet nginxbeautifier',
           },
           sources = {
             null_ls.builtins.formatting.nginx_beautifier.with({
@@ -829,7 +829,7 @@ return {
             null_ls.builtins.diagnostics.php,
             null_ls.builtins.diagnostics.phpcs,
             -- null_ls.builtins.diagnostics.phpmd,
-            null_ls.builtins.diagnostics.phpstan,
+            -- null_ls.builtins.diagnostics.phpstan, -- too many open files
             -- null_ls.builtins.diagnostics.psalm,
             null_ls.builtins.formatting.phpcbf,
             -- null_ls.builtins.formatting.phpcsfixer,
