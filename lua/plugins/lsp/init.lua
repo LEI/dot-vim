@@ -11,6 +11,26 @@ local function executable(name)
   return vim.fn.executable(name) == 1
 end
 
+local function execute_command(cmd)
+  local Job = require('plenary.job')
+  local is_table = type(cmd) == 'table'
+  local opts = {
+    command = is_table and cmd[1] or 'sh',
+    args = is_table and { unpack(cmd, 2) } or #cmd and { cmd } or {},
+    -- on_exit = function(j, return_val)
+    --   vim.pretty_print(j:result())
+    -- end,
+  }
+  -- vim.pretty_print(opts)
+  Job:new(opts):start() -- or :sync(10000)
+end
+
+local system_install_command = '$PACKAGE_MANAGER install %s'
+local function system_install(name)
+  local command = string.format(system_install_command, name)
+  execute_command(command)
+end
+
 -- Execute shell commands
 ---@param commands { [string]: Command }
 local function execute_install(commands)
@@ -20,17 +40,7 @@ local function execute_install(commands)
       vim.notify(string.format('Installing %s', name), 'INFO', {
         title = name,
       })
-      local Job = require('plenary.job')
-      local is_table = type(cmd) == 'table'
-      local opts = {
-        command = is_table and cmd[1] or 'sh',
-        args = is_table and { unpack(cmd, 2) } or #cmd and { cmd } or {},
-        -- on_exit = function(j, return_val)
-        --   vim.pretty_print(j:result())
-        -- end,
-      }
-      -- vim.pretty_print(opts)
-      Job:new(opts):start() -- or :sync(10000)
+      execute_command(cmd)
     end
   end
 end
@@ -722,7 +732,7 @@ return {
         -- },
         -- xml = { -- [{ 'html', 'xml' }]
         --   install = {
-        --     -- tidy = 'brew install tidy-html5',
+        --     -- tidy = system_install('tidy-html5'),
         --   },
         --   sources = {
         --     null_ls.builtins.diagnostics.tidy,
@@ -738,6 +748,9 @@ return {
         --   sources = { null_ls.builtins.diagnostics.vacuum },
         -- },
         lua = {
+          install = {
+            -- luarocks = system_install('luarocks')
+          },
           tools = {
             luacheck = {},
             stylua = {},
@@ -808,7 +821,7 @@ return {
         },
         nginx = {
           install = {
-            nginxbeautifier = 'npm install --global --quiet nginxbeautifier',
+            -- nginxbeautifier = 'npm install --global --quiet nginxbeautifier',
           },
           sources = {
             null_ls.builtins.formatting.nginx_beautifier.with({

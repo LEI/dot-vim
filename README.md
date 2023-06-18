@@ -14,19 +14,24 @@ Clone and change directory
 
 Create the directory `~/.vim`
 
-    mkdir -p "$HOME/.vim"
+    mkdir -p ~/.vim
 
 Link files to home directory
 
-    ln -isv "~/.dot/vim/{*.vim,autoload,config,ftdetect,ftplugin,plugin}" "$HOME/.vim"
+    ln -isv ~/.dot/vim/{*.vim,autoload,config,ftdetect,ftplugin,plugin} ~/.vim
 
 Source `~/.vim/init.vim` from `~/.vimrc`
 
-    echo 'source ~/.vim/init.vim' >> "$HOME/.vimrc"
+    echo 'source ~/.vim/init.vim' >> ~/.vimrc
+
+Nvim
+
+    ln -isv ~/.dot/vim ~/.config/nvim
+    ln -isv ~/.dot/vim/lua ~/.vim
 
 Gvim
 
-    echo 'source ~/.vim/ginit.vim' >> "$HOME/.gvimrc"
+    echo 'source ~/.vim/ginit.vim' >> ~/.gvimrc
 
 ## Resources
 
