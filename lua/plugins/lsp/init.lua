@@ -1,7 +1,7 @@
 -- https://github.com/wbthomason/dotfiles/blob/main/dot_config/nvim/lua/config/lsp.lua
 -- https://github.com/roginfarrer/dotfiles/blob/main/nvim/.config/nvim/lua/plugins/lsp/init.lua
 -- https://github.com/junnplus/lsp-setup.nvim
-local settings = require('core.settings')
+local settings = require("core.settings")
 
 ---@alias Command string | string[]
 ---@alias Source table null-ls source
@@ -12,10 +12,10 @@ local function executable(name)
 end
 
 local function execute_command(cmd)
-  local Job = require('plenary.job')
-  local is_table = type(cmd) == 'table'
+  local Job = require("plenary.job")
+  local is_table = type(cmd) == "table"
   local opts = {
-    command = is_table and cmd[1] or 'sh',
+    command = is_table and cmd[1] or "sh",
     args = is_table and { unpack(cmd, 2) } or #cmd and { cmd } or {},
     -- on_exit = function(j, return_val)
     --   vim.pretty_print(j:result())
@@ -25,7 +25,7 @@ local function execute_command(cmd)
   Job:new(opts):start() -- or :sync(10000)
 end
 
-local system_install_command = '$PACKAGE_MANAGER install %s'
+local system_install_command = "$PACKAGE_MANAGER install %s"
 local function system_install(name)
   local command = string.format(system_install_command, name)
   execute_command(command)
@@ -37,7 +37,7 @@ local function execute_install(commands)
   for name, cmd in pairs(commands) do
     local is_installed = executable(name)
     if not is_installed then
-      vim.notify(string.format('Installing %s', name), 'INFO', {
+      vim.notify(string.format("Installing %s", name), "INFO", {
         title = name,
       })
       execute_command(cmd)
@@ -49,7 +49,7 @@ end
 -- Skip if no version is provided and the tool is available globally
 ---@param tools { [string]: Tool }
 local function mason_install(tools)
-  local mr = require('mason-registry')
+  local mr = require("mason-registry")
   for name, opts in pairs(tools) do
     if not vim.tbl_isempty(opts) or not executable(name) then
       local p = mr.get_package(name)
@@ -62,7 +62,7 @@ end
 
 ---@param config { install: { [string]: Command }, tools?: { [string]: Tool }, sources: Source[] }
 local function null_ls_register(config)
-  local null_ls = require('null-ls')
+  local null_ls = require("null-ls")
   -- https://github.com/jose-elias-alvarez/null-ls.nvim/issues/1373#issuecomment-1407433597
   -- if name and not null_ls.is_registered(?) then
   --   return false
@@ -90,7 +90,7 @@ local format_diagnostic = function(diagnostic)
 
   -- Add LSP diagnostic code (e.g. eslint rule)
   if diagnostic.code then
-    msg = string.format('%s (%s)', msg, diagnostic.code)
+    msg = string.format("%s (%s)", msg, diagnostic.code)
   end
 
   if user_data then
@@ -98,10 +98,10 @@ local format_diagnostic = function(diagnostic)
       -- TODO no highlight msg = string.format('%s\n', msg)
       for key, value in pairs(user_data.lsp.codeDescription) do
         -- Add codeDescription.href (eslint documentation link)
-        if key == 'href' then
-          msg = string.format('%s\n%s', msg, value)
+        if key == "href" then
+          msg = string.format("%s\n%s", msg, value)
         else
-          msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+          msg = string.format("%s\n%s: %s", msg, key, type(value) == "string" and value or vim.inspect(value))
         end
       end
     end
@@ -109,10 +109,10 @@ local format_diagnostic = function(diagnostic)
       if user_data.lsp.relatedInformation then
         for _, related in ipairs(user_data.lsp.relatedInformation) do
           msg = string.format(
-            '%s\n[%d-%d] %s',
+            "%s\n[%d-%d] %s",
             msg,
             related.location.range.start.character,
-            related.location.range['end'].character,
+            related.location.range["end"].character,
             related.message
             -- related.location.uri
           )
@@ -120,28 +120,28 @@ local format_diagnostic = function(diagnostic)
       end
       if user_data.lsp.data then
         if user_data.lsp.data.rendered then
-          msg = string.format('%s\n%s', msg, user_data.lsp.data.rendered)
+          msg = string.format("%s\n%s", msg, user_data.lsp.data.rendered)
         end
         for key, value in pairs(user_data.lsp.data) do
-          if key ~= 'rendered' then
-            msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+          if key ~= "rendered" then
+            msg = string.format("%s\n%s: %s", msg, key, type(value) == "string" and value or vim.inspect(value))
           end
         end
       end
       for key, value in pairs(user_data.lsp) do
         if
-          key ~= 'code'
-          and key ~= 'codeDescription'
-          and key ~= 'data'
-          and key ~= 'relatedInformation'
-          and (diagnostic.source ~= 'typescript' or key ~= 'tags')
+          key ~= "code"
+          and key ~= "codeDescription"
+          and key ~= "data"
+          and key ~= "relatedInformation"
+          and (diagnostic.source ~= "typescript" or key ~= "tags")
         then
-          msg = string.format('%s\nLSP %s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+          msg = string.format("%s\nLSP %s: %s", msg, key, type(value) == "string" and value or vim.inspect(value))
         end
       end
     else
       for key, value in pairs(user_data) do
-        msg = string.format('%s\n%s: %s', msg, key, type(value) == 'string' and value or vim.inspect(value))
+        msg = string.format("%s\n%s: %s", msg, key, type(value) == "string" and value or vim.inspect(value))
       end
     end
   end
@@ -159,7 +159,7 @@ local format_diagnostic = function(diagnostic)
   -- if url then
   --   msg = string.format('%s [%s]', msg, url)
   -- end
-  return string.format('%s\n', msg)
+  return string.format("%s\n", msg)
 end
 
 if settings.diagnostic.float == nil then
@@ -169,13 +169,13 @@ end
 --   settings.diagnostic.float.border = 'none'
 -- end
 if settings.diagnostic.float.header == nil then
-  settings.diagnostic.float.header = ''
+  settings.diagnostic.float.header = ""
 end
 -- settings.diagnostic.float.max_width = max_width
 -- close_events = { 'BufLeave', 'CursorMoved', 'InsertEnter', 'FocusLost' },
 -- close_events = { 'BufLeave', 'CursorMoved', 'InsertEnter', 'TextChanged' }, -- DiagnosticChanged
 if settings.diagnostic.float.close_events == nil then
-  settings.diagnostic.float.close_events = { 'CursorMoved', 'DiagnosticChanged', 'BufHidden', 'InsertEnter' }
+  settings.diagnostic.float.close_events = { "CursorMoved", "DiagnosticChanged", "BufHidden", "InsertEnter" }
 end
 if settings.diagnostic.float.format == nil then
   settings.diagnostic.float.format = format_diagnostic
@@ -186,7 +186,7 @@ end
 --   return sep, 'Comment'
 -- end
 if settings.diagnostic.float.source == nil then
-  settings.diagnostic.float.source = 'always'
+  settings.diagnostic.float.source = "always"
 end
 
 vim.diagnostic.config(settings.diagnostic)
@@ -207,8 +207,8 @@ local function lsp_hover(_, result, ctx, config)
   return bufnr, winnr
 end
 
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(lsp_hover, {
-  name = 'lsp-hover',
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(lsp_hover, {
+  name = "lsp-hover",
   -- border = 'none',
 })
 
@@ -237,8 +237,8 @@ local function lsp_signature_help(_, result, ctx, config)
   return bufnr, winnr
 end
 
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(lsp_signature_help, {
-  name = 'lsp-signature-help',
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(lsp_signature_help, {
+  name = "lsp-signature-help",
   -- border = 'none',
   -- close_events = { 'CursorMoved', 'BufHidden', 'InsertEnter' },
   -- close_events = { 'CursorMoved', 'BufHidden', 'InsertChange' },
@@ -249,11 +249,11 @@ vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(lsp_signature_help
   -- zindex = 1001, -- Above cmp
 })
 
-vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
+vim.lsp.handlers["window/showMessage"] = function(_, result, ctx)
   local client = vim.lsp.get_client_by_id(ctx.client_id)
-  local lvl = ({ 'ERROR', 'WARN', 'INFO', 'DEBUG' })[result.type]
+  local lvl = ({ "ERROR", "WARN", "INFO", "DEBUG" })[result.type]
   vim.notify(result.message, lvl, {
-    title = 'LSP | ' .. client.name,
+    title = "LSP | " .. client.name,
     -- timeout = 3000,
     -- keep = function()
     --   return lvl == 'ERROR' or lvl == 'WARN'
@@ -270,37 +270,37 @@ end
 return {
   -- lspconfig
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     dependencies = {
       -- { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
-      { 'folke/neodev.nvim', config = true }, -- Replaces hrsh7th/cmp-nvim-lua
-      'mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'hrsh7th/cmp-nvim-lsp', -- 'hrsh7th/nvim-cmp',
+      { "folke/neodev.nvim", config = true }, -- Replaces hrsh7th/cmp-nvim-lua
+      "mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp", -- 'hrsh7th/nvim-cmp',
       -- 'lsp_signature.nvim', -- Alternative hrsh7th/cmp-nvim-lsp-signature-help
-      'b0o/schemastore.nvim', -- jsonls
-      'null-ls.nvim',
+      "b0o/schemastore.nvim", -- jsonls
+      "null-ls.nvim",
     },
-    event = 'BufReadPre',
+    event = "BufReadPre",
     -- Return true to skip setup with lspconfig
     setup_server = function(server, opts)
-      if server == 'docker_compose_language_service' then
+      if server == "docker_compose_language_service" then
         -- FIXME
         return true
       end
-      if server == 'lua_ls' then
-        require('lspconfig').sumneko_lua.setup(opts)
+      if server == "lua_ls" then
+        require("lspconfig").sumneko_lua.setup(opts)
         return true
       end
-      return vim.tbl_contains({ 'rust_analyzer', 'tsserver' }, server)
+      return vim.tbl_contains({ "rust_analyzer", "tsserver" }, server)
     end,
     config = function(plugin)
-      local lspconfig = require('lspconfig')
-      local configs = require('lspconfig.configs')
+      local lspconfig = require("lspconfig")
+      local configs = require("lspconfig.configs")
 
       -- vim.api.nvim_set_hl(0, 'LspCodeLens', { default = true, link = 'Comment' })
 
-      for name, config in pairs(LoadDir('plugins/lsp/available')) do
+      for name, config in pairs(LoadDir("plugins/lsp/available")) do
         configs[name] = config
       end
 
@@ -311,15 +311,15 @@ return {
       -- pyright
       -- vuels
 
-      local servers = LoadDir('plugins/lsp/servers')
+      local servers = LoadDir("plugins/lsp/servers")
 
       -- setup formatting and keymaps
       local attached = {}
-      require('lazyvim.util').on_attach(function(client, bufnr)
+      require("lazyvim.util").on_attach(function(client, bufnr)
         if not attached[bufnr] then
           -- vim.notify('Attached to ' .. client.name, vim.log.levels.INFO, { title = 'LSP' })
           -- vim.inspect(client.server_capabilities)
-          require('plugins.lsp.keymaps').once_on_attach(client, bufnr)
+          require("plugins.lsp.keymaps").once_on_attach(client, bufnr)
           attached[bufnr] = true
         end
 
@@ -330,9 +330,9 @@ return {
         if client.server_capabilities.signatureHelpProvider then
           -- print('Signature help enabled with ' .. client.name)
           -- 'TextChangedI', 'TextChangedP'
-          vim.api.nvim_create_autocmd({ 'CursorHoldI' }, {
+          vim.api.nvim_create_autocmd({ "CursorHoldI" }, {
             buffer = bufnr,
-            group = vim.api.nvim_create_augroup('LspSignatureHelp', { clear = true }), -- lsp_group
+            group = vim.api.nvim_create_augroup("LspSignatureHelp", { clear = true }), -- lsp_group
             callback = function()
               if not settings.signature_help then
                 return
@@ -341,8 +341,8 @@ return {
                 local config = vim.api.nvim_win_get_config(winnr)
                 if config.zindex then
                   local name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(winnr))
-                  local kind = 'lsp-signature-help'
-                  if name ~= '' and name:sub(-#kind) == kind then
+                  local kind = "lsp-signature-help"
+                  if name ~= "" and name:sub(-#kind) == kind then
                     -- Skip if a another signature window is already open
                     -- to avoid focus on second call
                     return
@@ -354,19 +354,19 @@ return {
           })
         end
 
-        require('plugins.lsp.format').on_attach(client, bufnr)
-        require('plugins.lsp.keymaps').on_attach(client, bufnr)
+        require("plugins.lsp.format").on_attach(client, bufnr)
+        require("plugins.lsp.keymaps").on_attach(client, bufnr)
       end)
 
       -- client.server_capabilities.diagnosticProvider
 
-      require('lspconfig.ui.windows').default_options.border = settings.border
+      require("lspconfig.ui.windows").default_options.border = settings.border
 
       -- local capabilities = vim.lsp.protocol.make_client_capabilities()
       -- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      local lsp_mason = require('mason-lspconfig')
+      local lsp_mason = require("mason-lspconfig")
       lsp_mason.setup({
         ensure_installed = vim.tbl_keys(servers),
         automatic_installation = true,
@@ -375,7 +375,7 @@ return {
         function(server)
           local opts = servers[server] or {}
           -- opts.autostart = false
-          opts.capabilities = vim.tbl_deep_extend('force', opts.capabilities or {}, capabilities)
+          opts.capabilities = vim.tbl_deep_extend("force", opts.capabilities or {}, capabilities)
           if not plugin.setup_server(server, opts) then
             -- vim.notify('Setup ' .. server, vim.log.levels.INFO, { title = 'LSP' })
             lspconfig[server].setup(opts)
@@ -385,7 +385,7 @@ return {
 
       -- https://github.com/RishabhRD/nvim-lsputils#setup
 
-      local lsp_group = vim.api.nvim_create_augroup('LspGroup', { clear = true })
+      local lsp_group = vim.api.nvim_create_augroup("LspGroup", { clear = true })
 
       -- Show line diagnostics automatically in hover window
 
@@ -399,7 +399,7 @@ return {
           return
         end
         -- Check if insert mode is active
-        if vim.api.nvim_get_mode().mode == 'i' then
+        if vim.api.nvim_get_mode().mode == "i" then
           return
         end
         -- Check if completion menu is open
@@ -424,20 +424,20 @@ return {
           if config.zindex then
             local bufnr = vim.api.nvim_win_get_buf(winnr)
             local name = vim.api.nvim_buf_get_name(bufnr)
-            local kind = 'lsp-hover'
-            if name ~= '' and name:sub(-#kind) == kind then
+            local kind = "lsp-hover"
+            if name ~= "" and name:sub(-#kind) == kind then
               -- Skip if another hover window is already open
               return
             end
           end
         end
         -- FIXME: hides last vim message
-        vim.diagnostic.open_float(nil, { focusable = false, scope = 'line' })
+        vim.diagnostic.open_float(nil, { focusable = false, scope = "line" })
       end
 
       -- You will likely want to reduce updatetime which affects CursorHold
       -- note: this setting is global and should be set only once
-      vim.api.nvim_create_autocmd({ 'CursorHold', 'DiagnosticChanged' }, {
+      vim.api.nvim_create_autocmd({ "CursorHold", "DiagnosticChanged" }, {
         group = lsp_group,
         callback = on_hover,
       })
@@ -470,20 +470,20 @@ return {
           elseif not config.install or config.install[server] == nil then
             table.insert(auto_install, server)
           end
-          opts.capabilities = vim.tbl_deep_extend('force', opts.capabilities or {}, capabilities)
+          opts.capabilities = vim.tbl_deep_extend("force", opts.capabilities or {}, capabilities)
           servers[server] = opts
         end
         if #manual_install then
           execute_install(manual_install)
         end
-        vim.api.nvim_create_autocmd('FileType', {
+        vim.api.nvim_create_autocmd("FileType", {
           -- desc = 'Install and register LSP servers',
           pattern = ft,
           group = lsp_group,
           callback = function()
             if config.install then
               for server, opts in pairs(config.servers) do
-                vim.notify('Setup ' .. server, vim.log.levels.INFO, { title = 'LSP' })
+                vim.notify("Setup " .. server, vim.log.levels.INFO, { title = "LSP" })
                 lspconfig[server].setup(opts)
               end
             else
@@ -499,13 +499,13 @@ return {
   },
 
   {
-    'adoyle-h/lsp-toggle.nvim',
+    "adoyle-h/lsp-toggle.nvim",
     dependencies = {
-      'nvim-lspconfig',
-      'telescope.nvim',
-      'null-ls.nvim',
+      "nvim-lspconfig",
+      "telescope.nvim",
+      "null-ls.nvim",
     },
-    cmd = { 'ToggleLSP', 'ToggleNullLSP' },
+    cmd = { "ToggleLSP", "ToggleNullLSP" },
     opts = {
       create_cmds = true,
       telescope = true,
@@ -566,10 +566,10 @@ return {
 
   -- Formatters
   {
-    'lukas-reineke/lsp-format.nvim', -- Wrapper around native LSP formatting
+    "lukas-reineke/lsp-format.nvim", -- Wrapper around native LSP formatting
     -- enabled = false,
     opts = {
-      exclude = require('plugins.lsp.format').list_excluded(),
+      exclude = require("plugins.lsp.format").list_excluded(),
       -- exclude = { 'lua_ls', 'tsserver', 'yamlls' },
       -- order = {},
       -- FIX: format_options = vim.tbl_deep_extend('force', {}, M.format_options or {}, format_options)
@@ -579,13 +579,13 @@ return {
     },
   },
   {
-    'jose-elias-alvarez/null-ls.nvim',
+    "jose-elias-alvarez/null-ls.nvim",
     -- enabled = false,
     -- event = 'BufReadPre',
     dependencies = {
-      'mason.nvim',
+      "mason.nvim",
       -- 'jay-babu/mason-null-ls.nvim',
-      'jose-elias-alvarez/typescript.nvim',
+      "jose-elias-alvarez/typescript.nvim",
       -- {
       --   -- https://github.com/ThePrimeagen/refactoring.nvim#configuration-for-refactoring-operations
       --   'ThePrimeagen/refactoring.nvim',
@@ -606,7 +606,7 @@ return {
         -- misspell = {},
       })
 
-      local null_ls = require('null-ls')
+      local null_ls = require("null-ls")
 
       local map_severity = function(map)
         return function(diagnostic)
@@ -669,7 +669,7 @@ return {
         -- diagnostic_config = nil,
         -- diagnostics_format = '[#{c}] #{m} (#{s})',
         -- fallback_severity = vim.diagnostic.severity.ERROR,
-        log_level = 'info', -- warn',
+        log_level = "info", -- warn',
         -- notify_format = '[null-ls] %s',
         -- https://github.com/lukas-reineke/lsp-format.nvim/issues/70
         -- on_attach = function(client, _)
@@ -684,11 +684,26 @@ return {
         -- update_in_insert = false,
       })
 
+      -- local guix_style = {
+      --   name = "guix_style",
+      --   filetypes = { ["scheme"] = true, ["scheme.guile"] = true },
+      --   methods = { [null_ls.methods.FORMATTING] = true },
+      --   -- generator = {
+      --   --   fn = function()
+      --   --     return "I am a source!"
+      --   --   end,
+      --   -- },
+      --   generator_options = {
+      --     command = "guix",
+      --     args = { "style", "-f", "$FILENAME" },
+      --   },
+      -- }
+
       local prettier_filetypes = {
-        'javascript',
-        'javascriptreact',
-        'typescript',
-        'typescriptreact',
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
         -- 'vue',
         -- 'css',
         -- 'scss',
@@ -705,7 +720,7 @@ return {
       local register_filetypes = {
         dockerfile = {
           -- https://github.com/hadolint/hadolint/issues/897
-          tools = { hadolint = { version = 'v2.12.1-beta' } },
+          tools = { hadolint = { version = "v2.12.1-beta" } },
           sources = { null_ls.builtins.diagnostics.hadolint },
         },
         gitcommit = {
@@ -758,7 +773,7 @@ return {
           sources = {
             -- null_ls.builtins.completion.luasnip,
             null_ls.builtins.diagnostics.luacheck.with({
-              extra_args = { '--globals', 'vim' },
+              extra_args = { "--globals", "vim" },
             }),
             null_ls.builtins.formatting.stylua,
           },
@@ -795,17 +810,17 @@ return {
         --     null_ls.builtins.diagnostics.proselint,
         --   },
         -- },
-        [{ 'markdown', 'txt' }] = {
+        [{ "markdown", "txt" }] = {
           tools = {
             alex = {},
           },
           sources = {
             null_ls.builtins.diagnostics.alex.with({
-              extra_filetypes = { 'txt' },
+              extra_filetypes = { "txt" },
             }),
           },
         },
-        [{ 'markdown', 'tex', 'asciidoc' }] = {
+        [{ "markdown", "tex", "asciidoc" }] = {
           tools = { vale = {} },
           sources = {
             -- ~/.vale.ini
@@ -825,7 +840,7 @@ return {
           },
           sources = {
             null_ls.builtins.formatting.nginx_beautifier.with({
-              extra_args = { '--space', 2 },
+              extra_args = { "--space", 2 },
             }),
           },
         },
@@ -867,6 +882,12 @@ return {
             -- null_ls.builtins.formatting.yapf,
           },
         },
+        scheme = {
+          sources = {
+            null_ls.builtins.formatting.emacs_scheme_mode,
+            -- guix_style,
+          },
+        },
         sh = {
           tools = {
             shfmt = {},
@@ -882,7 +903,7 @@ return {
             -- null_ls.builtins.formatting.shellharden,
           },
         },
-        [{ 'sql', 'pgsql' }] = {
+        [{ "sql", "pgsql" }] = {
           tools = {
             -- ['sql-formatter'] = {},
             sqlfluff = {},
@@ -890,13 +911,13 @@ return {
           sources = {
             null_ls.builtins.diagnostics.sqlfluff.with({
               -- '--processes', '-1',
-              extra_args = { '--dialect', 'postgres' },
-              extra_filetypes = { 'pgsql' },
+              extra_args = { "--dialect", "postgres" },
+              extra_filetypes = { "pgsql" },
             }),
             -- null_ls.builtins.formatting.pg_format,
             null_ls.builtins.formatting.sqlfluff.with({
-              extra_args = { '--dialect', 'postgres' },
-              extra_filetypes = { 'pgsql' },
+              extra_args = { "--dialect", "postgres" },
+              extra_filetypes = { "pgsql" },
             }),
             -- null_ls.builtins.formatting.sql_formatter.with({
             --   extra_args = { '--language', 'postgresql' },
@@ -922,7 +943,7 @@ return {
             --   -- extra_args = { '--conf', '~/.config/yamlfmt/.yamlfmt' },
             -- }),
             null_ls.builtins.diagnostics.yamllint.with({
-              extra_args = { '--config-data', '{ rules: { comments: { min-spaces-from-content: 1 } } }' },
+              extra_args = { "--config-data", "{ rules: { comments: { min-spaces-from-content: 1 } } }" },
             }),
           },
         },
@@ -992,13 +1013,13 @@ return {
 
   -- Languages
   {
-    'ray-x/go.nvim',
+    "ray-x/go.nvim",
     dependencies = {
-      'nvim-lspconfig',
-      'nvim-treesitter',
+      "nvim-lspconfig",
+      "nvim-treesitter",
       -- 'ray-x/guihua.lua',
     },
-    ft = { 'go' },
+    ft = { "go" },
     opts = {
       lsp_cfg = false,
       -- trouble = true,
@@ -1013,25 +1034,25 @@ return {
     end,
   },
   {
-    'simrat39/rust-tools.nvim',
-    dependencies = 'nvim-lspconfig',
-    ft = { 'rust' },
+    "simrat39/rust-tools.nvim",
+    dependencies = "nvim-lspconfig",
+    ft = { "rust" },
     config = function()
-      local opts = require('plugins.lsp.servers.rust_analyzer')
-      require('rust-tools').setup({
+      local opts = require("plugins.lsp.servers.rust_analyzer")
+      require("rust-tools").setup({
         -- tools = { on_initialized = vim.pretty_print },
         server = opts,
       })
-      local null_ls = require('null-ls')
+      local null_ls = require("null-ls")
       null_ls_register({ tools = { rustfmt = {} }, sources = { null_ls.builtins.formatting.rustfmt } })
     end,
   },
   {
-    'jose-elias-alvarez/typescript.nvim',
-    ft = { 'typescript', 'typescriptreact' },
+    "jose-elias-alvarez/typescript.nvim",
+    ft = { "typescript", "typescriptreact" },
     config = function()
-      local opts = require('plugins.lsp.servers.tsserver')
-      require('typescript').setup({
+      local opts = require("plugins.lsp.servers.tsserver")
+      require("typescript").setup({
         disable_commands = false, -- prevent the plugin from creating Vim commands
         debug = true, -- enable debug logging for commands
         go_to_source_definition = {
@@ -1041,17 +1062,17 @@ return {
       })
       local sources = {
         -- https://github.com/jose-elias-alvarez/typescript.nvim/issues/21#is5725105
-        require('typescript.extensions.null-ls.code-actions'),
+        require("typescript.extensions.null-ls.code-actions"),
         -- null_ls.builtins.diagnostics.tsc,
       }
-      require('null-ls').register(sources)
+      require("null-ls").register(sources)
     end,
   },
   {
-    'joeveiga/ng.nvim',
-    ft = { 'html', 'typescript' },
+    "joeveiga/ng.nvim",
+    ft = { "html", "typescript" },
     cond = function()
-      return vim.fn.filereadable('angular.json') == 1
+      return vim.fn.filereadable("angular.json") == 1
     end,
     -- stylua: ignore
     keys = {
@@ -1061,5 +1082,5 @@ return {
     },
   },
 
-  require('plugins.lsp.ui'),
+  require("plugins.lsp.ui"),
 }
