@@ -94,10 +94,13 @@ else
 endif
 
 " Languages:
+Pack 'jjo/vim-cue'
 Pack 'sheerun/vim-polyglot' " Syntax and indentation language pack
 " let g:polyglot_disabled = ['csv', 'graphql', 'tmux']
 if has('nvim')
-  let g:polyglot_disabled = ['go']
+  let g:polyglot_disabled = ['go', 'cue']
+else
+  let g:polyglot_disabled = ['cue']
 endif
 let g:jsx_ext_required = 1
 
