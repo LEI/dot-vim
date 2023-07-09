@@ -1,6 +1,6 @@
 -- https://github.com/seblj/dotfiles/blob/master/nvim/lua/config/lspconfig/init.lua
 -- https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-completion.md
-local settings = require('core.settings')
+local settings = require("core.settings")
 
 local max_buffer_size = 1024 * 1024 -- 1 Mb
 local function buffer_size(bufnr)
@@ -16,12 +16,12 @@ local function file_exists(path)
   -- else
   --   return false
   -- end
-  path = path:gsub('^~', vim.fn.expand('$HOME'))
+  path = path:gsub("^~", vim.fn.expand("$HOME"))
   return vim.fn.filereadable(path) == 1
 end
 
 local function function_exists(name)
-  return name:match('^[%w+]+$') and vim.fn.exists('*' .. name)
+  return name:match("^[%w+]+$") and vim.fn.exists("*" .. name)
 end
 
 return {
@@ -81,16 +81,16 @@ return {
 
   -- Snippets
   {
-    'L3MON4D3/LuaSnip',
+    "L3MON4D3/LuaSnip",
     dependencies = {
-      'rafamadriz/friendly-snippets',
+      "rafamadriz/friendly-snippets",
       config = function()
-        require('luasnip.loaders.from_vscode').lazy_load()
+        require("luasnip.loaders.from_vscode").lazy_load()
       end,
     },
     opts = {
       history = true,
-      delete_check_events = 'TextChanged',
+      delete_check_events = "TextChanged",
       -- region_check_events = 'InsertInter',
     },
     -- stylua: ignore
@@ -106,49 +106,49 @@ return {
       -- { '<S-Tab>', function() require('luasnip').jump(-1) end, mode = { 'i', 's' } },
     },
     config = function()
-      local luasnip = require('luasnip')
-      luasnip.setup({ region_check_events = 'InsertEnter', delete_check_events = 'InsertEnter' })
+      local luasnip = require("luasnip")
+      luasnip.setup({ region_check_events = "InsertEnter", delete_check_events = "InsertEnter" })
     end,
   },
 
   -- Auto completion
   {
-    'hrsh7th/nvim-cmp',
+    "hrsh7th/nvim-cmp",
     dependencies = {
-      'nvim-lspconfig',
-      'lspkind.nvim', -- NOTE: must be in the same file
+      "nvim-lspconfig",
+      "lspkind.nvim", -- NOTE: must be in the same file
 
       -- https://github.com/hrsh7th/nvim-cmp/wiki/List-of-sources
 
       -- Snippets
-      'saadparwaiz1/cmp_luasnip',
+      "saadparwaiz1/cmp_luasnip",
 
       -- Built-in
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-calc',
-      'uga-rosa/cmp-dictionary',
-      'f3fora/cmp-spell', -- or z=
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-calc",
+      "uga-rosa/cmp-dictionary",
+      "f3fora/cmp-spell", -- or z=
       -- buffer-lines digraphs, omni
 
       -- LSP
-      'hrsh7th/cmp-nvim-lsp',
+      "hrsh7th/cmp-nvim-lsp",
       -- 'hrsh7th/cmp-nvim-lsp-document-symbol',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
+      "hrsh7th/cmp-nvim-lsp-signature-help",
 
       -- File system
-      'hrsh7th/cmp-path',
+      "hrsh7th/cmp-path",
 
       -- Git
-      { 'petertriho/cmp-git', dependencies = 'plenary.nvim' },
+      { "petertriho/cmp-git", dependencies = "plenary.nvim" },
 
       -- Command line
-      'hrsh7th/cmp-cmdline',
-      'dmitmel/cmp-cmdline-history',
+      "hrsh7th/cmp-cmdline",
+      "dmitmel/cmp-cmdline-history",
 
       -- Fuzzy finding
 
       -- Shell
-      'andersevenrud/cmp-tmux',
+      "andersevenrud/cmp-tmux",
 
       -- Dependencies
       -- { 'David-Kunz/cmp-npm', dependencies = 'plenary.nvim' },
@@ -157,28 +157,28 @@ return {
       -- 'copilot-cmp',
 
       -- 'crispgm/cmp-beancount',
-      'quangnguyen30192/cmp-nvim-tags',
+      "quangnguyen30192/cmp-nvim-tags",
       -- 'hrsh7th/cmp-nvim-lua', -- Replaced by neodev
       -- 'KadoBOT/cmp-plugins',
       -- 'ray-x/cmp-treesitter',
-      'kristijanhusak/vim-dadbod-completion',
+      "kristijanhusak/vim-dadbod-completion",
 
       -- Icons
-      'nvim-web-devicons',
-      'chrisgrieser/cmp-nerdfont',
+      "nvim-web-devicons",
+      "chrisgrieser/cmp-nerdfont",
 
-      'nvim-autopairs',
+      "nvim-autopairs",
     },
-    event = { 'CmdlineEnter', 'InsertEnter' },
+    event = { "CmdlineEnter", "InsertEnter" },
     -- keys = {},
     config = function()
       -- https://github.com/wbthomason/dotfiles/blob/linux/neovim/.config/nvim/lua/config/cmp.lua
-      local cmp = require('cmp')
-      local cmp_buffer = require('cmp_buffer')
-      local luasnip = require('luasnip')
+      local cmp = require("cmp")
+      local cmp_buffer = require("cmp_buffer")
+      local luasnip = require("luasnip")
 
       -- https://github.com/nvim-tree/nvim-web-devicons/blob/master/lua/nvim-web-devicons.lua#L1718
-      local devicons = require('nvim-web-devicons')
+      local devicons = require("nvim-web-devicons")
       -- local default_icon = devicons.get_default_icon()
       -- local icons = devicons.get_icons()
       -- local function get_icon(name, ext, use_default_icon)
@@ -211,12 +211,12 @@ return {
       -- end
       -- https://github.com/zbirenbaum/copilot-cmp#tab-completion-configuration-highly-recommended
       local has_words_before = function()
-        if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then
+        if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
           return false
         end
         ---@diagnostic disable-next-line: deprecated
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match('^%s*$') == nil
+        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
       end
 
       -- local enable_copilot = vim.g.enable_copilot
@@ -224,9 +224,9 @@ return {
       --   vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = '#6CC644' })
       -- end
 
-      require('cmp_dictionary').setup({
+      require("cmp_dictionary").setup({
         dic = {
-          ['*'] = { '/usr/share/dict/words' },
+          ["*"] = { "/usr/share/dict/words" },
           -- ["lua"] = "path/to/lua.dic",
           -- ["javascript,typescript"] = { "path/to/js.dic", "path/to/js2.dic" },
           -- filename = {
@@ -250,28 +250,28 @@ return {
       })
 
       local source_names = {
-        buffer = '[Buffer]',
-        calc = '[Calc]',
-        cmdline = '[Cmdline]',
-        cmdline_history = '[History]',
-        copilot = '[Copilot]',
-        dap = '[DAP]',
-        dictionary = '[Dict]', -- Replaced by completion item
-        git = '[Git]',
-        luasnip = '[LuaSnip]',
-        nvim_lsp = '[LSP]',
+        buffer = "[Buffer]",
+        calc = "[Calc]",
+        cmdline = "[Cmdline]",
+        cmdline_history = "[History]",
+        copilot = "[Copilot]",
+        dap = "[DAP]",
+        dictionary = "[Dict]", -- Replaced by completion item
+        git = "[Git]",
+        luasnip = "[LuaSnip]",
+        nvim_lsp = "[LSP]",
         -- nvim_lsp_document_symbol = '[Symbol]',
-        nvim_lsp_signature_help = '[Signature]',
+        nvim_lsp_signature_help = "[Signature]",
         -- nvim_lua = '[Lua]',
-        path = '[Path]',
-        spell = '[Spell]',
-        tags = '[Tags]',
-        tmux = '[tmux]',
+        path = "[Path]",
+        spell = "[Spell]",
+        tags = "[Tags]",
+        tmux = "[tmux]",
         -- ['vim-dadbod-completion'] = '[dadbod]', -- Replaced by completion item
       }
 
       local buffer_source = {
-        name = 'buffer',
+        name = "buffer",
         option = {
           -- https://github.com/hrsh7th/cmp-buffer#performance-on-large-text-files
           get_bufnrs = function()
@@ -290,30 +290,30 @@ return {
         {
           -- vim.opt.spell = true
           -- vim.opt.spelllang = { 'en_us' }
-          name = 'spell',
+          name = "spell",
           option = {
             keyword_length = 2,
             -- keep_all_entries = false,
             enable_in_context = function()
-              return require('cmp.config.context').in_treesitter_capture('spell')
+              return require("cmp.config.context").in_treesitter_capture("spell")
             end,
           },
         },
-        { name = 'path' },
+        { name = "path" },
         -- { name = 'copilot' },
-        { name = 'nvim_lsp' },
-        { name = 'nvim_lsp_signature_help' },
+        { name = "nvim_lsp" },
+        { name = "nvim_lsp_signature_help" },
         -- { name = 'nvim_lua' },
-        { name = 'luasnip' },
-        buffer_source,
-        { name = 'nerdfont', option = { trigger_characters = { ':' } } },
-        { name = 'calc', option = { trigger_characters = { '=' } } },
+        { name = "luasnip" },
       }
       -- Second group index only visible if none of the above source is available
       local fallback_sources = {
-        { name = 'tmux', option = { all_panes = false } },
-        { name = 'tags', option = { keyword_length = 3 } },
-        { name = 'dictionary', option = { keyword_length = 3 } },
+        buffer_source,
+        { name = "nerdfont", option = { trigger_characters = { ":" } } },
+        { name = "calc", option = { trigger_characters = { "=" } } },
+        { name = "tmux", option = { all_panes = false } },
+        { name = "tags", option = { keyword_length = 3 } },
+        { name = "dictionary", option = { keyword_length = 3 } },
       }
 
       local select_behavior = cmp.SelectBehavior.Replace
@@ -390,19 +390,19 @@ return {
         --   end,
         -- },
         mapping = cmp.mapping.preset.insert({
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-e>'] = cmp.mapping.abort({}),
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort({}),
           -- Accept currently selected item
           -- Set `select` to `false` to only confirm explicitly selected items.
-          ['<CR>'] = cmp.mapping.confirm({
+          ["<CR>"] = cmp.mapping.confirm({
             -- behavior = cmp.ConfirmBehavior.Replace, select = true,
             select = false,
           }),
           -- vim.schedule_wrap?
 
-          ['<Tab>'] = cmp.mapping(function(fallback)
+          ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item({ behavior = select_behavior })
             elseif luasnip.expand_or_jumpable() then
@@ -412,8 +412,8 @@ return {
             else
               fallback()
             end
-          end, { 'i', 's' }),
-          ['<S-Tab>'] = cmp.mapping(function(fallback)
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item({ behavior = select_behavior })
             elseif luasnip.jumpable(-1) then
@@ -421,7 +421,7 @@ return {
             else
               fallback()
             end
-          end, { 'i', 's' }),
+          end, { "i", "s" }),
 
           -- ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
           -- ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
@@ -457,12 +457,12 @@ return {
         sources = cmp.config.sources(lsp_sources, fallback_sources),
         formatting = {
           -- https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#show-devicons-as-kind
-          format = require('lspkind').cmp_format({
-            mode = 'symbol_text',
+          format = require("lspkind").cmp_format({
+            mode = "symbol_text",
             -- menu = source_names,
             -- symbol_map = settings.kinds,
             before = function(entry, vim_item)
-              if entry.source.name == 'cmdline' and vim_item.kind == 'Variable' then
+              if entry.source.name == "cmdline" and vim_item.kind == "Variable" then
                 -- local label = vim_item.word -- abbr -- entry:get_completion_item().label
                 -- if label ~= '' then
                 --   local is_directory = label:sub(-1) == '/'
@@ -473,20 +473,20 @@ return {
                 --   vim_item.kind = is_directory and 'Folder' or is_command and 'Function' or is_file and 'File' or ''
                 --   vim_item.kind_hl_group = 'CmpItemKind' .. vim_item.kind
                 -- end
-                vim_item.kind = '' -- TODO: 'Command'
-                vim_item.menu = '' -- string.format('[%s]', entry.source.name)
-              elseif entry.source.name == 'vim-dadbod-completion' then
+                vim_item.kind = "" -- TODO: 'Command'
+                vim_item.menu = "" -- string.format('[%s]', entry.source.name)
+              elseif entry.source.name == "vim-dadbod-completion" then
                 local item = entry:get_completion_item()
-                if item.documentation == 'SQL reserved word' then
-                  vim_item.kind = 'Keyword'
+                if item.documentation == "SQL reserved word" then
+                  vim_item.kind = "Keyword"
                 -- vim_item.menu = '[SQL]'
-                elseif item.documentation == 'table' then
-                  vim_item.kind = 'Table'
-                elseif item.documentation:sub(-13) == ' table column' then
+                elseif item.documentation == "table" then
+                  vim_item.kind = "Table"
+                elseif item.documentation:sub(-13) == " table column" then
                   local table = item.documentation:sub(1, -14)
                   -- vim_item.abbr = table .. '.' .. vim_item.abbr
-                  vim_item.kind = 'Column'
-                  vim_item.menu = string.format('[%s]', table)
+                  vim_item.kind = "Column"
+                  vim_item.menu = string.format("[%s]", table)
                 else
                   vim_item.kind = item.documentation
                   -- vim_item.menu = item.labelDetails.description
@@ -535,14 +535,14 @@ return {
               --   -- end
               -- end
 
-              if entry.source.name == 'dictionary' then
+              if entry.source.name == "dictionary" then
                 local item = entry:get_completion_item()
                 -- https://github.com/hrsh7th/nvim-cmp/issues/388#issuecomment-949274984
                 -- vim_item.menu = item.detail
 
                 -- Detect dictionary source
                 -- Check if item.detail matches "belongs to `<source>`"
-                local dict_source = item.detail:match('belong to `(%w+)`') or item.detail
+                local dict_source = item.detail:match("belong to `(%w+)`") or item.detail
                 vim_item.kind = dict_source
               end
               -- if not source_names[entry.source.name] then
@@ -555,9 +555,9 @@ return {
         },
         view = {
           entries = {
-            name = 'custom',
+            name = "custom",
             native = true,
-            selection_order = 'near_cursor',
+            selection_order = "near_cursor",
           },
         },
         window = {
@@ -590,7 +590,7 @@ return {
       -- end
 
       -- https://github.com/hrsh7th/nvim-cmp/issues/875#issuecomment-1214416687
-      cmp.setup.cmdline(':', {
+      cmp.setup.cmdline(":", {
         -- enabled = function()
         --   local cmdline = vim.fn.getcmdline()
         --   if cmdline and cmdline:sub(1, 1) == ':' and cmdline:sub(-1) == '%' then
@@ -600,25 +600,25 @@ return {
         -- fields = { 'abbr' },
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-          { name = 'path' },
+          { name = "path" },
         }, {
           {
-            name = 'cmdline',
+            name = "cmdline",
             option = {
-              ignore_cmds = { '!', '%', 'Man' },
+              ignore_cmds = { "!", "%", "Man" },
             },
           },
         }, {
-          { name = 'cmdline_history', options = { history_type = ':' } },
+          { name = "cmdline_history", options = { history_type = ":" } },
         }),
       })
 
       -- Setup buffer-specific configuration
 
-      local git_filetypes = { 'gitcommit', 'octo' }
+      local git_filetypes = { "gitcommit", "octo" }
 
       -- :commit, @mention, #issue (ang github pr), !mr (gitlab)
-      require('cmp_git').setup({
+      require("cmp_git").setup({
         -- filetypes = git_filetypes,
         -- In order of most to least prioritized
         -- remotes = { 'upstream', 'origin' },
@@ -628,15 +628,15 @@ return {
 
       cmp.setup.filetype(git_filetypes, {
         sources = cmp.config.sources({
-          { name = 'git' },
-          { name = 'luasnip' },
+          { name = "git" },
+          { name = "luasnip" },
           buffer_source,
-          { name = 'tmux', option = { all_panes = false } },
+          { name = "tmux", option = { all_panes = false } },
         }),
       })
 
       -- Markdown
-      cmp.setup.filetype({ 'markdown', 'help', 'txt' }, {
+      cmp.setup.filetype({ "markdown", "help", "txt" }, {
         sources = cmp.config.sources(lsp_sources, fallback_sources),
         -- window = {
         --   documentation = cmp.config.disable,
@@ -644,12 +644,12 @@ return {
       })
 
       -- SQL
-      cmp.setup.filetype({ 'sql', 'mysql', 'plsql' }, {
+      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
         sources = cmp.config.sources({
-          { name = 'vim-dadbod-completion' },
-          { name = 'luasnip' },
+          { name = "vim-dadbod-completion" },
+          { name = "luasnip" },
           buffer_source, -- Not working?
-          { name = 'tmux', option = { all_panes = false } },
+          { name = "tmux", option = { all_panes = false } },
         }, fallback_sources),
       })
 
@@ -663,38 +663,38 @@ return {
       -- end)
 
       -- -- https://github.com/hrsh7th/nvim-cmp/wiki/Advanced-techniques#add-parentheses-after-selecting-function-or-method-item
-      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
     end,
   },
   {
-    'rcarriga/cmp-dap',
+    "rcarriga/cmp-dap",
     dependencies = {
-      'nvim-cmp',
+      "nvim-cmp",
     },
     config = function()
-      local cmp = require('cmp')
+      local cmp = require("cmp")
       -- require('dap').session().capabilities.supportsCompletionsRequest
       cmp.setup({
         enabled = function()
-          return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt' or require('cmp_dap').is_dap_buffer()
+          return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
         end,
       })
-      cmp.setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
+      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
         sources = cmp.config.sources({
-          { name = 'dap' },
+          { name = "dap" },
         }),
       })
     end,
   },
   {
-    'onsails/lspkind.nvim',
+    "onsails/lspkind.nvim",
     config = function()
-      require('lspkind').init({
-        mode = 'symbol_text', -- text, text_symbol, symbol_text, symbol (default)
+      require("lspkind").init({
+        mode = "symbol_text", -- text, text_symbol, symbol_text, symbol (default)
         -- maxwidth = 50, -- prevent the popup from showing more than provided characters
         -- ellipsis_char = settings.chars.ellipsis, -- when popup menu exceed maxwidth (must define maxwidth first)
-        preset = 'codicons',
+        preset = "codicons",
         symbol_map = settings.kinds,
       })
     end,
@@ -703,17 +703,17 @@ return {
   -- AI
   {
     -- TODO: Ignore .env, *.local
-    'zbirenbaum/copilot.lua', -- :Copilot auth
+    "zbirenbaum/copilot.lua", -- :Copilot auth
     enabled = false, -- FIXME: breaks LSP signature completion
-    cmd = 'Copilot',
+    cmd = "Copilot",
     -- event = 'InsertEnter',
     opts = {
       panel = {
         enabled = true,
         auto_refresh = true,
         keymap = {
-          jump_prev = '((',
-          jump_next = '))',
+          jump_prev = "((",
+          jump_next = "))",
           -- accept = '<CR>',
           -- refresh = 'gr',
           -- open = '<M-CR>',
@@ -724,12 +724,12 @@ return {
         auto_trigger = true, -- :Copilot suggestion toggle_auto_trigger
         -- debounce = 75,
         keymap = {
-          accept = '<C-j>', -- '<M-l>',
+          accept = "<C-j>", -- '<M-l>',
           -- accept_word = false,
           -- accept_line = false,
-          next = '<Right>', -- '<M-]>',
-          prev = '<Left>', -- '<M-[>',
-          dismiss = '<C-e>', -- '<C-]>',
+          next = "<Right>", -- '<M-]>',
+          prev = "<Left>", -- '<M-[>',
+          dismiss = "<C-e>", -- '<C-]>',
         },
       },
       filetypes = {
@@ -746,9 +746,9 @@ return {
     },
   },
   {
-    'zbirenbaum/copilot-cmp',
+    "zbirenbaum/copilot-cmp",
     enabled = false,
-    dependencies = 'copilot.lua',
+    dependencies = "copilot.lua",
     opts = {
       -- method = 'getCompletionsCycling',
       -- formatters = {
@@ -759,14 +759,14 @@ return {
     },
   },
   {
-    'jackMort/ChatGPT.nvim',
+    "jackMort/ChatGPT.nvim",
     enabled = false,
     dependencies = {
-      'nui.nvim',
-      'plenary.nvim',
-      'telescope.nvim',
+      "nui.nvim",
+      "plenary.nvim",
+      "telescope.nvim",
     },
-    cmd = { 'ChatGPT' },
+    cmd = { "ChatGPT" },
     opts = {
       -- https://github.com/jackMort/ChatGPT.nvim#configuration
     },

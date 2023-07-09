@@ -707,15 +707,15 @@ return {
         -- 'vue',
         -- 'css',
         -- 'scss',
-        'less',
-        'html', -- htmlls
-        'json',
-        'jsonc',
-        'yaml',
-        'markdown',
-        'markdown.mdx',
-        'graphql',
-        'handlebars',
+        "less",
+        "html", -- htmlls
+        "json",
+        "jsonc",
+        "yaml",
+        "markdown",
+        "markdown.mdx",
+        "graphql",
+        "handlebars",
       }
       local register_filetypes = {
         dockerfile = {
@@ -745,6 +745,14 @@ return {
         --     null_ls.builtins.formatting.eslint_d,
         --   },
         -- },
+        go = {
+          tools = {
+            gofumpt = {},
+          },
+          sources = {
+            -- null_ls.builtins.code_actions.gomodifytags,
+          },
+        },
         -- xml = { -- [{ 'html', 'xml' }]
         --   install = {
         --     -- tidy = system_install('tidy-html5'),
@@ -1024,14 +1032,7 @@ return {
       lsp_cfg = false,
       -- trouble = true,
     },
-    config = function()
-      -- go = {
-      --   tools = {},
-      --   sources = {
-      --     -- null_ls.builtins.code_actions.gomodifytags,
-      --   },
-      -- },
-    end,
+    config = function() end,
   },
   {
     "simrat39/rust-tools.nvim",
