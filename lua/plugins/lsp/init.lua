@@ -271,6 +271,7 @@ return {
   -- lspconfig
   {
     'neovim/nvim-lspconfig',
+    branch = 'master', -- https://github.com/neovim/nvim-lspconfig/issues/3014
     dependencies = {
       -- { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
       { 'folke/neodev.nvim', config = true }, -- Replaces hrsh7th/cmp-nvim-lua
@@ -288,11 +289,14 @@ return {
         -- FIXME
         return true
       end
-      if server == 'lua_ls' then
-        require('lspconfig').sumneko_lua.setup(opts)
-        return true
-      end
-      return vim.tbl_contains({ 'rust_analyzer', 'tsserver' }, server)
+      -- if server == 'lua_ls' then
+      --   require('lspconfig').sumneko_lua.setup(opts)
+      --   return true
+      -- end
+      return vim.tbl_contains({
+        'rust_analyzer',
+        -- 'ts_ls',
+      }, server)
     end,
     config = function(plugin)
       local lspconfig = require('lspconfig')
@@ -707,15 +711,15 @@ return {
         -- 'vue',
         -- 'css',
         -- 'scss',
-        "less",
-        "html", -- htmlls
-        "json",
-        "jsonc",
-        "yaml",
-        "markdown",
-        "markdown.mdx",
-        "graphql",
-        "handlebars",
+        'less',
+        'html', -- htmlls
+        'json',
+        'jsonc',
+        'yaml',
+        'markdown',
+        'markdown.mdx',
+        'graphql',
+        'handlebars',
       }
       local register_filetypes = {
         dockerfile = {
@@ -842,16 +846,16 @@ return {
             }),
           },
         },
-        nginx = {
-          install = {
-            -- nginxbeautifier = 'npm install --global --quiet nginxbeautifier',
-          },
-          sources = {
-            null_ls.builtins.formatting.nginx_beautifier.with({
-              extra_args = { '--space', 2 },
-            }),
-          },
-        },
+        -- nginx = {
+        --   install = {
+        --     -- nginxbeautifier = 'npm install --global --quiet nginxbeautifier',
+        --   },
+        --   sources = {
+        --     null_ls.builtins.formatting.nginx_beautifier.with({
+        --       extra_args = { '--space', 2 },
+        --     }),
+        --   },
+        -- },
         php = {
           tools = {
             -- ['php-cs-fixer'] = {},
@@ -890,12 +894,12 @@ return {
             -- null_ls.builtins.formatting.yapf,
           },
         },
-        scheme = {
-          sources = {
-            null_ls.builtins.formatting.emacs_scheme_mode,
-            -- guix_style,
-          },
-        },
+        -- scheme = {
+        --   sources = {
+        --     null_ls.builtins.formatting.emacs_scheme_mode,
+        --     -- guix_style,
+        --   },
+        -- },
         sh = {
           tools = {
             shfmt = {},
@@ -1055,27 +1059,27 @@ return {
       })
     end,
   },
-  {
-    'jose-elias-alvarez/typescript.nvim',
-    ft = { 'typescript', 'typescriptreact' },
-    config = function()
-      local opts = require('plugins.lsp.servers.tsserver')
-      require('typescript').setup({
-        disable_commands = false, -- prevent the plugin from creating Vim commands
-        debug = true, -- enable debug logging for commands
-        go_to_source_definition = {
-          fallback = true, -- fall back to standard LSP definition on failure
-        },
-        server = opts,
-      })
-      local sources = {
-        -- https://github.com/jose-elias-alvarez/typescript.nvim/issues/21#is5725105
-        require('typescript.extensions.null-ls.code-actions'),
-        -- null_ls.builtins.diagnostics.tsc,
-      }
-      require('null-ls').register(sources)
-    end,
-  },
+  -- {
+  --   'jose-elias-alvarez/typescript.nvim',
+  --   ft = { 'typescript', 'typescriptreact' },
+  --   config = function()
+  --     local opts = require('plugins.lsp.servers.tsserver')
+  --     require('typescript').setup({
+  --       disable_commands = false, -- prevent the plugin from creating Vim commands
+  --       debug = true, -- enable debug logging for commands
+  --       go_to_source_definition = {
+  --         fallback = true, -- fall back to standard LSP definition on failure
+  --       },
+  --       server = opts,
+  --     })
+  --     local sources = {
+  --       -- https://github.com/jose-elias-alvarez/typescript.nvim/issues/21#is5725105
+  --       require('typescript.extensions.null-ls.code-actions'),
+  --       -- null_ls.builtins.diagnostics.tsc,
+  --     }
+  --     require('null-ls').register(sources)
+  --   end,
+  -- },
   {
     'joeveiga/ng.nvim',
     ft = { 'html', 'typescript' },

@@ -211,6 +211,7 @@ return {
   },
   {
     'kosayoda/nvim-lightbulb',
+    enabled = false,
     event = 'BufReadPost',
     -- config = function()
     --   local format_group = vim.api.nvim_create_augroup('LightBulb', { clear = true })
@@ -224,8 +225,10 @@ return {
     -- end,
     opts = {
       ignore = {
-        'null-ls',
-        -- 'lua_ls',
+        clients = {
+          'null-ls',
+          -- 'lua_ls',
+        },
       },
       sign = {
         enabled = true,

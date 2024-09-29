@@ -9,7 +9,7 @@ return {
     'nvim-treesitter/nvim-treesitter',
     version = false, -- Download latest release
     dependencies = {
-      'JoosepAlviste/nvim-ts-context-commentstring',
+      -- 'JoosepAlviste/nvim-ts-context-commentstring',
       'RRethy/nvim-treesitter-endwise', -- Replaces tpope/vim-endwise
       -- 'nvim-treesitter-context', -- Uncomment to autoload
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -54,7 +54,7 @@ return {
         indent = { enable = true },
         autopairs = { enable = true }, -- https://github.com/windwp/nvim-autopairs
         autotag = { enable = true }, -- https://github.com/windwp/nvim-ts-autotag
-        context_commentstring = { enable = true, enable_autocmd = false }, -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring
+        -- context_commentstring = { enable = true, enable_autocmd = false }, -- https://github.com/JoosepAlviste/nvim-ts-context-commentstring
         endwise = { enable = true }, -- https://github.com/RRethy/nvim-treesitter-endwise
 
         incremental_selection = {

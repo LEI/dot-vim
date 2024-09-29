@@ -65,6 +65,7 @@ set shortmess=atI " Avoid hit-enter prompts caused by file messages
 " I  don't give the intro message when starting
 
 set lazyredraw " Redraw only if necessary, faster macros
+set redrawtime=5000
 
 set exrc " Enable per-directory .vimrc files
 set secure " Disable unsafe commands

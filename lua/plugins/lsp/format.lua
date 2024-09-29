@@ -11,9 +11,10 @@ M.servers = {
   eslint = true, -- Force formatting with eslint-ls
   -- ['null-ls'] = false,
 
-  sumneko_lua = false, -- Replaced by stylua
+  -- sumneko_lua = false, -- Replaced by stylua
   lua_ls = false,
 
+  ts_ls = false, -- New tsserver
   tsserver = false, -- Replaced by eslint-ls
   yamlls = false, -- TODO: fallback to yamlls if there is no prettier config
 

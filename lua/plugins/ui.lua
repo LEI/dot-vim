@@ -84,7 +84,7 @@ local format_mode = function(active)
     if not is_active then
       local length = #name
       local window = window_number()
-      local rep = string.rep('-', 4); -- length - 2
+      local rep = string.rep('-', 4) -- length - 2
       return length == 1 and tostring(window) or window .. ' ' .. rep
     end
     return name
@@ -371,7 +371,7 @@ return {
   {
     'akinsho/nvim-bufferline.lua',
     -- enabled = false,
-    version = 'v3.*',
+    version = '*',
     dependencies = {
       'nvim-web-devicons',
     },
@@ -1133,35 +1133,35 @@ return {
   -- Color highlighter
   {
     'NvChad/nvim-colorizer.lua',
-    ft = { 'css', 'html', 'javascript', 'lua', 'vim' },
-    opts = function(plugin)
-      local filetypes = plugin.ft -- { '*' }
-      filetypes.html = { mode = 'foreground' }
-      return {
-        filetypes = filetypes,
-        -- user_default_options = {
-        --   RGB = true, -- #RGB hex codes
-        --   RRGGBB = true, -- #RRGGBB hex codes
-        --   names = true, -- "Name" codes like Blue or blue
-        --   RRGGBBAA = false, -- #RRGGBBAA hex codes
-        --   AARRGGBB = false, -- 0xAARRGGBB hex codes
-        --   rgb_fn = false, -- CSS rgb() and rgba() functions
-        --   hsl_fn = false, -- CSS hsl() and hsla() functions
-        --   css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-        --   css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
-        --   -- Available modes for `mode`: foreground, background,  virtualtext
-        --   mode = 'background', -- Set the display mode.
-        --   -- Available methods are false / true / "normal" / "lsp" / "both"
-        --   -- True is same as normal
-        --   tailwind = false, -- Enable tailwind colors
-        --   -- parsers can contain values used in |user_default_options|
-        --   sass = { enable = false, parsers = { css } }, -- Enable sass colors
-        --   virtualtext = '■',
-        -- },
-        -- all the sub-options of filetypes apply to buftypes
-        -- buftypes = { '*', '!prompt', '!popup' },
-      }
-    end,
+    -- ft = { 'css', 'html', 'javascript', 'lua', 'vim', 'json' },
+    -- opts = function(plugin)
+    --   local filetypes = plugin.ft -- { '*' }
+    --   filetypes.html = { mode = 'foreground' }
+    --   return {
+    --     filetypes = filetypes,
+    --     -- user_default_options = {
+    --     --   RGB = true, -- #RGB hex codes
+    --     --   RRGGBB = true, -- #RRGGBB hex codes
+    --     --   names = true, -- "Name" codes like Blue or blue
+    --     --   RRGGBBAA = false, -- #RRGGBBAA hex codes
+    --     --   AARRGGBB = false, -- 0xAARRGGBB hex codes
+    --     --   rgb_fn = false, -- CSS rgb() and rgba() functions
+    --     --   hsl_fn = false, -- CSS hsl() and hsla() functions
+    --     --   css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+    --     --   css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+    --     --   -- Available modes for `mode`: foreground, background,  virtualtext
+    --     --   mode = 'background', -- Set the display mode.
+    --     --   -- Available methods are false / true / "normal" / "lsp" / "both"
+    --     --   -- True is same as normal
+    --     --   tailwind = false, -- Enable tailwind colors
+    --     --   -- parsers can contain values used in |user_default_options|
+    --     --   sass = { enable = false, parsers = { css } }, -- Enable sass colors
+    --     --   virtualtext = '■',
+    --     -- },
+    --     -- all the sub-options of filetypes apply to buftypes
+    --     -- buftypes = { '*', '!prompt', '!popup' },
+    --   }
+    -- end,
   },
 
   -- Icons

@@ -127,7 +127,6 @@ return {
 
       -- Plugins
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-      'barrett-ruth/telescope-http.nvim', -- :Telescope http list
       -- 'chip/telescope-software-licenses.nvim', -- :Telescope software-licenses find
       -- nvim-telescope/telescope-project.nvim
       'nvim-telescope/telescope-ghq.nvim',
@@ -159,7 +158,6 @@ return {
       { '<Leader>hc', '<cmd>Telescope commands<cr>', desc = 'Commands' },
       { '<Leader>hf', '<cmd>Telescope filetypes<cr>', desc = 'File Types' },
       { '<Leader>hh', '<cmd>Telescope help_tags<cr>', desc = 'Help Pages' },
-      { '<Leader>hH', '<cmd>Telescope http list<cr>', desc = 'HTTP status codes' },
       { '<Leader>hk', '<cmd>Telescope keymaps<cr>', desc = 'Key Maps' },
       { '<Leader>hm', '<cmd>Telescope man_pages<cr>', desc = 'Man Pages' },
       { '<Leader>ho', '<cmd>Telescope vim_options<cr>', desc = 'Options' },
@@ -235,14 +233,9 @@ return {
             -- override_file_sorter = true,
             -- case_mode = 'smart_case',
           },
-          http = {
-            -- How the mozilla url is opened. By default: xdg-open %s
-            open_url = 'open %s', -- FIXME
-          },
         },
       })
       telescope.load_extension('fzf')
-      telescope.load_extension('http')
       telescope.load_extension('ghq')
     end,
   },
@@ -296,12 +289,24 @@ return {
       wk.setup({
         plugins = { spelling = true },
         -- operators = { gc = 'Comments' },
-        key_labels = {
-          -- ['<leader>'] = 'SPC'
-          -- ["<space>"] = "SPC",
-          -- ["<cr>"] = "RET",
-          -- ["<tab>"] = "TAB",
-        },
+        -- replace = {
+        --   key = {
+        --     function(key)
+        --       return require("which-key.view").format(key)
+        --     end,
+        --     -- { "<Space>", "SPC" },
+        --   },
+        --   desc = {
+        --     { "<Plug>%(?(.*)%)?", "%1" },
+        --     { "^%+", "" },
+        --     { "<[cC]md>", "" },
+        --     { "<[cC][rR]>", "" },
+        --     { "<[sS]ilent>", "" },
+        --     { "^lua%s+", "" },
+        --     { "^call%s+", "" },
+        --     { "^:%s*", "" },
+        --   },
+        -- },
         -- icons = {
         --   breadcrumb = '»', -- symbol used in the command line area that shows your active key combo
         --   separator = '➜', -- symbol used between a key and it's label
@@ -311,50 +316,34 @@ return {
         --   scroll_down = '<c-d>', -- binding to scroll down inside the popup
         --   scroll_up = '<c-u>', -- binding to scroll up inside the popup
         -- },
-        window = {
-          border = settings.border,
-          -- position = 'bottom', -- bottom, top
-          -- margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
-          -- padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
-          -- winblend = 0,
-        },
-        -- layout = {
-        --   height = { min = 4, max = 25 }, -- min and max height of the columns
-        --   width = { min = 20, max = 50 }, -- min and max width of the columns
-        --   spacing = 3, -- spacing between columns
-        --   align = 'left', -- align columns left, center or right
+        win = { bo = settings.border },
+        -- triggers_blacklist = {
+        --   c = { '%', 'w' }, -- FIXME: cmp %
+        --   i = { 'j', 'k' },
+        --   v = { 'j', 'k' },
         -- },
-        -- ignore_missing = false, -- enable this to hide mappings for which you didn't specify a label
-        hidden = { '<Plug>', '<silent>', '<cmd>', '<Cmd>', '<CR>', 'call', 'lua', '^:', '^ ' }, -- hide mapping boilerplate
-        -- show_help = true, -- show help message on the command line when the popup is visible
-        -- show_keys = true, -- show the currently pressed key and its label as a message in the command line
-        -- triggers = 'auto', -- automatically setup triggers
         -- triggers = {
-        --   '<Leader>',
-        --   'g',
+        --   { "<auto>", mode = "nxsot" },
         -- },
-        triggers_blacklist = {
-          c = { '%', 'w' }, -- FIXME: cmp %
-          i = { 'j', 'k' },
-          v = { 'j', 'k' },
-        },
         disable = {
           buftypes = {},
           filetypes = { 'TelescopePrompt', 'dbout' },
         },
       })
-      wk.register({
-        mode = { 'n', 'v' },
-        ['g'] = { name = '+goto' },
-        [')'] = { name = '+next' },
-        ['('] = { name = '+prev' },
-        ['<Leader>c'] = { name = '+code' }, -- change
-        ['<Leader>g'] = { name = '+git' },
-        ['<Leader>S'] = { name = '+search' },
-        ['<Leader>t'] = { name = '+toggle', mode = 'n' }, -- TODO: option mode
-        ['<Leader>T'] = { name = '+test', mode = 'n' },
-        ['<Leader>x'] = { name = '+diagnostics/quickfix', mode = 'n' },
-        -- ['<Leader><Tab>'] = { name = '+tabs' },
+      -- ['<Leader><Tab>'] = { name = '+tabs' },
+      wk.add({
+        { '<Leader>T', group = 'test' },
+        { '<Leader>t', group = 'toggle' },
+        { '<Leader>x', group = 'diagnostics/quickfix' },
+        {
+          mode = { 'n', 'v' },
+          { '(', group = 'prev' },
+          { ')', group = 'next' },
+          { '<Leader>S', group = 'search' },
+          { '<Leader>c', group = 'code' }, -- change
+          { '<Leader>g', group = 'git' },
+          { 'g', group = 'goto' },
+        },
       })
 
       local function remap(mode, left, right, keymap)
@@ -623,149 +612,149 @@ return {
   -- KabbAmine/zeavim.vim
   -- keith/investigate.vim
 
-  -- Devcontainer
-  {
-    'https://codeberg.org/esensar/nvim-dev-container',
-    cmd = {
-      'DevcontainerBuild', -- builds image from nearest devcontainer.json
-      'DevcontainerImageRun', -- runs image from nearest devcontainer.json
-      'DevcontainerBuildAndRun', -- builds image from nearest devcontainer.json and then runs it
-      'DevcontainerBuildRunAndAttach', -- builds image from nearest devcontainer.json (with neovim added), runs it and attaches to neovim in it - currently using `terminal_handler`, but in the future with Neovim 0.8.0 maybe directly (https://codeberg.org/esensar/nvim-dev-container/issues/30)
-      'DevcontainerComposeUp', -- run docker-compose up based on devcontainer.json
-      'DevcontainerComposeDown', -- run docker-compose down based on devcontainer.json
-      'DevcontainerComposeRm', -- run docker-compose rm based on devcontainer.json
-      'DevcontainerStartAuto', -- start whatever is defined in devcontainer.json
-      'DevcontainerStartAutoAndAttach', -- start and attach to whatever is defined in devcontainer.json
-      'DevcontainerAttachAuto', -- attach to whatever is defined in devcontainer.json
-      'DevcontainerStopAuto', -- stop whatever was started based on devcontainer.json
-      'DevcontainerStopAll', -- stop everything started with this plugin (in current session)
-      'DevcontainerRemoveAll', -- remove everything started with this plugin (in current session)
-      'DevcontainerLogs', -- open plugin log file
-      'DevcontainerOpenNearestConfig', -- opens nearest devcontainer.json file if it exists
-      'DevcontainerEditNearestConfig', -- opens nearest devcontainer.json file if it exists, or creates a new one if it does not
-    },
-    keys = {
-      { '<Leader>dcb', '<cmd>DevcontainerBuild<CR>', desc = 'Build devcontainer' },
-      { '<Leader>dci', '<cmd>DevcontainerImageRun<CR>', desc = 'Run devcontainer image' },
-      { '<Leader>dcr', '<cmd>DevcontainerBuildAndRun<CR>', desc = 'Build and run devcontainer' },
-      { '<Leader>dca', '<cmd>DevcontainerBuildRunAndAttach<CR>', desc = 'Build, run and attach to devcontainer' },
-      { '<Leader>dcu', '<cmd>DevcontainerComposeUp<CR>', desc = 'Run docker-compose up' },
-      { '<Leader>dcd', '<cmd>DevcontainerComposeDown<CR>', desc = 'Run docker-compose down' },
-      -- { '<Leader>dcR', '<cmd>DevcontainerComposeRm<CR>', desc = 'Run docker-compose down' },
-      { '<Leader>dcs', '<cmd>DevcontainerStartAuto<CR>', desc = 'Start devcontainer' },
-      { '<Leader>dct', '<cmd>DevcontainerStartAutoAndAttach<CR>', desc = 'Start and attach to devcontainer' },
-      { '<Leader>dca', '<cmd>DevcontainerAttachAuto<CR>', desc = 'Attach to devcontainer' },
-      { '<Leader>dcx', '<cmd>DevcontainerStopAuto<CR>', desc = 'Stop devcontainer' },
-      { '<Leader>dcX', '<cmd>DevcontainerStopAll<CR>', desc = 'Stop all devcontainers' },
-      { '<Leader>dcR', '<cmd>DevcontainerRemoveAll<CR>', desc = 'Remove all devcontainers' },
-      { '<Leader>dcl', '<cmd>DevcontainerLogs<CR>', desc = 'Devcontainer logs' },
-      { '<Leader>dco', '<cmd>DevcontainerOpenNearestConfig<CR>', desc = 'Open devcontainer.json' },
-      { '<Leader>dce', '<cmd>DevcontainerEditNearestConfig<CR>', desc = 'Edit devcontainer.json' },
-    },
-    dependencies = 'nvim-treesitter', -- With jsonc parser
-    opts = {
-      -- config_search_start = function()
-      --   -- By default this function uses vim.loop.cwd()
-      --   -- This is used to find a starting point for .devcontainer.json file search
-      --   -- Since by default, it is searched for recursively
-      --   -- That behavior can also be disabled
-      -- end,
-      -- workspace_folder_provider = function()
-      --   -- By default this function uses first workspace folder for integrated lsp if available and vim.loop.cwd() as a fallback
-      --   -- This is used to replace `${localWorkspaceFolder}` in devcontainer.json
-      --   -- Also used for creating default .devcontainer.json file
-      -- end,
-      -- terminal_handler = function(command)
-      --   -- By default this function creates a terminal in a new tab using :terminal command
-      --   -- It also removes statusline when that tab is active, to prevent double statusline
-      --   -- It can be overridden to provide custom terminal handling
-      -- end,
-      -- nvim_dockerfile_template = function(base_image)
-      --   -- Takes base_image and returns string, which should be used as a Dockerfile
-      --   -- This is used when adding neovim to existing images
-      --   -- Check out default implementation in lua/devcontainer/config.lua
-      --   -- It installs neovim version based on current version
-      -- end,
-      -- devcontainer_json_template = function()
-      --   -- Returns table - list of lines to set when creating new devcontainer.json files
-      --   -- As a template
-      --   -- Used only when using functions from commands module or created commands
-      -- end,
-      -- -- Can be set to false to prevent generating default commands
-      -- -- Default commands are listed below
-      -- generate_commands = true,
-      -- -- By default no autocommands are generated
-      -- -- This option can be used to configure automatic starting and cleaning of containers
-      -- autocommands = {
-      --   -- can be set to true to automatically start containers when devcontainer.json is available
-      --   init = false,
-      --   -- can be set to true to automatically remove any started containers and any built images when exiting vim
-      --   clean = false,
-      --   -- can be set to true to automatically restart containers when devcontainer.json file is updated
-      --   update = false,
-      -- },
-      -- -- can be changed to increase or decrease logging from library
-      -- log_level = 'info',
-      -- -- can be set to true to disable recursive search
-      -- -- in that case only .devcontainer.json and .devcontainer/devcontainer.json files will be checked relative
-      -- -- to the directory provided by config_search_start
-      -- disable_recursive_config_search = false,
-      -- -- By default all mounts are added (config, data and state)
-      -- -- This can be changed to disable mounts or change their options
-      -- -- This can be useful to mount local configuration
-      -- -- And any other mounts when attaching to containers with this plugin
-      -- attach_mounts = {
-      --   -- Can be set to true to always mount items defined below
-      --   -- And not only when directly attaching
-      --   -- This can be useful if executing attach command separately
-      --   always = false,
-      --   neovim_config = {
-      --     -- enables mounting local config to /root/.config/nvim in container
-      --     enabled = false,
-      --     -- makes mount readonly in container
-      --     options = { 'readonly' },
-      --   },
-      --   neovim_data = {
-      --     -- enables mounting local data to /root/.local/share/nvim in container
-      --     enabled = false,
-      --     -- no options by default
-      --     options = {},
-      --   },
-      --   -- Only useful if using neovim 0.8.0+
-      --   neovim_state = {
-      --     -- enables mounting local state to /root/.local/state/nvim in container
-      --     enabled = false,
-      --     -- no options by default
-      --     options = {},
-      --   },
-      --   -- This takes a list of mounts (strings) that should always be added whenever attaching to containers
-      --   -- This is passed directly as --mount option to docker command
-      --   -- Or multiple --mount options if there are multiple values
-      --   custom_mounts = {},
-      -- },
-      -- -- This takes a list of mounts (strings) that should always be added to every run container
-      -- -- This is passed directly as --mount option to docker command
-      -- -- Or multiple --mount options if there are multiple values
-      -- always_mount = {},
-      -- -- This takes a string (usually either "podman" or "docker") representing container runtime
-      -- -- That is the command that will be invoked for container operations
-      -- -- If it is nil, plugin will use whatever is available (trying "podman" first)
-      -- container_runtime = nil,
-      -- -- This takes a string (usually either "podman-compose" or "docker-compose") representing compose command
-      -- -- That is the command that will be invoked for compose operations
-      -- -- If it is nil, plugin will use whatever is available (trying "podman-compose" first)
-      -- compose_command = nil,
-    },
-    init = function()
-      local group = vim.api.nvim_create_augroup('Devcontainer', { clear = true })
+  -- -- Devcontainer
+  -- {
+  --   'https://codeberg.org/esensar/nvim-dev-container',
+  --   cmd = {
+  --     'DevcontainerBuild', -- builds image from nearest devcontainer.json
+  --     'DevcontainerImageRun', -- runs image from nearest devcontainer.json
+  --     'DevcontainerBuildAndRun', -- builds image from nearest devcontainer.json and then runs it
+  --     'DevcontainerBuildRunAndAttach', -- builds image from nearest devcontainer.json (with neovim added), runs it and attaches to neovim in it - currently using `terminal_handler`, but in the future with Neovim 0.8.0 maybe directly (https://codeberg.org/esensar/nvim-dev-container/issues/30)
+  --     'DevcontainerComposeUp', -- run docker-compose up based on devcontainer.json
+  --     'DevcontainerComposeDown', -- run docker-compose down based on devcontainer.json
+  --     'DevcontainerComposeRm', -- run docker-compose rm based on devcontainer.json
+  --     'DevcontainerStartAuto', -- start whatever is defined in devcontainer.json
+  --     'DevcontainerStartAutoAndAttach', -- start and attach to whatever is defined in devcontainer.json
+  --     'DevcontainerAttachAuto', -- attach to whatever is defined in devcontainer.json
+  --     'DevcontainerStopAuto', -- stop whatever was started based on devcontainer.json
+  --     'DevcontainerStopAll', -- stop everything started with this plugin (in current session)
+  --     'DevcontainerRemoveAll', -- remove everything started with this plugin (in current session)
+  --     'DevcontainerLogs', -- open plugin log file
+  --     'DevcontainerOpenNearestConfig', -- opens nearest devcontainer.json file if it exists
+  --     'DevcontainerEditNearestConfig', -- opens nearest devcontainer.json file if it exists, or creates a new one if it does not
+  --   },
+  --   keys = {
+  --     { '<Leader>dcb', '<cmd>DevcontainerBuild<CR>', desc = 'Build devcontainer' },
+  --     { '<Leader>dci', '<cmd>DevcontainerImageRun<CR>', desc = 'Run devcontainer image' },
+  --     { '<Leader>dcr', '<cmd>DevcontainerBuildAndRun<CR>', desc = 'Build and run devcontainer' },
+  --     { '<Leader>dca', '<cmd>DevcontainerBuildRunAndAttach<CR>', desc = 'Build, run and attach to devcontainer' },
+  --     { '<Leader>dcu', '<cmd>DevcontainerComposeUp<CR>', desc = 'Run docker-compose up' },
+  --     { '<Leader>dcd', '<cmd>DevcontainerComposeDown<CR>', desc = 'Run docker-compose down' },
+  --     -- { '<Leader>dcR', '<cmd>DevcontainerComposeRm<CR>', desc = 'Run docker-compose down' },
+  --     { '<Leader>dcs', '<cmd>DevcontainerStartAuto<CR>', desc = 'Start devcontainer' },
+  --     { '<Leader>dct', '<cmd>DevcontainerStartAutoAndAttach<CR>', desc = 'Start and attach to devcontainer' },
+  --     { '<Leader>dca', '<cmd>DevcontainerAttachAuto<CR>', desc = 'Attach to devcontainer' },
+  --     { '<Leader>dcx', '<cmd>DevcontainerStopAuto<CR>', desc = 'Stop devcontainer' },
+  --     { '<Leader>dcX', '<cmd>DevcontainerStopAll<CR>', desc = 'Stop all devcontainers' },
+  --     { '<Leader>dcR', '<cmd>DevcontainerRemoveAll<CR>', desc = 'Remove all devcontainers' },
+  --     { '<Leader>dcl', '<cmd>DevcontainerLogs<CR>', desc = 'Devcontainer logs' },
+  --     { '<Leader>dco', '<cmd>DevcontainerOpenNearestConfig<CR>', desc = 'Open devcontainer.json' },
+  --     { '<Leader>dce', '<cmd>DevcontainerEditNearestConfig<CR>', desc = 'Edit devcontainer.json' },
+  --   },
+  --   dependencies = 'nvim-treesitter', -- With jsonc parser
+  --   opts = {
+  --     -- config_search_start = function()
+  --     --   -- By default this function uses vim.loop.cwd()
+  --     --   -- This is used to find a starting point for .devcontainer.json file search
+  --     --   -- Since by default, it is searched for recursively
+  --     --   -- That behavior can also be disabled
+  --     -- end,
+  --     -- workspace_folder_provider = function()
+  --     --   -- By default this function uses first workspace folder for integrated lsp if available and vim.loop.cwd() as a fallback
+  --     --   -- This is used to replace `${localWorkspaceFolder}` in devcontainer.json
+  --     --   -- Also used for creating default .devcontainer.json file
+  --     -- end,
+  --     -- terminal_handler = function(command)
+  --     --   -- By default this function creates a terminal in a new tab using :terminal command
+  --     --   -- It also removes statusline when that tab is active, to prevent double statusline
+  --     --   -- It can be overridden to provide custom terminal handling
+  --     -- end,
+  --     -- nvim_dockerfile_template = function(base_image)
+  --     --   -- Takes base_image and returns string, which should be used as a Dockerfile
+  --     --   -- This is used when adding neovim to existing images
+  --     --   -- Check out default implementation in lua/devcontainer/config.lua
+  --     --   -- It installs neovim version based on current version
+  --     -- end,
+  --     -- devcontainer_json_template = function()
+  --     --   -- Returns table - list of lines to set when creating new devcontainer.json files
+  --     --   -- As a template
+  --     --   -- Used only when using functions from commands module or created commands
+  --     -- end,
+  --     -- -- Can be set to false to prevent generating default commands
+  --     -- -- Default commands are listed below
+  --     -- generate_commands = true,
+  --     -- -- By default no autocommands are generated
+  --     -- -- This option can be used to configure automatic starting and cleaning of containers
+  --     -- autocommands = {
+  --     --   -- can be set to true to automatically start containers when devcontainer.json is available
+  --     --   init = false,
+  --     --   -- can be set to true to automatically remove any started containers and any built images when exiting vim
+  --     --   clean = false,
+  --     --   -- can be set to true to automatically restart containers when devcontainer.json file is updated
+  --     --   update = false,
+  --     -- },
+  --     -- -- can be changed to increase or decrease logging from library
+  --     -- log_level = 'info',
+  --     -- -- can be set to true to disable recursive search
+  --     -- -- in that case only .devcontainer.json and .devcontainer/devcontainer.json files will be checked relative
+  --     -- -- to the directory provided by config_search_start
+  --     -- disable_recursive_config_search = false,
+  --     -- -- By default all mounts are added (config, data and state)
+  --     -- -- This can be changed to disable mounts or change their options
+  --     -- -- This can be useful to mount local configuration
+  --     -- -- And any other mounts when attaching to containers with this plugin
+  --     -- attach_mounts = {
+  --     --   -- Can be set to true to always mount items defined below
+  --     --   -- And not only when directly attaching
+  --     --   -- This can be useful if executing attach command separately
+  --     --   always = false,
+  --     --   neovim_config = {
+  --     --     -- enables mounting local config to /root/.config/nvim in container
+  --     --     enabled = false,
+  --     --     -- makes mount readonly in container
+  --     --     options = { 'readonly' },
+  --     --   },
+  --     --   neovim_data = {
+  --     --     -- enables mounting local data to /root/.local/share/nvim in container
+  --     --     enabled = false,
+  --     --     -- no options by default
+  --     --     options = {},
+  --     --   },
+  --     --   -- Only useful if using neovim 0.8.0+
+  --     --   neovim_state = {
+  --     --     -- enables mounting local state to /root/.local/state/nvim in container
+  --     --     enabled = false,
+  --     --     -- no options by default
+  --     --     options = {},
+  --     --   },
+  --     --   -- This takes a list of mounts (strings) that should always be added whenever attaching to containers
+  --     --   -- This is passed directly as --mount option to docker command
+  --     --   -- Or multiple --mount options if there are multiple values
+  --     --   custom_mounts = {},
+  --     -- },
+  --     -- -- This takes a list of mounts (strings) that should always be added to every run container
+  --     -- -- This is passed directly as --mount option to docker command
+  --     -- -- Or multiple --mount options if there are multiple values
+  --     -- always_mount = {},
+  --     -- -- This takes a string (usually either "podman" or "docker") representing container runtime
+  --     -- -- That is the command that will be invoked for container operations
+  --     -- -- If it is nil, plugin will use whatever is available (trying "podman" first)
+  --     -- container_runtime = nil,
+  --     -- -- This takes a string (usually either "podman-compose" or "docker-compose") representing compose command
+  --     -- -- That is the command that will be invoked for compose operations
+  --     -- -- If it is nil, plugin will use whatever is available (trying "podman-compose" first)
+  --     -- compose_command = nil,
+  --   },
+  --   init = function()
+  --     local group = vim.api.nvim_create_augroup('Devcontainer', { clear = true })
 
-      vim.api.nvim_create_autocmd('BufRead', {
-        group = group,
-        pattern = 'devcontainer.json',
-        callback = function()
-          vim.cmd('set filetype=jsonc')
-        end,
-      })
-    end,
-  },
+  --     vim.api.nvim_create_autocmd('BufRead', {
+  --       group = group,
+  --       pattern = 'devcontainer.json',
+  --       callback = function()
+  --         vim.cmd('set filetype=jsonc')
+  --       end,
+  --     })
+  --   end,
+  -- },
 }
